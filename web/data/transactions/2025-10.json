@@ -1,0 +1,257 @@
+{
+  "meta": {
+    "month": "2025-10",
+    "currency": "USD",
+    "generated_at": "2025-11-02T20:20:45.422Z"
+  },
+  "transactions": [
+    {
+      "id": "txn-2025-10-03-marriott-union-square",
+      "card_id": "card-0812",
+      "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+      "owner_id": "owner-arman",
+      "llm_category_id": "cat-travel",
+      "category_id": "cat-travel",
+      "amount": -174.52,
+      "currency": "USD",
+      "transaction_date": "2025-10-03",
+      "merchant": "MARRIOTT UNION SQUARE SAN FRANCISCOCAUS",
+      "source_llm": {
+        "run_id": "run-2025-11-arman-001",
+        "model": "unknown"
+      },
+      "created_at": "2025-11-02T20:20:45.422Z",
+      "updated_at": "2025-11-02T20:20:45.422Z",
+      "flags": {
+        "review": false,
+        "duplicate": false
+      }
+    },
+    {
+      "id": "txn-2025-10-04-walgreens-7043",
+      "card_id": "card-0812",
+      "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+      "owner_id": "owner-arman",
+      "category_id": "cat-family",
+      "llm_category_id": "cat-family",
+      "amount": -13.81,
+      "currency": "USD",
+      "transaction_date": "2025-10-04",
+      "merchant": "WALGREENS #7043 SAN FRANCISCOCAUS",
+      "source_llm": {
+        "run_id": "run-2025-11-arman-001",
+        "model": "unknown"
+      },
+      "created_at": "2025-11-02T20:20:45.422Z",
+      "updated_at": "2025-11-02T20:34:23.817Z",
+      "flags": {
+        "review": false,
+        "duplicate": false
+      }
+    },
+    {
+      "id": "txn-2025-10-04-pearl-factory-500",
+      "card_id": "card-0812",
+      "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+      "owner_id": "owner-arman",
+      "category_id": "cat-family",
+      "llm_category_id": "cat-family",
+      "amount": -281.33,
+      "currency": "USD",
+      "transaction_date": "2025-10-04",
+      "merchant": "PEARL FACTORY 500 SAN FRANCISCOCAUS",
+      "source_llm": {
+        "run_id": "run-2025-11-arman-001",
+        "model": "unknown"
+      },
+      "created_at": "2025-11-02T20:20:45.422Z",
+      "updated_at": "2025-11-02T20:34:19.899Z",
+      "flags": {
+        "review": false,
+        "duplicate": false
+      }
+    },
+    {
+      "id": "txn-2025-10-04-the-exploratorium",
+      "card_id": "card-0812",
+      "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+      "owner_id": "owner-arman",
+      "llm_category_id": "cat-entertainment",
+      "category_id": "cat-entertainment",
+      "amount": -27.16,
+      "currency": "USD",
+      "transaction_date": "2025-10-04",
+      "merchant": "THE EXPLORATORIUM SAN FRANCISCOCAUS",
+      "source_llm": {
+        "run_id": "run-2025-11-arman-001",
+        "model": "unknown"
+      },
+      "created_at": "2025-11-02T20:20:45.422Z",
+      "updated_at": "2025-11-02T20:20:45.422Z",
+      "flags": {
+        "review": false,
+        "duplicate": false
+      }
+    },
+    {
+      "id": "txn-2025-10-06-target-00027664",
+      "card_id": "card-0812",
+      "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+      "owner_id": "owner-arman",
+      "category_id": "cat-family",
+      "llm_category_id": "cat-family",
+      "amount": -34.09,
+      "currency": "USD",
+      "transaction_date": "2025-10-06",
+      "merchant": "TARGET 00027664 SAN FRANCISCOCAUS",
+      "source_llm": {
+        "run_id": "run-2025-11-arman-001",
+        "model": "unknown"
+      },
+      "created_at": "2025-11-02T20:20:45.422Z",
+      "updated_at": "2025-11-02T20:34:12.054Z",
+      "flags": {
+        "review": false,
+        "duplicate": false
+      }
+    },
+    {
+      "id": "txn-2025-10-06-sq-hi-usa-cafe-franc",
+      "card_id": "card-0812",
+      "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+      "owner_id": "owner-company",
+      "category_id": "cat-entertainment",
+      "llm_category_id": "cat-entertainment",
+      "amount": -5,
+      "currency": "USD",
+      "transaction_date": "2025-10-06",
+      "merchant": "SQ *HI USA - CAFE FRANCSAN FRANCİSCOCAUS",
+      "notes": "Cafe or dining",
+      "source_llm": {
+        "run_id": "run-2025-11-arman-001",
+        "model": "unknown"
+      },
+      "created_at": "2025-11-02T20:20:45.422Z",
+      "updated_at": "2025-11-02T20:33:40.790Z",
+      "flags": {
+        "review": false,
+        "duplicate": false
+      }
+    },
+    {
+      "id": "txn-2025-10-07-apple-store-r075",
+      "card_id": "card-0812",
+      "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+      "owner_id": "owner-arman",
+      "llm_category_id": "cat-other",
+      "category_id": "cat-other",
+      "amount": -383.1,
+      "currency": "USD",
+      "transaction_date": "2025-10-07",
+      "merchant": "APPLE STORE #R075 SAN FRANCISCOCAUS",
+      "notes": "Electronics or software",
+      "source_llm": {
+        "run_id": "run-2025-11-arman-001",
+        "model": "unknown"
+      },
+      "created_at": "2025-11-02T20:20:45.422Z",
+      "updated_at": "2025-11-02T20:20:45.422Z",
+      "flags": {
+        "review": false,
+        "duplicate": false
+      }
+    },
+    {
+      "id": "txn-2025-10-07-cheesecake-san-francisco",
+      "card_id": "card-0812",
+      "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+      "owner_id": "owner-company",
+      "category_id": "cat-entertainment",
+      "llm_category_id": "cat-entertainment",
+      "amount": -31.94,
+      "currency": "USD",
+      "transaction_date": "2025-10-07",
+      "merchant": "CHEESECAKE SAN FRANCISCSAN FRANCISCOCAUS",
+      "notes": "Food or dining",
+      "source_llm": {
+        "run_id": "run-2025-11-arman-001",
+        "model": "unknown"
+      },
+      "created_at": "2025-11-02T20:20:45.422Z",
+      "updated_at": "2025-11-02T20:21:26.157Z",
+      "flags": {
+        "review": false,
+        "duplicate": false
+      }
+    },
+    {
+      "id": "txn-2025-10-10-xai-llc-x-ai-about",
+      "card_id": "card-0812",
+      "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+      "owner_id": "owner-company",
+      "category_id": "cat-other",
+      "llm_category_id": "cat-other",
+      "amount": -300,
+      "currency": "USD",
+      "transaction_date": "2025-10-10",
+      "merchant": "XAI LLC X.AI/ABOUT CAUS",
+      "notes": "Software or subscription",
+      "source_llm": {
+        "run_id": "run-2025-11-arman-001",
+        "model": "unknown"
+      },
+      "created_at": "2025-11-02T20:20:45.422Z",
+      "updated_at": "2025-11-02T20:33:23.016Z",
+      "flags": {
+        "review": false,
+        "duplicate": false
+      }
+    },
+    {
+      "id": "txn-2025-10-17-replit-inc",
+      "card_id": "card-0812",
+      "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+      "owner_id": "owner-arman",
+      "llm_category_id": "cat-other",
+      "category_id": "cat-other",
+      "amount": -25,
+      "currency": "USD",
+      "transaction_date": "2025-10-17",
+      "merchant": "REPLIT, INC. REPLIT.COM CAUS",
+      "notes": "Software subscription",
+      "source_llm": {
+        "run_id": "run-2025-11-arman-001",
+        "model": "unknown"
+      },
+      "created_at": "2025-11-02T20:20:45.422Z",
+      "updated_at": "2025-11-02T20:20:45.422Z",
+      "flags": {
+        "review": false,
+        "duplicate": false
+      }
+    },
+    {
+      "id": "txn-2025-10-21-claude-ai-subscription",
+      "card_id": "card-0812",
+      "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+      "owner_id": "owner-company",
+      "category_id": "cat-other",
+      "llm_category_id": "cat-other",
+      "amount": -200,
+      "currency": "USD",
+      "transaction_date": "2025-10-21",
+      "merchant": "CLAUDE.AI SUBSCRIPTION ANTHROPIC.COMCAUS",
+      "notes": "Software subscription",
+      "source_llm": {
+        "run_id": "run-2025-11-arman-001",
+        "model": "unknown"
+      },
+      "created_at": "2025-11-02T20:20:45.422Z",
+      "updated_at": "2025-11-02T20:33:33.237Z",
+      "flags": {
+        "review": false,
+        "duplicate": false
+      }
+    }
+  ]
+}

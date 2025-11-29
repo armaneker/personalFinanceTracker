@@ -1,0 +1,67 @@
+[
+  {
+    "run_id": "run-2025-11-arman-001",
+    "statement_file": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+    "card_id": "card-0812",
+    "month": "2025-09",
+    "imported_at": "2025-11-02T20:44:30.965Z",
+    "status": "completed",
+    "summary": {
+      "transactions": 78,
+      "total_spend": 158737.41,
+      "currency": "TRY"
+    }
+  },
+  {
+    "run_id": "run-2025-11-arman-001",
+    "statement_file": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+    "card_id": "card-0812",
+    "month": "2025-10",
+    "imported_at": "2025-11-02T20:20:45.433Z",
+    "status": "completed",
+    "summary": {
+      "transactions": 11,
+      "total_spend": 1475.95,
+      "currency": "USD"
+    }
+  },
+  {
+    "run_id": "run-2025-11-arman-0812",
+    "statement_file": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+    "card_id": "card-0812",
+    "month": "2025-11",
+    "imported_at": "2025-11-02T20:12:30.388Z",
+    "status": "completed",
+    "summary": {
+      "transactions": 11,
+      "total_spend": 1475.95,
+      "currency": "USD"
+    }
+  },
+  {
+    "run_id": "run-2025-11-arman-0812",
+    "statement_file": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479 (1).pdf",
+    "card_id": "card-0812",
+    "month": "2025-11",
+    "imported_at": "2025-11-02T20:10:02.850Z",
+    "status": "completed",
+    "summary": {
+      "transactions": 11,
+      "total_spend": 1475.95,
+      "currency": "USD"
+    }
+  },
+  {
+    "run_id": "run-2024-10-12-1",
+    "statement_file": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx0812.pdf",
+    "card_id": "card-0812",
+    "month": "2024-10",
+    "imported_at": "2024-10-13T18:00:00Z",
+    "status": "completed",
+    "summary": {
+      "transactions": 32,
+      "total_spend": -15890.45,
+      "currency": "TRY"
+    }
+  }
+]

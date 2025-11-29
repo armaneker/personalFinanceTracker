@@ -1,0 +1,37 @@
+[
+  {
+    "id": "cat-groceries",
+    "name": "Groceries",
+    "color": "#22c55e"
+  },
+  {
+    "id": "cat-transport",
+    "name": "Transport",
+    "color": "#3b82f6"
+  },
+  {
+    "id": "cat-entertainment",
+    "name": "Entertainment",
+    "color": "#a855f7"
+  },
+  {
+    "id": "cat-bills",
+    "name": "Bills",
+    "color": "#ef4444"
+  },
+  {
+    "id": "cat-travel",
+    "name": "Travel",
+    "color": "#f97316"
+  },
+  {
+    "id": "cat-other",
+    "name": "Other",
+    "color": "#94a3b8"
+  },
+  {
+    "id": "cat-family",
+    "name": "Family",
+    "color": "#3b82f6"
+  }
+]

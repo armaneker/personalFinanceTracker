@@ -1,0 +1,16 @@
+[
+  {
+    "id": "card-0812",
+    "name": "Isbank Main",
+    "issuer": "Isbank",
+    "last4": "0812",
+    "currency": "TRY"
+  },
+  {
+    "id": "card-8479",
+    "name": "Isbank Miles&Smiles",
+    "issuer": "Isbank",
+    "last4": "8479",
+    "currency": "TRY"
+  }
+]

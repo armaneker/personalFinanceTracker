@@ -1,0 +1,3428 @@
+{
+  "version": 1,
+  "saved_at": "2025-11-03T06:42:03.125Z",
+  "extraction": {
+    "run_id": "2025-11-arman-ek-creditcard-v1",
+    "model": "personal-finance-extractor-v1",
+    "summary": {
+      "transactions": 77,
+      "total_spend": 158634.48,
+      "currency": "TRY"
+    },
+    "transactions": [
+      {
+        "id": "2025-09-28-google-youtube-premium",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-09-28",
+        "post_date": null,
+        "merchant": "GOOGLE YOUTUBEPREMİUM",
+        "description": "LONDON GB",
+        "amount": -159.99,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-09-29-figo-ticari-bilgi",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-09-29",
+        "post_date": null,
+        "merchant": "FİGO TİCARİ BİLGİ",
+        "description": "İSTANBUL TR",
+        "amount": -239.99,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-09-30-kings-lounge",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-09-30",
+        "post_date": null,
+        "merchant": "KINGS LOUNGE",
+        "description": "IZMIR TU",
+        "amount": -140,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-01-iyzico-tesla",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-01",
+        "post_date": null,
+        "merchant": "IYZICO/TESLA.COM",
+        "description": "ISTANBUL TR",
+        "amount": -350,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-10-02-apple-bill",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-02",
+        "post_date": null,
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "amount": -189.99,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-03-hur-servis",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-03",
+        "post_date": null,
+        "merchant": "HÜR SERVİS 6 F 0419 F5",
+        "description": "İSTANBUL TR",
+        "amount": -587.52,
+        "currency": "TRY",
+        "category_id": "cat-transport",
+        "llm_category_id": "cat-transport",
+        "notes": null
+      },
+      {
+        "id": "2025-10-03-tt-net",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-03",
+        "post_date": null,
+        "merchant": "TT NET ANONIM STI",
+        "description": "İSTANBUL TR",
+        "amount": -1453.49,
+        "currency": "TRY",
+        "category_id": "cat-bills",
+        "llm_category_id": "cat-bills",
+        "notes": null
+      },
+      {
+        "id": "2025-10-05-playstation-network",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-05",
+        "post_date": null,
+        "merchant": "PLAYSTATİON NETWORK SONY PSN",
+        "description": "GB",
+        "amount": -5398,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-08-8505-e8-01",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-08",
+        "post_date": null,
+        "merchant": "8505 / E8-01",
+        "description": "ISTANBUL TR",
+        "amount": -953.5,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-10-08-tav-ege-terminal",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-08",
+        "post_date": null,
+        "merchant": "TAV EGE TERMINAL YAT",
+        "description": "İZMİR TR",
+        "amount": -2160,
+        "currency": "TRY",
+        "category_id": "cat-travel",
+        "llm_category_id": "cat-travel",
+        "notes": null
+      },
+      {
+        "id": "2025-10-09-moka-united-biletinial",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-09",
+        "post_date": null,
+        "merchant": "MOKA UNITED/BILETINIAL",
+        "description": "ISTANBUL TR",
+        "amount": -421.98,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-10-09-apple-bill",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-09",
+        "post_date": null,
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "amount": -399.99,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-09-yurtici-kargo",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-09",
+        "post_date": null,
+        "merchant": "YURTICI KARGO GUZELBAHC",
+        "description": "IZMIR TR",
+        "amount": -425.22,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-10-09-ers-res-tu",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-09",
+        "post_date": null,
+        "merchant": "ERS RES TU SAN VE Tİ",
+        "description": "İZMİR TR",
+        "amount": -245,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-10-09-akkardesler-lojistik",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-09",
+        "post_date": null,
+        "merchant": "AKKARDESLER LOJISTIK",
+        "description": "KAIZMIR TU",
+        "amount": -50,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-10-10-hesaptan-aktarim",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-10",
+        "post_date": null,
+        "merchant": "HESAPTAN AKTARIM",
+        "description": "İNTERAKTİF",
+        "amount": -12479.68,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": "Charge"
+      },
+      {
+        "id": "2025-10-10-kasap-arif-et-tavuk",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-10",
+        "post_date": null,
+        "merchant": "KASAP ARİF ET VE TAVUK",
+        "description": "İZMİR TR",
+        "amount": -1100,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-10-2451-urla-zeytinalani",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-10",
+        "post_date": null,
+        "merchant": "2451 URLA ZEYTINALANI",
+        "description": "IZMIR TR",
+        "amount": -49,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-11-apple-bill",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-11",
+        "post_date": null,
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "amount": -249.99,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-11-ayyildiz-dijital",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-11",
+        "post_date": null,
+        "merchant": "AYYILDIZ DİJİTAL",
+        "description": "İSTANBUL TR",
+        "amount": -150,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-10-11-kavacik-yasam-merkezi",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-11",
+        "post_date": null,
+        "merchant": "KAVACIK YASAM MERKEZI OI",
+        "description": "STANBUL TU",
+        "amount": -100,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-11-bayramoglu-doner",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-11",
+        "post_date": null,
+        "merchant": "BAYRAMOĞLU DÖNER",
+        "description": "İSTANBUL TR",
+        "amount": -2160,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-11-paycell-trugo",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-11",
+        "post_date": null,
+        "merchant": "PAYCELL/T R U G O",
+        "description": "KOCAELİ TR",
+        "amount": -824,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-10-11-iyzico-tesla-2",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-11",
+        "post_date": null,
+        "merchant": "IYZICO/TESLA.COM",
+        "description": "ISTANBUL TR",
+        "amount": -461.58,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-10-12-beyaz-bahce-restaurant",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-12",
+        "post_date": null,
+        "merchant": "BEYAZ BAHÇE RESTAURANT",
+        "description": "İSTANBUL TR",
+        "amount": -3500,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-12-9944-i537-a101-koyici",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-12",
+        "post_date": null,
+        "merchant": "9944-I537-A101-KOYICI",
+        "description": "ISTANBUL TR",
+        "amount": -524.29,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-10-12-iskender-iskenderoglu",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-12",
+        "post_date": null,
+        "merchant": "İSKENDER İSKENDEROĞLU",
+        "description": "ABURSA TR",
+        "amount": -2040,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-12-kebapci-iskender",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-12",
+        "post_date": null,
+        "merchant": "KEBAPÇI İSKENDER",
+        "description": "BURSA TR",
+        "amount": -465,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-12-paycell-trugo-2",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-12",
+        "post_date": null,
+        "merchant": "PAYCELL/T R U G O",
+        "description": "KOCAELİ TR",
+        "amount": -716.88,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-10-12-shell-akhisar-oht-bati",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-12",
+        "post_date": null,
+        "merchant": "SHELL AKHISAR OHT BATI",
+        "description": "MANISA TR",
+        "amount": -85,
+        "currency": "TRY",
+        "category_id": "cat-transport",
+        "llm_category_id": "cat-transport",
+        "notes": null
+      },
+      {
+        "id": "2025-10-12-iyzico-tesla-3",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-12",
+        "post_date": null,
+        "merchant": "IYZICO/TESLA.COM",
+        "description": "ISTANBUL TR",
+        "amount": -331.78,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": null
+      },
+      {
+        "id": "2025-10-12-trendyol",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-12",
+        "post_date": null,
+        "merchant": "WWW.TRENDYOL.COM",
+        "description": "ISTANBUL TR",
+        "amount": -489.9,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-12-iyzico-amazon-turkey",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-12",
+        "post_date": null,
+        "merchant": "IYZICO/AMAZON TURKEY PE",
+        "description": "ISTANBUL TR",
+        "amount": -1519,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-13-netflix",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-13",
+        "post_date": null,
+        "merchant": "NETFLIX.COM",
+        "description": "AMSTERDAM NL",
+        "amount": -379.99,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-13-trendyol-2",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-13",
+        "post_date": null,
+        "merchant": "WWW.TRENDYOL.COM",
+        "description": "ISTANBUL TR",
+        "amount": -440.91,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-14-trendyol-3",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-14",
+        "post_date": null,
+        "merchant": "WWW.TRENDYOL.COM",
+        "description": "ISTANBUL TR",
+        "amount": -478,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-14-trendyol-4",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-14",
+        "post_date": null,
+        "merchant": "WWW.TRENDYOL.COM",
+        "description": "ISTANBUL TR",
+        "amount": -1100,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-15-batis-restoran",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-15",
+        "post_date": null,
+        "merchant": "BATIS RESTORAN",
+        "description": "İZMİR TR",
+        "amount": -1890,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-15-apple-bill-2",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-15",
+        "post_date": null,
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "amount": -119.39,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-16-apple-bill-3",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-16",
+        "post_date": null,
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "amount": -229.99,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-17-ioki-house-of-sushi",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-17",
+        "post_date": null,
+        "merchant": "IOKI HOUSE OF SUSHI",
+        "description": "İZMİR TR",
+        "amount": -7876,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-17-apple-bill-4",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-17",
+        "post_date": null,
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "amount": -99.99,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-18-kalabak-mah-urlamigros",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-18",
+        "post_date": null,
+        "merchant": "KALABAK MAH URLA MIGROS",
+        "description": "IZMIR TR",
+        "amount": -1822.96,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-18-cesi-gida-sanayi",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-18",
+        "post_date": null,
+        "merchant": "CESI GIDA SANAYI",
+        "description": "IZMIR TU",
+        "amount": -640,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-18-trendyol-5",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-18",
+        "post_date": null,
+        "merchant": "TRENDYOL.COM",
+        "description": "ISTANBUL TR",
+        "amount": -75,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-19-apple-bill-5",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-19",
+        "post_date": null,
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "amount": -239.99,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-19-mavivet-veteriner-kl",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-19",
+        "post_date": null,
+        "merchant": "MAVİVET VETERİNER KL",
+        "description": "İZMİR TR",
+        "amount": -4000,
+        "currency": "TRY",
+        "category_id": "cat-family",
+        "llm_category_id": "cat-family",
+        "notes": null
+      },
+      {
+        "id": "2025-10-19-pablo-artisan-coffee",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-19",
+        "post_date": null,
+        "merchant": "PABLO ARTISAN COFFEE",
+        "description": "IZMIR TR",
+        "amount": -100,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-19-yagmur-balik-ekmek",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-19",
+        "post_date": null,
+        "merchant": "YAĞMUR BALIK EKMEK",
+        "description": "İZMİR TR",
+        "amount": -1760,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-19-bolulu-hasan-usta-gu",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-19",
+        "post_date": null,
+        "merchant": "BOLULU HASAN USTA GÜ",
+        "description": "İZMİR TR",
+        "amount": -620,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-19-ada-eczanesi",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-19",
+        "post_date": null,
+        "merchant": "ADA ECZANESI",
+        "description": "IZMIR TU",
+        "amount": -574.27,
+        "currency": "TRY",
+        "category_id": "cat-family",
+        "llm_category_id": "cat-family",
+        "notes": null
+      },
+      {
+        "id": "2025-10-20-apple-bill-6",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-20",
+        "post_date": null,
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "amount": -169.99,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-20-takside-pos",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-20",
+        "post_date": null,
+        "merchant": "TAKSİDE POS",
+        "description": "İSTANBUL TR",
+        "amount": -1951.2,
+        "currency": "TRY",
+        "category_id": "cat-transport",
+        "llm_category_id": "cat-transport",
+        "notes": null
+      },
+      {
+        "id": "2025-10-20-burger-nusret-kanyon",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-20",
+        "post_date": null,
+        "merchant": "BURGER NUSRET KANYON",
+        "description": "ISTANBUL TU",
+        "amount": -1500,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-20-aa-egitim-kurumlari-1",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-20",
+        "post_date": null,
+        "merchant": "AA EGITIM KURUMLARI A.S",
+        "description": "ISTANBUL TR 4/6 taksidi (59.253,30)",
+        "amount": -9875.55,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": "Installment payment"
+      },
+      {
+        "id": "2025-10-20-aa-egitim-kurumlari-2",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-20",
+        "post_date": null,
+        "merchant": "AA EGITIM KURUMLARI A.S",
+        "description": "ISTANBUL TR 4/6 taksidi (70.780,50)",
+        "amount": -11796.75,
+        "currency": "TRY",
+        "category_id": "cat-other",
+        "llm_category_id": "cat-other",
+        "notes": "Installment payment"
+      },
+      {
+        "id": "2025-10-21-apple-bill-7",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-21",
+        "post_date": null,
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "amount": -399.99,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-21-turkuvaz-muzik-kitap",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-21",
+        "post_date": null,
+        "merchant": "TURKUVAZ MUZIK KITAP MA",
+        "description": "ISTANBUL TR",
+        "amount": -1219.5,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-21-gunaydin-et-kanyon",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-21",
+        "post_date": null,
+        "merchant": "GUNAYDIN ET KANYON",
+        "description": "ISTANBUL TU",
+        "amount": -1284,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-22-apple-bill-8",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-22",
+        "post_date": null,
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "amount": -499.99,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-22-avantaj-seyahat",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-22",
+        "post_date": null,
+        "merchant": "AVANTAJ SEYAHAT",
+        "description": "İSTANBUL TR",
+        "amount": -43535.85,
+        "currency": "TRY",
+        "category_id": "cat-travel",
+        "llm_category_id": "cat-travel",
+        "notes": null
+      },
+      {
+        "id": "2025-10-22-le-pain",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-22",
+        "post_date": null,
+        "merchant": "LE PAIN",
+        "description": "ISTANBUL TU",
+        "amount": -350,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-22-wagamama-kanyon",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-22",
+        "post_date": null,
+        "merchant": "WAGAMAMA KANYON",
+        "description": "ISTANBUL TR",
+        "amount": -2222,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-22-cs-kanyon",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-22",
+        "post_date": null,
+        "merchant": "CS-KANYON",
+        "description": "ISTANBUL TR",
+        "amount": -475,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-22-tav-ege-terminal-2",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-22",
+        "post_date": null,
+        "merchant": "TAV EGE TERMINAL YAT",
+        "description": "İZMİR TR",
+        "amount": -1080,
+        "currency": "TRY",
+        "category_id": "cat-travel",
+        "llm_category_id": "cat-travel",
+        "notes": null
+      },
+      {
+        "id": "2025-10-22-iyzico-amazon-turkey-2",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-22",
+        "post_date": null,
+        "merchant": "IYZICO/AMAZON TURKEY PE",
+        "description": "ISTANBUL TR",
+        "amount": -1618.34,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-22-iyzico-amazon-turkey-3",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-22",
+        "post_date": null,
+        "merchant": "IYZICO/AMAZON TURKEY PE",
+        "description": "ISTANBUL TR",
+        "amount": -1322,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-23-hepsipay-hepsiburada",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-23",
+        "post_date": null,
+        "merchant": "HEPSIPAY/HEPSIBURADA",
+        "description": "ISTANBUL TR",
+        "amount": -704.17,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-23-trendyol-6",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-23",
+        "post_date": null,
+        "merchant": "WWW.TRENDYOL.COM",
+        "description": "ISTANBUL TR",
+        "amount": -2649,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-24-boorek-pistii",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-24",
+        "post_date": null,
+        "merchant": "BÖÖREK PİŞTİİ",
+        "description": "İZMİR TR",
+        "amount": -1200,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-26-urla-sahne",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-26",
+        "post_date": null,
+        "merchant": "URLA SAHNE",
+        "description": "İZMİR TR",
+        "amount": -3685,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-26-pablo-artisan-coffee-2",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-26",
+        "post_date": null,
+        "merchant": "PABLO ARTISAN COFFEE",
+        "description": "IZMIR TR",
+        "amount": -125,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-26-guzelbahce-sahil-macroci",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-26",
+        "post_date": null,
+        "merchant": "GUZELBAHCE SAHIL MACROC",
+        "description": "IZMIR TR",
+        "amount": -5733.85,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-26-hepsipay-hepsiburada-2",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-26",
+        "post_date": null,
+        "merchant": "HEPSIPAY/HEPSIBURADA",
+        "description": "ISTANBUL TR",
+        "amount": -617.87,
+        "currency": "TRY",
+        "category_id": "cat-groceries",
+        "llm_category_id": "cat-groceries",
+        "notes": null
+      },
+      {
+        "id": "2025-10-27-sbx-izm-guzelbahce-yelk",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-27",
+        "post_date": null,
+        "merchant": "SBX IZM GUZELBAHCE YELK",
+        "description": "IZMIR TR",
+        "amount": -550,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      },
+      {
+        "id": "2025-10-27-zeytinalani-eczane",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-27",
+        "post_date": null,
+        "merchant": "ZEYTİNALANI ECZANESİ",
+        "description": "İZMİR TR",
+        "amount": -347.57,
+        "currency": "TRY",
+        "category_id": "cat-family",
+        "llm_category_id": "cat-family",
+        "notes": null
+      },
+      {
+        "id": "2025-10-27-fix-izmir-yelki",
+        "card_id": "card-0812",
+        "owner_id": "owner-arman",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "transaction_date": "2025-10-27",
+        "post_date": null,
+        "merchant": "FIX IZMIR YELKI",
+        "description": "IZMIR TR",
+        "amount": -854.6,
+        "currency": "TRY",
+        "category_id": "cat-entertainment",
+        "llm_category_id": "cat-entertainment",
+        "notes": null
+      }
+    ],
+    "warnings": [
+      "Some transactions have ambiguous merchant names or descriptions, e.g. '8505 / E8-01' and '9944-I537-A101-KOYICI', categorized as 'Other'.",
+      "Refunds and discounts labeled as 'PRIVIA BLACK' with 'IND' or 'PET INDIRIM' assumed as refunds.",
+      "Installment payments for 'AA EGITIM KURUMLARI A.S' noted in description, categorized as Other.",
+      "Filtered 11 non-spending transactions (amount >= 0)."
+    ],
+    "statement_notes": "Statement covers transactions from 2025-09-28 to 2025-10-28. Total debt is 125,627.07 TRY with minimum payment 50,250.83 TRY due by 2025-11-07.",
+    "new_categories": []
+  },
+  "options": {
+    "statementFile": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+    "month": "2025-11",
+    "cardId": "card-0812",
+    "ownerId": "owner-arman",
+    "autoCommit": false,
+    "fingerprint": "bd81949458c8920dc6133ca7a4ad3d188c52f6a7810e2d5ca2fd0a93439beab9"
+  },
+  "prepared_records": [
+    {
+      "month": "2025-09",
+      "record": {
+        "id": "2025-09-28-google-youtube-premium",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -159.99,
+        "currency": "TRY",
+        "original_amount": -159.99,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-09-28",
+        "merchant": "GOOGLE YOUTUBEPREMİUM",
+        "description": "LONDON GB",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.123Z",
+        "updated_at": "2025-11-03T06:42:03.123Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-09",
+      "record": {
+        "id": "2025-09-29-figo-ticari-bilgi",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -239.99,
+        "currency": "TRY",
+        "original_amount": -239.99,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-09-29",
+        "merchant": "FİGO TİCARİ BİLGİ",
+        "description": "İSTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-09",
+      "record": {
+        "id": "2025-09-30-kings-lounge",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -140,
+        "currency": "TRY",
+        "original_amount": -140,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-09-30",
+        "merchant": "KINGS LOUNGE",
+        "description": "IZMIR TU",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-01-iyzico-tesla",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -350,
+        "currency": "TRY",
+        "original_amount": -350,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-01",
+        "merchant": "IYZICO/TESLA.COM",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-02-apple-bill",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -189.99,
+        "currency": "TRY",
+        "original_amount": -189.99,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-02",
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-03-hur-servis",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-transport",
+        "category_id": "cat-transport",
+        "amount": -587.52,
+        "currency": "TRY",
+        "original_amount": -587.52,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-03",
+        "merchant": "HÜR SERVİS 6 F 0419 F5",
+        "description": "İSTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-03-tt-net",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-bills",
+        "category_id": "cat-bills",
+        "amount": -1453.49,
+        "currency": "TRY",
+        "original_amount": -1453.49,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-03",
+        "merchant": "TT NET ANONIM STI",
+        "description": "İSTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-05-playstation-network",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -5398,
+        "currency": "TRY",
+        "original_amount": -5398,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-05",
+        "merchant": "PLAYSTATİON NETWORK SONY PSN",
+        "description": "GB",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-08-8505-e8-01",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -953.5,
+        "currency": "TRY",
+        "original_amount": -953.5,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-08",
+        "merchant": "8505 / E8-01",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-08-tav-ege-terminal",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-travel",
+        "category_id": "cat-travel",
+        "amount": -2160,
+        "currency": "TRY",
+        "original_amount": -2160,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-08",
+        "merchant": "TAV EGE TERMINAL YAT",
+        "description": "İZMİR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-09-moka-united-biletinial",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -421.98,
+        "currency": "TRY",
+        "original_amount": -421.98,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-09",
+        "merchant": "MOKA UNITED/BILETINIAL",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-09-apple-bill",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -399.99,
+        "currency": "TRY",
+        "original_amount": -399.99,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-09",
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-09-yurtici-kargo",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -425.22,
+        "currency": "TRY",
+        "original_amount": -425.22,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-09",
+        "merchant": "YURTICI KARGO GUZELBAHC",
+        "description": "IZMIR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-09-ers-res-tu",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -245,
+        "currency": "TRY",
+        "original_amount": -245,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-09",
+        "merchant": "ERS RES TU SAN VE Tİ",
+        "description": "İZMİR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-09-akkardesler-lojistik",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -50,
+        "currency": "TRY",
+        "original_amount": -50,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-09",
+        "merchant": "AKKARDESLER LOJISTIK",
+        "description": "KAIZMIR TU",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-10-hesaptan-aktarim",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -12479.68,
+        "currency": "TRY",
+        "original_amount": -12479.68,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-10",
+        "merchant": "HESAPTAN AKTARIM",
+        "description": "İNTERAKTİF",
+        "notes": "Charge",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-10-kasap-arif-et-tavuk",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -1100,
+        "currency": "TRY",
+        "original_amount": -1100,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-10",
+        "merchant": "KASAP ARİF ET VE TAVUK",
+        "description": "İZMİR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-10-2451-urla-zeytinalani",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -49,
+        "currency": "TRY",
+        "original_amount": -49,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-10",
+        "merchant": "2451 URLA ZEYTINALANI",
+        "description": "IZMIR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-11-apple-bill",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -249.99,
+        "currency": "TRY",
+        "original_amount": -249.99,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-11",
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-11-ayyildiz-dijital",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -150,
+        "currency": "TRY",
+        "original_amount": -150,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-11",
+        "merchant": "AYYILDIZ DİJİTAL",
+        "description": "İSTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-11-kavacik-yasam-merkezi",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -100,
+        "currency": "TRY",
+        "original_amount": -100,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-11",
+        "merchant": "KAVACIK YASAM MERKEZI OI",
+        "description": "STANBUL TU",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-11-bayramoglu-doner",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -2160,
+        "currency": "TRY",
+        "original_amount": -2160,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-11",
+        "merchant": "BAYRAMOĞLU DÖNER",
+        "description": "İSTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-11-paycell-trugo",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -824,
+        "currency": "TRY",
+        "original_amount": -824,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-11",
+        "merchant": "PAYCELL/T R U G O",
+        "description": "KOCAELİ TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-11-iyzico-tesla-2",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -461.58,
+        "currency": "TRY",
+        "original_amount": -461.58,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-11",
+        "merchant": "IYZICO/TESLA.COM",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-12-beyaz-bahce-restaurant",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -3500,
+        "currency": "TRY",
+        "original_amount": -3500,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-12",
+        "merchant": "BEYAZ BAHÇE RESTAURANT",
+        "description": "İSTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-12-9944-i537-a101-koyici",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -524.29,
+        "currency": "TRY",
+        "original_amount": -524.29,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-12",
+        "merchant": "9944-I537-A101-KOYICI",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-12-iskender-iskenderoglu",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -2040,
+        "currency": "TRY",
+        "original_amount": -2040,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-12",
+        "merchant": "İSKENDER İSKENDEROĞLU",
+        "description": "ABURSA TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-12-kebapci-iskender",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -465,
+        "currency": "TRY",
+        "original_amount": -465,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-12",
+        "merchant": "KEBAPÇI İSKENDER",
+        "description": "BURSA TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-12-paycell-trugo-2",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -716.88,
+        "currency": "TRY",
+        "original_amount": -716.88,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-12",
+        "merchant": "PAYCELL/T R U G O",
+        "description": "KOCAELİ TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-12-shell-akhisar-oht-bati",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-transport",
+        "category_id": "cat-transport",
+        "amount": -85,
+        "currency": "TRY",
+        "original_amount": -85,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-12",
+        "merchant": "SHELL AKHISAR OHT BATI",
+        "description": "MANISA TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-12-iyzico-tesla-3",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -331.78,
+        "currency": "TRY",
+        "original_amount": -331.78,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-12",
+        "merchant": "IYZICO/TESLA.COM",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-12-trendyol",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -489.9,
+        "currency": "TRY",
+        "original_amount": -489.9,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-12",
+        "merchant": "WWW.TRENDYOL.COM",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-12-iyzico-amazon-turkey",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -1519,
+        "currency": "TRY",
+        "original_amount": -1519,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-12",
+        "merchant": "IYZICO/AMAZON TURKEY PE",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-13-netflix",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -379.99,
+        "currency": "TRY",
+        "original_amount": -379.99,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-13",
+        "merchant": "NETFLIX.COM",
+        "description": "AMSTERDAM NL",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-13-trendyol-2",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -440.91,
+        "currency": "TRY",
+        "original_amount": -440.91,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-13",
+        "merchant": "WWW.TRENDYOL.COM",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-14-trendyol-3",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -478,
+        "currency": "TRY",
+        "original_amount": -478,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-14",
+        "merchant": "WWW.TRENDYOL.COM",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-14-trendyol-4",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -1100,
+        "currency": "TRY",
+        "original_amount": -1100,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-14",
+        "merchant": "WWW.TRENDYOL.COM",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-15-batis-restoran",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -1890,
+        "currency": "TRY",
+        "original_amount": -1890,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-15",
+        "merchant": "BATIS RESTORAN",
+        "description": "İZMİR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-15-apple-bill-2",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -119.39,
+        "currency": "TRY",
+        "original_amount": -119.39,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-15",
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-16-apple-bill-3",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -229.99,
+        "currency": "TRY",
+        "original_amount": -229.99,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-16",
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-17-ioki-house-of-sushi",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -7876,
+        "currency": "TRY",
+        "original_amount": -7876,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-17",
+        "merchant": "IOKI HOUSE OF SUSHI",
+        "description": "İZMİR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-17-apple-bill-4",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -99.99,
+        "currency": "TRY",
+        "original_amount": -99.99,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-17",
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-18-kalabak-mah-urlamigros",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -1822.96,
+        "currency": "TRY",
+        "original_amount": -1822.96,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-18",
+        "merchant": "KALABAK MAH URLA MIGROS",
+        "description": "IZMIR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-18-cesi-gida-sanayi",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -640,
+        "currency": "TRY",
+        "original_amount": -640,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-18",
+        "merchant": "CESI GIDA SANAYI",
+        "description": "IZMIR TU",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-18-trendyol-5",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -75,
+        "currency": "TRY",
+        "original_amount": -75,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-18",
+        "merchant": "TRENDYOL.COM",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-19-apple-bill-5",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -239.99,
+        "currency": "TRY",
+        "original_amount": -239.99,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-19",
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-19-mavivet-veteriner-kl",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-family",
+        "category_id": "cat-family",
+        "amount": -4000,
+        "currency": "TRY",
+        "original_amount": -4000,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-19",
+        "merchant": "MAVİVET VETERİNER KL",
+        "description": "İZMİR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-19-pablo-artisan-coffee",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -100,
+        "currency": "TRY",
+        "original_amount": -100,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-19",
+        "merchant": "PABLO ARTISAN COFFEE",
+        "description": "IZMIR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-19-yagmur-balik-ekmek",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -1760,
+        "currency": "TRY",
+        "original_amount": -1760,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-19",
+        "merchant": "YAĞMUR BALIK EKMEK",
+        "description": "İZMİR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-19-bolulu-hasan-usta-gu",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -620,
+        "currency": "TRY",
+        "original_amount": -620,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-19",
+        "merchant": "BOLULU HASAN USTA GÜ",
+        "description": "İZMİR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-19-ada-eczanesi",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-family",
+        "category_id": "cat-family",
+        "amount": -574.27,
+        "currency": "TRY",
+        "original_amount": -574.27,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-19",
+        "merchant": "ADA ECZANESI",
+        "description": "IZMIR TU",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-20-apple-bill-6",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -169.99,
+        "currency": "TRY",
+        "original_amount": -169.99,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-20",
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-20-takside-pos",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-transport",
+        "category_id": "cat-transport",
+        "amount": -1951.2,
+        "currency": "TRY",
+        "original_amount": -1951.2,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-20",
+        "merchant": "TAKSİDE POS",
+        "description": "İSTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-20-burger-nusret-kanyon",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -1500,
+        "currency": "TRY",
+        "original_amount": -1500,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-20",
+        "merchant": "BURGER NUSRET KANYON",
+        "description": "ISTANBUL TU",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-20-aa-egitim-kurumlari-1",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -9875.55,
+        "currency": "TRY",
+        "original_amount": -9875.55,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-20",
+        "merchant": "AA EGITIM KURUMLARI A.S",
+        "description": "ISTANBUL TR 4/6 taksidi (59.253,30)",
+        "notes": "Installment payment",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-20-aa-egitim-kurumlari-2",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-other",
+        "category_id": "cat-other",
+        "amount": -11796.75,
+        "currency": "TRY",
+        "original_amount": -11796.75,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-20",
+        "merchant": "AA EGITIM KURUMLARI A.S",
+        "description": "ISTANBUL TR 4/6 taksidi (70.780,50)",
+        "notes": "Installment payment",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-21-apple-bill-7",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -399.99,
+        "currency": "TRY",
+        "original_amount": -399.99,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-21",
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-21-turkuvaz-muzik-kitap",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -1219.5,
+        "currency": "TRY",
+        "original_amount": -1219.5,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-21",
+        "merchant": "TURKUVAZ MUZIK KITAP MA",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-21-gunaydin-et-kanyon",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -1284,
+        "currency": "TRY",
+        "original_amount": -1284,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-21",
+        "merchant": "GUNAYDIN ET KANYON",
+        "description": "ISTANBUL TU",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-22-apple-bill-8",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -499.99,
+        "currency": "TRY",
+        "original_amount": -499.99,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-22",
+        "merchant": "APPLE.COM/BILL",
+        "description": "APPLE.COM/BIL IE",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-22-avantaj-seyahat",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-travel",
+        "category_id": "cat-travel",
+        "amount": -43535.85,
+        "currency": "TRY",
+        "original_amount": -43535.85,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-22",
+        "merchant": "AVANTAJ SEYAHAT",
+        "description": "İSTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-22-le-pain",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -350,
+        "currency": "TRY",
+        "original_amount": -350,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-22",
+        "merchant": "LE PAIN",
+        "description": "ISTANBUL TU",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-22-wagamama-kanyon",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -2222,
+        "currency": "TRY",
+        "original_amount": -2222,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-22",
+        "merchant": "WAGAMAMA KANYON",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-22-cs-kanyon",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -475,
+        "currency": "TRY",
+        "original_amount": -475,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-22",
+        "merchant": "CS-KANYON",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-22-tav-ege-terminal-2",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-travel",
+        "category_id": "cat-travel",
+        "amount": -1080,
+        "currency": "TRY",
+        "original_amount": -1080,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-22",
+        "merchant": "TAV EGE TERMINAL YAT",
+        "description": "İZMİR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-22-iyzico-amazon-turkey-2",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -1618.34,
+        "currency": "TRY",
+        "original_amount": -1618.34,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-22",
+        "merchant": "IYZICO/AMAZON TURKEY PE",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-22-iyzico-amazon-turkey-3",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -1322,
+        "currency": "TRY",
+        "original_amount": -1322,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-22",
+        "merchant": "IYZICO/AMAZON TURKEY PE",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-23-hepsipay-hepsiburada",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -704.17,
+        "currency": "TRY",
+        "original_amount": -704.17,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-23",
+        "merchant": "HEPSIPAY/HEPSIBURADA",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-23-trendyol-6",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -2649,
+        "currency": "TRY",
+        "original_amount": -2649,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-23",
+        "merchant": "WWW.TRENDYOL.COM",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-24-boorek-pistii",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -1200,
+        "currency": "TRY",
+        "original_amount": -1200,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-24",
+        "merchant": "BÖÖREK PİŞTİİ",
+        "description": "İZMİR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-26-urla-sahne",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -3685,
+        "currency": "TRY",
+        "original_amount": -3685,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-26",
+        "merchant": "URLA SAHNE",
+        "description": "İZMİR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-26-pablo-artisan-coffee-2",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -125,
+        "currency": "TRY",
+        "original_amount": -125,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-26",
+        "merchant": "PABLO ARTISAN COFFEE",
+        "description": "IZMIR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-26-guzelbahce-sahil-macroci",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -5733.85,
+        "currency": "TRY",
+        "original_amount": -5733.85,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-26",
+        "merchant": "GUZELBAHCE SAHIL MACROC",
+        "description": "IZMIR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-26-hepsipay-hepsiburada-2",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-groceries",
+        "category_id": "cat-groceries",
+        "amount": -617.87,
+        "currency": "TRY",
+        "original_amount": -617.87,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-26",
+        "merchant": "HEPSIPAY/HEPSIBURADA",
+        "description": "ISTANBUL TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-27-sbx-izm-guzelbahce-yelk",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -550,
+        "currency": "TRY",
+        "original_amount": -550,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-27",
+        "merchant": "SBX IZM GUZELBAHCE YELK",
+        "description": "IZMIR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.124Z",
+        "updated_at": "2025-11-03T06:42:03.124Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-27-zeytinalani-eczane",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-family",
+        "category_id": "cat-family",
+        "amount": -347.57,
+        "currency": "TRY",
+        "original_amount": -347.57,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-27",
+        "merchant": "ZEYTİNALANI ECZANESİ",
+        "description": "İZMİR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.125Z",
+        "updated_at": "2025-11-03T06:42:03.125Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "record": {
+        "id": "2025-10-27-fix-izmir-yelki",
+        "card_id": "card-0812",
+        "statement_ref": "ARMAN EKER - Kredi Kartı Hesap Özeti - 4743xxxxxxxx8479.pdf",
+        "owner_id": "owner-arman",
+        "llm_category_id": "cat-entertainment",
+        "category_id": "cat-entertainment",
+        "amount": -854.6,
+        "currency": "TRY",
+        "original_amount": -854.6,
+        "original_currency": "TRY",
+        "fx_rate": 1,
+        "transaction_date": "2025-10-27",
+        "merchant": "FIX IZMIR YELKI",
+        "description": "IZMIR TR",
+        "source_llm": {
+          "run_id": "2025-11-arman-ek-creditcard-v1",
+          "model": "unknown"
+        },
+        "created_at": "2025-11-03T06:42:03.125Z",
+        "updated_at": "2025-11-03T06:42:03.125Z",
+        "flags": {
+          "review": false,
+          "duplicate": false
+        }
+      }
+    }
+  ],
+  "months": [
+    "2025-09",
+    "2025-10"
+  ]
+}
