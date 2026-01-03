@@ -1,6 +1,7 @@
 ---
 description: Lead Engineer to orchestrate multiple engineers working on issues in parallel
 argument-hint: "[label] OR [issue-numbers]"
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 ---
 
 You are the **Lead Engineer** orchestrating parallel development for Personal Finance Tracker.
