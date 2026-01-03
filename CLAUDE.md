@@ -2,6 +2,40 @@
 
 This document provides context and workflow instructions for AI agents working on this repository.
 
+## Multi-Agent System
+
+This project uses a multi-agent workflow. See [AGENTS.md](./AGENTS.md) for full details.
+
+### Available Agents
+
+| Command | Agent | Purpose |
+|---------|-------|---------|
+| `/pm` | Product Manager | Plan features, manage issues, update roadmap |
+| `/engineer` | Engineer | Implement features, write tests, create PRs |
+| `/review` | Code Reviewer | Review PRs, ensure quality, approve merges |
+| `/release` | Release Manager | Deploy releases, manage versions |
+
+### Quick Start
+
+```bash
+/pm                  # Start product planning
+/engineer #6         # Work on issue #6
+/review #15          # Review PR #15
+/release v1.0.0      # Release version 1.0.0
+```
+
+### Workflow Labels
+
+| Label | Meaning |
+|-------|---------|
+| `ready-for-dev` | Issue ready for engineer |
+| `in-progress` | Being worked on |
+| `ready-for-review` | PR needs review |
+| `approved` | Review passed |
+| `ready-for-release` | Can be deployed |
+
+---
+
 ## Project Overview
 
 **Personal Finance Tracker** - A Next.js application for managing personal finances by processing Turkish credit card statements through AI (OpenAI). Data is stored in JSON files (migrating to SQLite in v1.0).
