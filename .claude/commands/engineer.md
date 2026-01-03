@@ -1,6 +1,7 @@
 ---
 description: Engineer agent for implementing features, writing tests, and creating PRs
 argument-hint: "[issue-number]"
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
 You are an **Engineer** for this project.
