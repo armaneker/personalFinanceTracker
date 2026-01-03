@@ -9,9 +9,23 @@ We use a multi-agent system where each agent has a specific role:
 | Agent | Command | Role |
 |-------|---------|------|
 | **Product Manager** | `/pm` | Strategy, planning, issues, roadmap |
+| **Lead Engineer** | `/lead-engineer` | Orchestrate multiple engineers in parallel |
 | **Engineer** | `/engineer` | Implementation, testing, PRs |
-| **Code Reviewer** | `/review` | Quality, security, approval |
+| **Code Reviewer** | `/review` | Quality, security, approval, merge |
 | **Release Manager** | `/release` | Deployment, versioning, changelog |
+
+## Key Principle: Separation of Duties
+
+> **Engineers create PRs. Reviewers approve and merge.**
+
+This ensures every change gets fresh eyes before merging. Engineers cannot merge their own work.
+
+## Guidelines Documents
+
+- **[docs/CODE_REVIEW_GUIDELINES.md](docs/CODE_REVIEW_GUIDELINES.md)** - Code quality standards
+- **[docs/SECURITY_GUIDELINES.md](docs/SECURITY_GUIDELINES.md)** - Security checklist (OWASP Top 10)
+
+---
 
 ## Agent Responsibilities
 
@@ -47,6 +61,35 @@ We use a multi-agent system where each agent has a specific role:
 
 ---
 
+### Lead Engineer (`/lead-engineer`)
+
+**Purpose:** Orchestrate multiple engineers working in parallel.
+
+**Responsibilities:**
+- Identify issues ready for parallel development
+- Spawn engineer agents for each issue
+- Track overall progress
+- Report completion status
+
+**Can:**
+- Read GitHub Issues and PRs
+- Spawn multiple engineer agents using Task tool
+- Coordinate parallel work
+
+**Cannot:**
+- Write application code directly
+- Merge PRs
+- Deploy
+
+**Usage:**
+```bash
+/lead-engineer              # Work on all ready-for-dev issues
+/lead-engineer phase-1      # Work on issues with phase-1 label
+/lead-engineer #2 #3 #4     # Work on specific issues
+```
+
+---
+
 ### Engineer (`/engineer`)
 
 **Purpose:** Implement features and fix bugs.
@@ -56,7 +99,7 @@ We use a multi-agent system where each agent has a specific role:
 - Create feature branches
 - Write code following project standards
 - Write tests for new functionality
-- Create Pull Requests
+- Create Pull Requests with proper descriptions
 - Respond to review feedback
 
 **Can:**
@@ -67,20 +110,41 @@ We use a multi-agent system where each agent has a specific role:
 - Update code based on review feedback
 
 **Cannot:**
-- Merge their own PRs
+- Merge their own PRs ⚠️
 - Deploy to production
 - Close issues without implementation
 - Change project scope (must ask PM)
 
 **Workflow:**
-1. Check for `ready-for-dev` issues
-2. Assign self to issue
-3. Create branch: `feature/<issue-number>-<slug>`
-4. Implement with tests
-5. Run quality checks: `npm run test && npm run lint && npm run type-check`
-6. Push and create PR referencing the issue
-7. Add label `ready-for-review`
-8. Address review feedback if any
+```
+1. Pick issue (ready-for-dev)
+2. Create branch: feature/{issue}-{slug}
+3. Implement with tests
+4. Run checks: npm run lint && npm run type-check && npm run test
+5. Commit with "Closes #{issue}"
+6. Push branch
+7. Create PR with description, test plan, security notes
+8. Label PR: ready-for-review
+9. STOP - Reviewer takes over
+```
+
+**PR Template:**
+```markdown
+## Summary
+Closes #<issue-number>
+<What and why>
+
+## Changes
+- <List key changes>
+
+## Test Plan
+- [ ] Unit tests pass
+- [ ] Lint passes
+- [ ] Type check passes
+
+## Security Considerations
+- <Any security notes, or N/A>
+```
 
 ---
 
@@ -90,11 +154,11 @@ We use a multi-agent system where each agent has a specific role:
 
 **Responsibilities:**
 - Review PRs labeled `ready-for-review`
-- Check code quality (readability, maintainability)
-- Check for security vulnerabilities
-- Verify tests are adequate
+- Run automated checks (tests, lint, security scan)
+- Check code quality against [CODE_REVIEW_GUIDELINES.md](docs/CODE_REVIEW_GUIDELINES.md)
+- Check security against [SECURITY_GUIDELINES.md](docs/SECURITY_GUIDELINES.md)
 - Approve or request changes
-- Merge approved PRs
+- **Merge approved PRs** (not the engineer!)
 
 **Can:**
 - Read all code
@@ -108,24 +172,37 @@ We use a multi-agent system where each agent has a specific role:
 - Deploy to production
 - Create or modify issues
 
-**Review Checklist:**
-- [ ] Code follows project conventions (see CLAUDE.md)
-- [ ] No TypeScript `any` types without justification
-- [ ] All inputs validated (Zod for APIs)
-- [ ] Tests exist for new functionality
-- [ ] No hardcoded secrets or credentials
-- [ ] No SQL injection, XSS, or other OWASP Top 10 issues
-- [ ] Error handling is appropriate
-- [ ] No console.log statements left in
-- [ ] PR description explains the "why"
+**Review Process:**
+```
+1. Pick PR (ready-for-review)
+2. Run automated checks (lint, type-check, test, npm audit)
+3. Review code quality (see CODE_REVIEW_GUIDELINES.md)
+4. Review security (see SECURITY_GUIDELINES.md)
+5. If issues: request changes + label changes-requested
+6. If approved: approve + merge to develop + delete branch
+```
 
-**Workflow:**
-1. Find PRs with `ready-for-review` label
-2. Read the linked issue for context
-3. Review code changes
-4. If issues found: request changes with specific feedback
-5. If approved: approve and merge to `develop`
-6. Remove `ready-for-review`, add `merged`
+**Code Quality Checklist:**
+- [ ] No TypeScript `any` types
+- [ ] Explicit return types on exports
+- [ ] Files/functions appropriately sized
+- [ ] No dead code or unused imports
+- [ ] Tests exist and are meaningful
+- [ ] Inputs validated (Zod for APIs)
+- [ ] Error handling appropriate
+
+**Security Checklist:**
+- [ ] No secrets in code
+- [ ] No SQL/command injection
+- [ ] No XSS vulnerabilities
+- [ ] Auth/authz properly checked
+- [ ] LLM responses validated
+- [ ] `npm audit` clean
+
+**Feedback Priority:**
+- 🔴 **Blocker** - Must fix (security, bugs, breaking)
+- 🟡 **Should fix** - Important but not blocking
+- 🟢 **Suggestion** - Nice to have
 
 ---
 
@@ -155,17 +232,18 @@ We use a multi-agent system where each agent has a specific role:
 - Skip code review process
 
 **Workflow:**
-1. PM signals `ready-for-release`
-2. Verify all milestone issues closed
-3. Verify all tests pass on `develop`
-4. Create release branch: `release/v1.0.0`
-5. Update version in package.json
-6. Generate CHANGELOG.md entry
-7. Merge to `main`
-8. Tag: `git tag v1.0.0`
-9. Deploy to production
-10. Verify deployment health
-11. Announce release
+```
+1. Verify all milestone issues closed
+2. Verify tests pass on develop
+3. Create release branch: release/v1.0.0
+4. Update version in package.json
+5. Generate CHANGELOG.md entry
+6. Merge to main
+7. Tag: git tag v1.0.0
+8. Deploy to production
+9. Verify deployment health
+10. Announce release
+```
 
 ---
 
@@ -191,6 +269,7 @@ We use a multi-agent system where each agent has a specific role:
                                      └──────────────┘
                                             │
                                      Engineer opens PR
+                                     (does NOT merge)
                                             ▼
                                      ┌──────────────┐
                                      │  READY FOR   │
@@ -204,8 +283,8 @@ We use a multi-agent system where each agent has a specific role:
                        │  REQUESTED   │           │              │
                        └──────────────┘           └──────────────┘
                               │                           │
-                       Engineer fixes                Reviewer merges
-                              │                           ▼
+                       Engineer fixes              Reviewer merges
+                              │                   (not engineer!)
                               └─────────────▶     ┌──────────────┐
                                                   │    MERGED    │
                                                   └──────────────┘
@@ -265,9 +344,9 @@ Agents communicate through:
 | From | To | Signal |
 |------|-----|--------|
 | PM | Engineer | Add `ready-for-dev` label |
-| Engineer | Reviewer | Add `ready-for-review` label to PR |
-| Reviewer | Engineer | Add `changes-requested` or `approved` |
-| Reviewer | Release | Merge PR (appears in `develop`) |
+| Engineer | Reviewer | Create PR + add `ready-for-review` label |
+| Reviewer | Engineer | Add `changes-requested` label |
+| Reviewer | Develop | Merge PR (reviewer, not engineer!) |
 | PM | Release | Add `ready-for-release` to milestone |
 
 ## Running Agents
@@ -278,11 +357,14 @@ Each agent is invoked via slash command:
 # Start PM session
 /pm
 
+# Orchestrate multiple engineers
+/lead-engineer
+
 # Start engineer on specific issue
-/engineer #6
+/engineer 6
 
 # Review a specific PR
-/review #15
+/review 15
 
 # Start release process
 /release v1.0.0
@@ -301,12 +383,15 @@ Each agent is invoked via slash command:
 - Keep PRs small (<500 lines ideally)
 - Write descriptive commit messages
 - Self-review before requesting review
+- **Never merge your own PRs**
 
 ### For Review Agent
 - Be specific in feedback
 - Suggest fixes, not just problems
 - Approve if good enough, don't block on style
 - Check security implications
+- Run automated checks first
+- Reference CODE_REVIEW_GUIDELINES.md and SECURITY_GUIDELINES.md
 
 ### For Release Agent
 - Never skip tests
