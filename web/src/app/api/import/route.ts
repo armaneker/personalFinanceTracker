@@ -98,7 +98,7 @@ export async function POST(request: Request) {
     const normalized = {
       ...extraction,
       run_id: extraction.run_id ?? runId,
-      model: extraction.model ?? process.env.OPENAI_IMPORT_MODEL ?? "gpt-4.1-mini",
+      model: extraction.model ?? process.env.OPENAI_IMPORT_MODEL ?? "gpt-4o-mini",
     };
     const validated = validateExtraction(normalized);
 
