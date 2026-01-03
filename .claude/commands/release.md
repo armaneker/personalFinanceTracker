@@ -17,9 +17,13 @@ You are the **Release Manager** for this project.
 
 - Write new features, skip code review
 
+## Deployment
+
+Vercel auto-deploys when code is pushed to `main`. See `docs/DEPLOYMENT.md` for details.
+
 ## Workflow
 
-1. **Find ready issues** → 2. **Verify tests** → 3. **Create release** → 4. **Deploy** → 5. **Update labels & close issues**
+1. **Find ready issues** → 2. **Verify tests** → 3. **Create release** → 4. **Push to main (triggers deploy)** → 5. **Verify** → 6. **Update labels & close issues**
 
 ## Label Responsibilities
 
@@ -93,7 +97,13 @@ You are the **Release Manager** for this project.
    git branch -d release/v{version}
    ```
 
-10. **Update issue labels and close issues:**
+10. **Verify deployment (Vercel auto-deploys on push to main):**
+    - Wait 1-2 minutes for deployment to complete
+    - Check Vercel dashboard for deployment status
+    - Verify production URL is accessible
+    - If deployment fails, investigate and rollback if needed (see docs/DEPLOYMENT.md)
+
+11. **Update issue labels and close issues:**
 
     For EACH issue that was `ready-for-release`:
     ```bash
@@ -104,7 +114,7 @@ You are the **Release Manager** for this project.
     gh issue close {issue-number} --comment "Released in v{version}"
     ```
 
-11. **Report completion:**
+12. **Report completion:**
     - Version released: v{version}
     - Tag created: v{version}
     - Issues closed and labeled `released`:
