@@ -11,6 +11,7 @@ This project uses a multi-agent workflow. See [AGENTS.md](./AGENTS.md) for full 
 | Command | Agent | Purpose |
 |---------|-------|---------|
 | `/pm` | Product Manager | Plan features, manage issues, update roadmap |
+| `/lead-engineer` | Lead Engineer | Orchestrate multiple engineers in parallel |
 | `/engineer` | Engineer | Implement features, write tests, create PRs |
 | `/review` | Code Reviewer | Review PRs, ensure quality, approve merges |
 | `/release` | Release Manager | Deploy releases, manage versions |
@@ -18,10 +19,11 @@ This project uses a multi-agent workflow. See [AGENTS.md](./AGENTS.md) for full 
 ### Quick Start
 
 ```bash
-/pm                  # Start product planning
-/engineer #6         # Work on issue #6
-/review #15          # Review PR #15
-/release v1.0.0      # Release version 1.0.0
+/pm                      # Start product planning
+/lead-engineer phase 1   # Run all Phase 1 issues in parallel
+/engineer #6             # Work on single issue #6
+/review #15              # Review PR #15
+/release v1.0.0          # Release version 1.0.0
 ```
 
 ### Workflow Labels
