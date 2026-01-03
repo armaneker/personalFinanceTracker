@@ -7,7 +7,15 @@
       "Edit",
       "Glob",
       "Grep",
-      "Task"
+      "Task",
+      "Bash(npm install)",
+      "Bash(cd /Users/armaneker/Documents/PersonalApps/personalFinanceTracker/web && npm run type-check:*)",
+      "Bash(cat:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm run test:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
