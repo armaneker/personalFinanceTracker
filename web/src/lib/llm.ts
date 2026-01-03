@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { z } from "zod";
 
 import { StatementExtraction, StatementExtractionPrompt } from "./types";
+import { logLLMStart, logLLMComplete, logLLMError, llmLogger } from "./logger";
 
 // ============================================================================
 // Custom LLM Error Class
@@ -308,7 +309,13 @@ async function withRetry<T>(
 
       // Calculate delay and wait before retrying
       const delayMs = calculateBackoffDelay(attempt, config);
-      console.warn(
+      llmLogger.warn(
+        {
+          attempt: attempt + 1,
+          maxAttempts: config.maxAttempts,
+          delayMs: Math.round(delayMs),
+          error: (error as Error).message,
+        },
         `LLM request failed (attempt ${attempt + 1}/${config.maxAttempts}): ${
           (error as Error).message
         }. Retrying in ${Math.round(delayMs)}ms...`
@@ -333,61 +340,90 @@ export async function extractTransactionsWithLLM(
 ): Promise<StatementExtraction> {
   const client = getClient();
   const model = process.env.OPENAI_IMPORT_MODEL ?? "gpt-4o-mini";
+  const startTime = Date.now();
 
-  const result = await withRetry(async () => {
-    let response;
-    try {
-      response = await client.chat.completions.create({
-        model,
-        temperature: 0,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: buildPrompt(input) },
-        ],
-      });
-    } catch (error) {
-      handleOpenAIError(error);
-    }
-
-    const content = response.choices?.[0]?.message?.content;
-    if (!content) {
-      throw new LLMError(
-        "LLM returned no content in the response. This may indicate an issue with the model or prompt.",
-        LLMErrorCode.EMPTY_RESPONSE,
-        { retryable: true }
-      );
-    }
-
-    // Parse JSON
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(content);
-    } catch (error) {
-      throw new LLMError(
-        `Failed to parse LLM response as JSON: ${(error as Error).message}`,
-        LLMErrorCode.INVALID_RESPONSE,
-        { retryable: false, details: { rawContent: content.slice(0, 500) }, cause: error as Error }
-      );
-    }
-
-    // Validate with Zod schema
-    const validationResult = statementExtractionSchema.safeParse(parsed);
-    if (!validationResult.success) {
-      const issues = validationResult.error.issues
-        .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
-        .join("; ");
-
-      throw new LLMError(
-        `LLM response validation failed: ${issues}`,
-        LLMErrorCode.VALIDATION_FAILED,
-        { retryable: false, details: validationResult.error.issues }
-      );
-    }
-
-    return validationResult.data;
+  // Log the start of the LLM call
+  logLLMStart({
+    operation: "extractTransactions",
+    model,
+    inputSummary: `statement=${input.statementName}, textLength=${input.statementText.length}, categories=${input.categories.length}`,
   });
 
-  // Cast to StatementExtraction (the validated data is compatible)
-  return result as StatementExtraction;
+  try {
+    const result = await withRetry(async () => {
+      let response;
+      try {
+        response = await client.chat.completions.create({
+          model,
+          temperature: 0,
+          response_format: { type: "json_object" },
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: buildPrompt(input) },
+          ],
+        });
+      } catch (error) {
+        handleOpenAIError(error);
+      }
+
+      const content = response.choices?.[0]?.message?.content;
+      if (!content) {
+        throw new LLMError(
+          "LLM returned no content in the response. This may indicate an issue with the model or prompt.",
+          LLMErrorCode.EMPTY_RESPONSE,
+          { retryable: true }
+        );
+      }
+
+      // Parse JSON
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(content);
+      } catch (error) {
+        throw new LLMError(
+          `Failed to parse LLM response as JSON: ${(error as Error).message}`,
+          LLMErrorCode.INVALID_RESPONSE,
+          { retryable: false, details: { rawContent: content.slice(0, 500) }, cause: error as Error }
+        );
+      }
+
+      // Validate with Zod schema
+      const validationResult = statementExtractionSchema.safeParse(parsed);
+      if (!validationResult.success) {
+        const issues = validationResult.error.issues
+          .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+          .join("; ");
+
+        throw new LLMError(
+          `LLM response validation failed: ${issues}`,
+          LLMErrorCode.VALIDATION_FAILED,
+          { retryable: false, details: validationResult.error.issues }
+        );
+      }
+
+      // Log successful completion with token usage
+      const usage = response.usage;
+      logLLMComplete({
+        operation: "extractTransactions",
+        model,
+        promptTokens: usage?.prompt_tokens,
+        completionTokens: usage?.completion_tokens,
+        totalTokens: usage?.total_tokens,
+        durationMs: Date.now() - startTime,
+      });
+
+      return validationResult.data;
+    });
+
+    // Cast to StatementExtraction (the validated data is compatible)
+    return result as StatementExtraction;
+  } catch (error) {
+    // Log the error with full context
+    logLLMError("extractTransactions", error as Error, {
+      model,
+      statementName: input.statementName,
+      durationMs: Date.now() - startTime,
+    });
+    throw error;
+  }
 }
