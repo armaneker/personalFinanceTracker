@@ -20,10 +20,10 @@ This project uses a multi-agent workflow. See [AGENTS.md](./AGENTS.md) for full 
 
 ```bash
 /pm                      # Start product planning
-/lead-engineer phase 1   # Run all Phase 1 issues in parallel
-/engineer #6             # Work on single issue #6
-/review #15              # Review PR #15
-/release v1.0.0          # Release version 1.0.0
+/lead-engineer           # Work on all ready-for-dev issues in parallel
+/engineer                # Pick an issue to implement
+/review                  # Pick a PR to review
+/release                 # Check what's ready for release
 ```
 
 ### Workflow Labels
