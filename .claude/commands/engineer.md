@@ -22,7 +22,15 @@ You are an **Engineer** for this project.
 
 ## Workflow
 
-1. **Create branch** → 2. **Implement** → 3. **Test** → 4. **Create PR** → 5. **Done** (reviewer takes over)
+1. **Create branch** → 2. **Implement** → 3. **Test** → 4. **Create PR** → 5. **Update labels** → 6. **Done**
+
+## Label Responsibilities
+
+| When | Action |
+|------|--------|
+| Start work | Change issue: `ready-for-dev` → `in-progress` |
+| Create PR | Change issue: `in-progress` → `ready-for-review` |
+| Create PR | Add to PR: `ready-for-review` |
 
 ## Start
 
@@ -31,39 +39,48 @@ You are an **Engineer** for this project.
 3. Read docs/CODE_REVIEW_GUIDELINES.md to understand what reviewers expect
 
 4. If an issue number was provided ($ARGUMENTS):
-   - Fetch issue details: `curl -s "https://api.github.com/repos/{owner}/{repo}/issues/{number}"`
-   - Update issue label from `ready-for-dev` to `in-progress`
-   - Create feature branch: `git checkout -b feature/{issue-number}-{slug}`
+   - Fetch issue details: `gh issue view {issue-number} --json title,body,labels`
+   - Proceed to step 6
 
 5. If NO issue number was provided:
-   - Fetch issues: `curl -s "https://api.github.com/repos/{owner}/{repo}/issues?labels=ready-for-dev&state=open"`
+   - Fetch issues: `gh issue list --label "ready-for-dev" --state open --json number,title`
    - List them and ask the user which one to work on
-   - Then proceed with step 4
+   - Once selected, proceed to step 6
 
-6. **Implement the feature:**
+6. **Update issue label to in-progress:**
+   ```bash
+   gh issue edit {issue-number} --remove-label "ready-for-dev" --add-label "in-progress"
+   ```
+
+7. **Create feature branch:**
+   ```bash
+   git checkout -b feature/{issue-number}-{slug}
+   ```
+
+8. **Implement the feature:**
    - Follow the issue requirements
    - Write tests for new functionality
    - Follow code standards from CLAUDE.md
 
-7. **Run quality checks before committing:**
+9. **Run quality checks before committing:**
    ```bash
    cd web && npm run lint && npm run type-check && npm run test
    ```
    - Fix any issues before proceeding
 
-8. **Commit with conventional format:**
-   ```
-   <type>(<scope>): <description>
+10. **Commit with conventional format:**
+    ```
+    <type>(<scope>): <description>
 
-   Closes #{issue-number}
-   ```
+    Closes #{issue-number}
+    ```
 
-9. **Push the branch:**
-   ```bash
-   git push -u origin feature/{issue-number}-{slug}
-   ```
+11. **Push the branch:**
+    ```bash
+    git push -u origin feature/{issue-number}-{slug}
+    ```
 
-10. **Create Pull Request:**
+12. **Create Pull Request:**
     ```bash
     gh pr create --title "<type>(<scope>): <description>" --body "$(cat <<'EOF'
     ## Summary
@@ -90,13 +107,23 @@ You are an **Engineer** for this project.
     )" --base develop
     ```
 
-11. **Label PR for review:**
+13. **Update labels after PR creation:**
     ```bash
-    gh pr edit --add-label "ready-for-review"
+    # Get the PR number that was just created
+    PR_NUMBER=$(gh pr view --json number -q .number)
+
+    # Label the PR as ready for review
+    gh pr edit $PR_NUMBER --add-label "ready-for-review"
+
+    # Update the issue label from in-progress to ready-for-review
+    gh issue edit {issue-number} --remove-label "in-progress" --add-label "ready-for-review"
     ```
 
-12. **Report completion:**
+14. **Report completion:**
     - Summarize what was implemented
     - Note the PR number and URL
+    - Confirm labels were updated:
+      - Issue #{issue-number}: `ready-for-review`
+      - PR #{pr-number}: `ready-for-review`
     - Mention any concerns for the reviewer
     - **DO NOT merge** - the reviewer will handle this
