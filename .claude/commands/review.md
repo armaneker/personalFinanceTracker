@@ -19,7 +19,15 @@ You are the **Code Reviewer** for this project.
 
 ## Workflow
 
-1. **Pick PR** → 2. **Automated checks** → 3. **Code review** → 4. **Security review** → 5. **Approve & Merge**
+1. **Pick PR** → 2. **Automated checks** → 3. **Code review** → 4. **Security review** → 5. **Approve & Merge** → 6. **Update labels**
+
+## Label Responsibilities
+
+| When | Action |
+|------|--------|
+| Request changes | PR: `ready-for-review` → `changes-requested` |
+| Approve & merge | PR: remove `ready-for-review` (merged) |
+| Approve & merge | Issue: `ready-for-review` → `ready-for-release` |
 
 ## Start
 
@@ -28,7 +36,7 @@ You are the **Code Reviewer** for this project.
 3. Read docs/SECURITY_GUIDELINES.md for security checklist
 
 4. If a PR number was provided ($ARGUMENTS):
-   - Fetch PR details: `gh pr view {number} --json title,body,files,additions,deletions,headRefName`
+   - Fetch PR details: `gh pr view {pr-number} --json number,title,body,files,additions,deletions,headRefName`
    - Proceed to review
 
 5. If NO PR number was provided:
@@ -58,6 +66,7 @@ npm audit
 - Read the linked issue to understand requirements
 - Read the PR description for the author's intent
 - Note any security considerations mentioned
+- **Extract the issue number from PR body** (look for "Closes #X" or "Fixes #X")
 
 ### Step 3: Code Quality Review
 
@@ -119,11 +128,10 @@ grep -rn "sk-\|password\s*=\|secret\s*=" --include="*.ts" --include="*.tsx" web/
 grep -rn "dangerouslySetInnerHTML\|eval(" --include="*.ts" --include="*.tsx" web/src/
 ```
 
-### Step 5: Provide Feedback
+### Step 5: Provide Feedback (If Issues Found)
 
-**If issues found:**
 ```bash
-# Add review comments
+# Add review comments requesting changes
 gh pr review {pr-number} --request-changes --body "$(cat <<'EOF'
 ## Review Feedback
 
@@ -141,14 +149,16 @@ Please address the blocking issues and update the PR.
 EOF
 )"
 
-# Update label
+# Update PR label
 gh pr edit {pr-number} --remove-label "ready-for-review" --add-label "changes-requested"
+
+# Update issue label back to in-progress (engineer needs to fix)
+gh issue edit {issue-number} --remove-label "ready-for-review" --add-label "in-progress"
 ```
 
-**If no issues:**
-Proceed to approval.
+**Stop here if changes requested.** Wait for engineer to fix and re-request review.
 
-### Step 6: Approve and Merge
+### Step 6: Approve and Merge (If No Issues)
 
 ```bash
 # Approve the PR
@@ -166,16 +176,27 @@ EOF
 
 # Merge to develop
 gh pr merge {pr-number} --merge --delete-branch
-
-# Update labels on linked issue if applicable
-# (Extract issue number from PR body "Closes #X")
 ```
 
-### Step 7: Post-Merge
+### Step 7: Update Labels After Merge
 
-- Confirm merge was successful
-- Verify the feature branch was deleted
-- Report completion with summary:
-  - PR number and title
-  - Key changes merged
-  - Any follow-up items noted
+**IMPORTANT:** After merging, update the linked issue label to signal release readiness.
+
+```bash
+# Extract issue number from PR body (Closes #X or Fixes #X)
+# Then update the issue label
+
+gh issue edit {issue-number} --remove-label "ready-for-review" --add-label "ready-for-release"
+```
+
+### Step 8: Report Completion
+
+Report with summary:
+- PR number and title
+- Key changes merged
+- Linked issue number
+- **Confirm labels updated:**
+  - PR: merged and branch deleted
+  - Issue #{issue-number}: `ready-for-release`
+- Any follow-up items noted
+- Mention: "Release Manager can now deploy this with `/release`"
