@@ -216,7 +216,7 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
             {isSubmitting ? "Importing..." : "Run import"}
           </button>
           <span className="text-xs text-slate-500">
-            Uses OpenAI (default gpt-4.1-mini). Set OPENAI_API_KEY in .env.local.
+            Uses OpenAI (default gpt-4o-mini). Set OPENAI_API_KEY in .env.local.
           </span>
         </div>
       </form>

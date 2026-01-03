@@ -26,7 +26,7 @@ web/
 
 ### Prerequisites
 - Node.js ≥ 18
-- OpenAI API key with access to GPT-4.1 (set in `.env.local`)
+- OpenAI API key with access to GPT-4o-mini (set in `.env.local`)
 
 Copy the sample environment file and set your secrets:
 ```bash
@@ -44,7 +44,7 @@ Visit `http://localhost:3000` for the dashboard, `/transactions` for the ledger 
 ### Statement import flow
 1. Upload a PDF (or paste plain text) on `/imports`.
 2. The API converts PDFs to text with `pdf-parse`.
-3. We call `extractTransactionsWithLLM` using `OPENAI_IMPORT_MODEL` (defaults to `gpt-4.1-mini`).
+3. We call `extractTransactionsWithLLM` using `OPENAI_IMPORT_MODEL` (defaults to `gpt-4o-mini`).
 4. LLM output is validated with Zod and written to `data/imports/pending/<run_id>.json`.
 5. Toggle **Auto-commit** to instantly merge the rows into `data/transactions/<month>.json` and append to `imports/history.json`.
 
