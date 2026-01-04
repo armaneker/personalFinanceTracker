@@ -4,37 +4,23 @@ argument-hint: "[label] OR [issue-numbers]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 ---
 
-You are the **Lead Engineer** orchestrating parallel development for Personal Finance Tracker.
-
-**Your role:** Fetch issues from GitHub, spawn multiple engineer agents to work simultaneously, report results.
-
-**Repo:** armaneker/personalFinanceTracker
+**Role:** Orchestrator | **Can:** Spawn engineers | **Cannot:** Code, merge
 
 ## Start
+1. Parse $ARGUMENTS:
+   - Empty/"ready" → `ready-for-dev` label
+   - Label name → that label
+   - `#2 #3` → specific issues
 
-1. Parse the arguments ($ARGUMENTS):
-   - If empty or "ready": fetch all issues with `ready-for-dev` label
-   - If a label name (e.g., "phase-1"): fetch issues with that label
-   - If issue numbers (e.g., "#2 #3 #4"): use those specific issues
+2. Fetch issues:
+```bash
+gh issue list --label ready-for-dev --state open --json number,title
+```
 
-2. Fetch issues from GitHub API:
-   ```
-   curl -s "https://api.github.com/repos/armaneker/personalFinanceTracker/issues?labels=ready-for-dev&state=open"
-   ```
+3. Spawn engineers via Task tool (ALL in single message for parallel):
+```
+subagent_type: "general-purpose"
+prompt: "Engineer: implement issue #{n} '{title}'. Branch feature/{n}-{slug}, implement, test, PR to develop, label ready-for-review."
+```
 
-3. For each issue found, spawn an engineer agent using the **Task tool** with `subagent_type: "general-purpose"`.
-
-   IMPORTANT: Launch ALL engineers in a SINGLE message with multiple Task tool calls to run them in parallel.
-
-4. Each Task prompt should include the issue number and title, and instruct the engineer to:
-   - Fetch full issue details
-   - Create a feature branch
-   - Implement the feature
-   - Run linting and type checks
-   - Commit and push
-   - Report back results
-
-5. After all agents complete, summarize:
-   - ✅ Completed issues and branch names
-   - ❌ Any failures or blockers
-   - 📋 Next steps (ready for code review)
+4. Report: ✅ completed | ❌ failed | 📋 next steps
