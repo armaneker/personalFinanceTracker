@@ -15,7 +15,14 @@
       "Bash(npm run type-check:*)",
       "Bash(npm run test:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh issue list:*)",
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)",
+      "Bash(git fetch:*)",
+      "Bash(git branch:*)",
+      "Bash(node -e \"console.log\\(require\\(''bcryptjs''\\).hashSync\\(''admin123'', 10\\)\\)\")"
     ]
   }
 }
