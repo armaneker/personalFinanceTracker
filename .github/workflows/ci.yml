@@ -111,7 +111,7 @@ jobs:
         run: npm ci
         working-directory: web
 
-      - name: Run npm audit
+      - name: Run npm audit (high/critical vulnerabilities fail the build)
         run: npm audit --audit-level=high
         working-directory: web
-        continue-on-error: true
+        # No continue-on-error - this WILL fail the build on vulnerabilities

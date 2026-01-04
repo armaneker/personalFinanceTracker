@@ -55,11 +55,17 @@ gh pr checkout {pr-number}
 # Run automated checks
 cd web && npm install && npm run lint && npm run type-check && npm run test
 
-# Check for security issues
-npm audit
+# CRITICAL: Check for security vulnerabilities (MUST PASS)
+npm audit --audit-level=high
 ```
 
-**If automated checks fail:** Request changes, do not proceed.
+**BLOCKING:** If ANY of these checks fail, request changes immediately:
+- Lint errors → Request changes
+- Type errors → Request changes
+- Test failures → Request changes
+- **npm audit high/critical vulnerabilities → Request changes (SECURITY BLOCKER)**
+
+Do NOT proceed to code review until all pre-checks pass.
 
 ### Step 2: Understand the Context
 
@@ -119,6 +125,10 @@ Check each item from SECURITY_GUIDELINES.md:
 - [ ] No dangerouslySetInnerHTML without sanitization
 - [ ] User input properly escaped
 
+**Dependency Vulnerabilities (CRITICAL):**
+- [ ] `npm audit --audit-level=high` passes with no high/critical issues
+- [ ] No outdated packages with known CVEs
+
 **Quick security scan:**
 ```bash
 # Check for secrets
@@ -126,6 +136,9 @@ grep -rn "sk-\|password\s*=\|secret\s*=" --include="*.ts" --include="*.tsx" web/
 
 # Check for dangerous patterns
 grep -rn "dangerouslySetInnerHTML\|eval(" --include="*.ts" --include="*.tsx" web/src/
+
+# Check for vulnerable dependencies (MUST PASS)
+cd web && npm audit --audit-level=high
 ```
 
 ### Step 5: Provide Feedback (If Issues Found)
