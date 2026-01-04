@@ -4,3 +4,4 @@ export * from "./categories";
 export * from "./owners";
 export * from "./transactions";
 export * from "./import-runs";
+export * from "./fx-rates";

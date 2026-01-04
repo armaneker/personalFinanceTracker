@@ -17,6 +17,7 @@ import {
 } from "./types";
 import { statementExtractionSchema, StatementExtractionInput } from "./schemas";
 import { slugifyId } from "./utils";
+import { convertAmount, type FxConversionResult } from "./fx-service";
 
 const DEFAULT_CATEGORY = "cat-other";
 
@@ -156,42 +157,28 @@ function inferMonthFromExtraction(payload: StatementExtractionInput, explicitMon
   return sample.transaction_date.slice(0, 7);
 }
 
-const fxRateCache = new Map<string, { rate: number }>();
-
+/**
+ * Convert amount to TRY using the FX service with caching and fallback
+ */
 async function convertAmountToTry(
   amount: number,
   currency: string | undefined,
   transactionDate: string,
-) {
+): Promise<{ amount: number; currency: string; originalCurrency: string; fxRate: number }> {
   const code = currency?.toUpperCase() ?? "TRY";
   if (code === "TRY") {
     return { amount, currency: "TRY", originalCurrency: code, fxRate: 1 };
   }
 
   const targetDate = transactionDate || new Date().toISOString().slice(0, 10);
-  const cacheKey = `${code}|${targetDate}`;
-  let cached = fxRateCache.get(cacheKey);
-  if (!cached) {
-    const response = await fetch(
-      `https://api.exchangerate.host/${targetDate}?base=${code}&symbols=TRY`,
-    );
-    if (!response.ok) {
-      throw new Error(`FX service returned ${response.status}`);
-    }
-    const body = (await response.json()) as { rates?: Record<string, number> };
-    const rate = body.rates?.TRY;
-    if (!rate) {
-      throw new Error(`TRY rate unavailable for ${code} on ${targetDate}`);
-    }
-    cached = { rate };
-    fxRateCache.set(cacheKey, cached);
-  }
-  const rate = cached.rate;
+
+  const result: FxConversionResult = await convertAmount(amount, code, "TRY", targetDate);
+
   return {
-    amount: Number((amount * rate).toFixed(2)),
-    currency: "TRY",
-    originalCurrency: code,
-    fxRate: rate,
+    amount: result.amount,
+    currency: result.currency,
+    originalCurrency: result.originalCurrency,
+    fxRate: result.fxRate,
   };
 }
 

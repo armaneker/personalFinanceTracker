@@ -137,3 +137,18 @@ export type NewImportRun = typeof importRuns.$inferInsert;
 
 export type PendingExtraction = typeof pendingExtractions.$inferSelect;
 export type NewPendingExtraction = typeof pendingExtractions.$inferInsert;
+
+// FX rates table - for caching exchange rates
+export const fxRates = sqliteTable("fx_rates", {
+  id: text("id").primaryKey(),
+  baseCurrency: text("base_currency").notNull(),
+  targetCurrency: text("target_currency").notNull(),
+  rate: real("rate").notNull(),
+  date: text("date").notNull(), // YYYY-MM-DD
+  source: text("source").notNull(), // 'api' | 'manual' | 'fallback'
+  fetchedAt: text("fetched_at").notNull(),
+  userId: text("user_id").notNull(),
+});
+
+export type FxRate = typeof fxRates.$inferSelect;
+export type NewFxRate = typeof fxRates.$inferInsert;
