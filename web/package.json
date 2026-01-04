@@ -10,11 +10,16 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@libsql/client": "^0.15.15",
     "bcryptjs": "^3.0.3",
     "date-fns": "^4.1.0",
+    "drizzle-orm": "^0.45.1",
     "nanoid": "^5.1.6",
     "next": "16.1.1",
     "next-auth": "^4.24.13",
@@ -39,6 +44,7 @@
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^4.5.2",
     "@vitest/coverage-v8": "^3.2.3",
+    "drizzle-kit": "^0.31.8",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "jsdom": "^26.1.0",
