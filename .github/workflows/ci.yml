@@ -138,12 +138,10 @@ jobs:
         run: |
           cd web
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }} \
+            --build-env TURSO_DATABASE_URL="file:./dummy.db" \
+            --build-env TURSO_AUTH_TOKEN="dummy"
           vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          # Provide dummy database credentials for build time
-          # These are never used since all data-fetching pages are dynamic
-          TURSO_DATABASE_URL: "file:./dummy.db"
-          TURSO_AUTH_TOKEN: "dummy"
