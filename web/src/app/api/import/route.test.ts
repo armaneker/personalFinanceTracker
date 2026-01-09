@@ -140,8 +140,11 @@ describe('POST /api/import', () => {
 
     const data = await getResponseJson(response)
     expect(data).toHaveProperty('error')
-    expect(data.error).toHaveProperty('fieldErrors')
-    expect(data.error.fieldErrors).toHaveProperty('statementName')
+    expect(data).toHaveProperty('code')
+    expect(data.code).toBe('VALIDATION_ERROR')
+    expect(data).toHaveProperty('details')
+    expect(data.details).toHaveProperty('fieldErrors')
+    expect(data.details.fieldErrors).toHaveProperty('statementName')
   })
 
   it('returns 400 for invalid month format', async () => {
@@ -208,8 +211,11 @@ describe('POST /api/import', () => {
     const data = await getResponseJson(response)
     expect(data).toHaveProperty('error')
     expect(data.error).toContain('already imported')
-    expect(data).toHaveProperty('duplicate')
-    expect(data.duplicate.run_id).toBe('run-existing-123')
+    expect(data).toHaveProperty('code')
+    expect(data.code).toBe('DUPLICATE')
+    expect(data).toHaveProperty('details')
+    expect(data.details).toHaveProperty('duplicate')
+    expect(data.details.duplicate.run_id).toBe('run-existing-123')
   })
 
   it('returns 409 when duplicate statement is pending', async () => {
@@ -236,8 +242,11 @@ describe('POST /api/import', () => {
 
     const data = await getResponseJson(response)
     expect(data.error).toContain('already pending approval')
-    expect(data).toHaveProperty('duplicate')
-    expect(data.duplicate.run_id).toBe('run-pending-456')
+    expect(data).toHaveProperty('code')
+    expect(data.code).toBe('DUPLICATE')
+    expect(data).toHaveProperty('details')
+    expect(data.details).toHaveProperty('duplicate')
+    expect(data.details.duplicate.run_id).toBe('run-pending-456')
   })
 
   it('returns 500 when LLM extraction fails', async () => {
