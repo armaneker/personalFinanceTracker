@@ -95,6 +95,8 @@ jobs:
           SKIP_ENV_VALIDATION: true
           DATABASE_URL: "file:local.db"
           DATABASE_AUTH_TOKEN: "dummy"
+          NEXTAUTH_URL: "http://localhost:3000"
+          NEXTAUTH_SECRET: "dummy-secret-for-ci-build"
 
   security:
     name: Security Audit
