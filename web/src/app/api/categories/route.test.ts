@@ -12,7 +12,6 @@ const { GET, POST } = await import('./route')
 
 describe('GET /api/categories', () => {
   it('returns all categories successfully', async () => {
-    const request = createMockRequest('http://localhost:3000/api/categories')
     const response = await GET()
 
     expect(response.status).toBe(200)
@@ -100,8 +99,11 @@ describe('POST /api/categories', () => {
 
     const data = await getResponseJson(response)
     expect(data).toHaveProperty('error')
-    expect(data.error).toHaveProperty('fieldErrors')
-    expect(data.error.fieldErrors).toHaveProperty('name')
+    expect(data).toHaveProperty('code')
+    expect(data.code).toBe('VALIDATION_ERROR')
+    expect(data).toHaveProperty('details')
+    expect(data.details).toHaveProperty('fieldErrors')
+    expect(data.details.fieldErrors).toHaveProperty('name')
   })
 
   it('returns 400 for empty name', async () => {
@@ -123,7 +125,7 @@ describe('POST /api/categories', () => {
     expect(data).toHaveProperty('error')
   })
 
-  it('returns 400 for invalid JSON payload', async () => {
+  it('returns 500 for invalid JSON payload', async () => {
     const request = new Request('http://localhost:3000/api/categories', {
       method: 'POST',
       headers: {
@@ -132,7 +134,14 @@ describe('POST /api/categories', () => {
       body: 'invalid json',
     })
 
-    await expect(POST(request)).rejects.toThrow()
+    const response = await POST(request)
+
+    expect(response.status).toBe(500)
+
+    const data = await getResponseJson(response)
+    expect(data).toHaveProperty('error')
+    expect(data).toHaveProperty('code')
+    expect(data.code).toBe('INTERNAL_ERROR')
   })
 
   it('returns 400 for wrong data types', async () => {
