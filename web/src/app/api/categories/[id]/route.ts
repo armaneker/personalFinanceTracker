@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 
 import { deleteCategory, getCategories, upsertCategory } from "@/lib/data-store";
+import { errorResponse, validateRequestBody, successResponse } from "@/lib/api-utils";
+import { ErrorFactory } from "@/lib/errors";
 
 const updateSchema = z.object({
   name: z.string().min(1).optional(),
@@ -13,39 +14,39 @@ export async function PUT(
   request: NextRequest,
   context: { params: { id: string } | Promise<{ id: string }> },
 ) {
-  const params = await context.params;
-  const id = params.id;
-  const payload = await request.json();
-  const parsed = updateSchema.safeParse(payload);
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  try {
+    const params = await context.params;
+    const id = params.id;
+    const data = await validateRequestBody(request, updateSchema);
+
+    const categories = await getCategories();
+    const existing = categories.find((category) => category.id === id);
+    if (!existing) {
+      throw ErrorFactory.notFound(`Category ${id}`);
+    }
+
+    const updated = await upsertCategory({
+      id,
+      name: data.name ?? existing.name,
+      color: data.color ?? existing.color,
+    });
+
+    return successResponse({ category: updated });
+  } catch (error) {
+    return errorResponse(error);
   }
-
-  const categories = await getCategories();
-  const existing = categories.find((category) => category.id === id);
-  if (!existing) {
-    return NextResponse.json({ error: `Category ${id} not found` }, { status: 404 });
-  }
-
-  const updated = await upsertCategory({
-    id,
-    name: parsed.data.name ?? existing.name,
-    color: parsed.data.color ?? existing.color,
-  });
-
-  return NextResponse.json({ category: updated });
 }
 
 export async function DELETE(
   _request: NextRequest,
   context: { params: { id: string } | Promise<{ id: string }> },
 ) {
-  const params = await context.params;
-  const id = params.id;
   try {
+    const params = await context.params;
+    const id = params.id;
     await deleteCategory(id);
-    return NextResponse.json({ ok: true });
+    return successResponse({ ok: true });
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 404 });
+    return errorResponse(error);
   }
 }

@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { z } from "zod";
 import { PDFParse } from "pdf-parse";
 import path from "node:path";
@@ -14,6 +13,8 @@ import {
 } from "@/lib/importer";
 import { generateRunId } from "@/lib/ids";
 import { getCategories } from "@/lib/data-store";
+import { errorResponse, validateRequestBody, successResponse } from "@/lib/api-utils";
+import { ErrorFactory } from "@/lib/errors";
 
 const requestSchema = z
   .object({
@@ -39,33 +40,35 @@ const requestSchema = z
   });
 
 export async function POST(request: Request) {
-  const payload = await request.json();
-  const parsed = requestSchema.safeParse(payload);
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
-  }
-  const data = parsed.data;
-
-  const runId = generateRunId("run");
-
   try {
+    const data = await validateRequestBody(request, requestSchema);
+    const runId = generateRunId("run");
+
     let statementText = data.statementText ?? "";
     if (!statementText && data.statementPdfBase64) {
-      const buffer = Buffer.from(data.statementPdfBase64, "base64");
-      const workerUrl = pathToFileURL(
-        path.join(process.cwd(), "node_modules/pdfjs-dist/build/pdf.worker.min.mjs"),
-      ).href;
-      PDFParse.setWorker(workerUrl);
-      const parser = new PDFParse({ data: buffer });
       try {
-        const parsed = await parser.getText();
-        statementText = parsed.text;
-      } finally {
-        await parser.destroy();
+        const buffer = Buffer.from(data.statementPdfBase64, "base64");
+        const workerUrl = pathToFileURL(
+          path.join(process.cwd(), "node_modules/pdfjs-dist/build/pdf.worker.min.mjs"),
+        ).href;
+        PDFParse.setWorker(workerUrl);
+        const parser = new PDFParse({ data: buffer });
+        try {
+          const parsed = await parser.getText();
+          statementText = parsed.text;
+        } finally {
+          await parser.destroy();
+        }
+      } catch (error) {
+        throw ErrorFactory.pdfParseError(
+          "Failed to parse PDF file",
+          { originalError: (error as Error).message }
+        );
       }
     }
+
     if (!statementText || statementText.trim().length === 0) {
-      throw new Error("Unable to extract text from statement. Provide plain text instead.");
+      throw ErrorFactory.pdfParseError("Unable to extract text from statement. Provide plain text instead.");
     }
 
     const normalizedText = statementText.replace(/\s+/g, " ").trim();
@@ -73,16 +76,10 @@ export async function POST(request: Request) {
 
     const duplicate = await findExistingImportByFingerprint(fingerprint, data.cardId ?? undefined);
     if (duplicate) {
-      return NextResponse.json(
-        {
-          error:
-            duplicate.type === "history"
-              ? `Statement already imported (run ${duplicate.run_id}).`
-              : `Statement already pending approval (run ${duplicate.run_id}).`,
-          duplicate,
-        },
-        { status: 409 },
-      );
+      const message = duplicate.type === "history"
+        ? `Statement already imported (run ${duplicate.run_id}).`
+        : `Statement already pending approval (run ${duplicate.run_id}).`;
+      throw ErrorFactory.duplicate(message, { duplicate });
     }
 
     const categories = await getCategories();
@@ -120,18 +117,13 @@ export async function POST(request: Request) {
       await commitExtraction(validated, commitOptions, prepared);
     }
 
-    return NextResponse.json({
+    return successResponse({
       runId: validated.run_id,
       summary: validated.summary,
       warnings: validated.warnings ?? [],
       autoCommitted: Boolean(data.autoCommit),
     });
   } catch (error) {
-    return NextResponse.json(
-      {
-        error: (error as Error).message,
-      },
-      { status: 500 },
-    );
+    return errorResponse(error);
   }
 }
