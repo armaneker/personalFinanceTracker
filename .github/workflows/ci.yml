@@ -93,6 +93,8 @@ jobs:
         working-directory: web
         env:
           SKIP_ENV_VALIDATION: true
+          DATABASE_URL: "file:local.db"
+          DATABASE_AUTH_TOKEN: "dummy"
 
   security:
     name: Security Audit
