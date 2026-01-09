@@ -1,8 +1,11 @@
-import { NextResponse } from "next/server";
-
 import { getTransactionsGroupedByCard } from "@/lib/analytics";
+import { errorResponse, successResponse } from "@/lib/api-utils";
 
 export async function GET() {
-  const grouped = await getTransactionsGroupedByCard();
-  return NextResponse.json({ grouped });
+  try {
+    const grouped = await getTransactionsGroupedByCard();
+    return successResponse({ grouped });
+  } catch (error) {
+    return errorResponse(error);
+  }
 }

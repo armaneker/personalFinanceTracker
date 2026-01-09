@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 
 import { approvePendingRun, discardPendingRun, getPendingRunDetail } from "@/lib/importer";
+import { errorResponse, validateRequestBody, successResponse } from "@/lib/api-utils";
 
 const overridesSchema = z
   .object({
@@ -20,22 +20,19 @@ export async function POST(
   request: NextRequest,
   context: { params: { runId: string } | Promise<{ runId: string }> },
 ) {
-  const params = await context.params;
-  const runId = params.runId;
-  const payload = await request.json().catch(() => ({}));
-  const parsed = overridesSchema.safeParse(payload);
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
-  }
-
   try {
-    const result = await approvePendingRun(runId, parsed.data ?? undefined);
-    return NextResponse.json({ ok: true, result });
+    const params = await context.params;
+    const runId = params.runId;
+    const payload = await request.json().catch(() => ({}));
+    const data = await validateRequestBody(
+      new Request(request.url, { method: 'POST', body: JSON.stringify(payload) }),
+      overridesSchema
+    ).catch(() => undefined);
+
+    const result = await approvePendingRun(runId, data ?? undefined);
+    return successResponse({ ok: true, result });
   } catch (error) {
-    return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 400 },
-    );
+    return errorResponse(error);
   }
 }
 
@@ -43,13 +40,13 @@ export async function GET(
   _request: NextRequest,
   context: { params: { runId: string } | Promise<{ runId: string }> },
 ) {
-  const params = await context.params;
-  const runId = params.runId;
   try {
+    const params = await context.params;
+    const runId = params.runId;
     const detail = await getPendingRunDetail(runId);
-    return NextResponse.json(detail);
+    return successResponse(detail);
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 404 });
+    return errorResponse(error);
   }
 }
 
@@ -57,12 +54,12 @@ export async function DELETE(
   _request: NextRequest,
   context: { params: { runId: string } | Promise<{ runId: string }> },
 ) {
-  const params = await context.params;
-  const runId = params.runId;
   try {
+    const params = await context.params;
+    const runId = params.runId;
     const result = await discardPendingRun(runId);
-    return NextResponse.json({ ok: true, result });
+    return successResponse({ ok: true, result });
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 404 });
+    return errorResponse(error);
   }
 }

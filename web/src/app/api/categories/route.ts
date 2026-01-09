@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getCategories, upsertCategory } from "@/lib/data-store";
 import { slugifyId } from "@/lib/utils";
+import { errorResponse, validateRequestBody, successResponse, createdResponse } from "@/lib/api-utils";
 
 const createSchema = z.object({
   name: z.string().min(1),
@@ -10,20 +10,22 @@ const createSchema = z.object({
 });
 
 export async function GET() {
-  const categories = await getCategories();
-  return NextResponse.json({ categories });
+  try {
+    const categories = await getCategories();
+    return successResponse({ categories });
+  } catch (error) {
+    return errorResponse(error);
+  }
 }
 
 export async function POST(request: Request) {
-  const payload = await request.json();
-  const parsed = createSchema.safeParse(payload);
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  try {
+    const { name, color } = await validateRequestBody(request, createSchema);
+    const id = slugifyId(name, "cat");
+    const category = await upsertCategory({ id, name, color });
+
+    return createdResponse({ category });
+  } catch (error) {
+    return errorResponse(error);
   }
-
-  const { name, color } = parsed.data;
-  const id = slugifyId(name, "cat");
-  const category = await upsertCategory({ id, name, color });
-
-  return NextResponse.json({ category }, { status: 201 });
 }

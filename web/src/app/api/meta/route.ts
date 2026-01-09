@@ -1,19 +1,22 @@
-import { NextResponse } from "next/server";
-
 import { getCards, getCategories, getOwners, listTransactionMonths } from "@/lib/data-store";
+import { errorResponse, successResponse } from "@/lib/api-utils";
 
 export async function GET() {
-  const [cards, owners, categories, months] = await Promise.all([
-    getCards(),
-    getOwners(),
-    getCategories(),
-    listTransactionMonths(),
-  ]);
+  try {
+    const [cards, owners, categories, months] = await Promise.all([
+      getCards(),
+      getOwners(),
+      getCategories(),
+      listTransactionMonths(),
+    ]);
 
-  return NextResponse.json({
-    cards,
-    owners,
-    categories,
-    months,
-  });
+    return successResponse({
+      cards,
+      owners,
+      categories,
+      months,
+    });
+  } catch (error) {
+    return errorResponse(error);
+  }
 }

@@ -1,8 +1,11 @@
-import { NextResponse } from "next/server";
-
 import { getDistinctFilters } from "@/lib/analytics";
+import { errorResponse, successResponse } from "@/lib/api-utils";
 
 export async function GET() {
-  const filters = await getDistinctFilters();
-  return NextResponse.json(filters);
+  try {
+    const filters = await getDistinctFilters();
+    return successResponse(filters);
+  } catch (error) {
+    return errorResponse(error);
+  }
 }
