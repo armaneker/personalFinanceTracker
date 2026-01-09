@@ -26,12 +26,90 @@ web/
 
 ### Prerequisites
 - Node.js ≥ 18
-- OpenAI API key with access to GPT-4o-mini (set in `.env.local`)
+- OpenAI API key with access to GPT-4o-mini
+- Turso account for database (free tier available)
 
-Copy the sample environment file and set your secrets:
+### Environment Setup
+
+#### 1. Copy the environment template
 ```bash
 cp .env.example .env.local
 ```
+
+#### 2. Configure OpenAI (Required)
+Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys):
+```bash
+OPENAI_API_KEY=sk-your-actual-api-key
+OPENAI_IMPORT_MODEL=gpt-4o-mini
+```
+
+#### 3. Configure NextAuth (Required)
+Generate a secure secret (at least 32 characters):
+```bash
+# Generate with openssl (recommended)
+openssl rand -base64 32
+
+# Or use any secure random string generator
+```
+
+Set in `.env.local`:
+```bash
+NEXTAUTH_SECRET=your-generated-secret-here
+NEXTAUTH_URL=http://localhost:3000
+```
+
+#### 4. Configure Authentication (Required)
+Set up your admin credentials:
+
+```bash
+AUTH_USER_EMAIL=your@email.com
+
+# Generate password hash (example for password "mypassword")
+node -e "console.log(require('bcryptjs').hashSync('mypassword', 10))"
+# Copy the output to AUTH_USER_PASSWORD_HASH
+AUTH_USER_PASSWORD_HASH=$2a$10$...your-generated-hash...
+```
+
+#### 5. Configure Turso Database (Required)
+Set up your Turso database:
+
+**Option A: Using Turso CLI (Recommended)**
+```bash
+# Install Turso CLI
+brew install tursodatabase/tap/turso  # macOS
+# or see https://docs.turso.tech/cli/installation for other platforms
+
+# Login to Turso
+turso auth login
+
+# Create database
+turso db create personal-finance
+
+# Get database URL
+turso db show personal-finance --url
+
+# Create authentication token
+turso db tokens create personal-finance
+```
+
+**Option B: Using Turso Dashboard**
+1. Sign up at [turso.tech](https://turso.tech)
+2. Create a new database
+3. Copy the database URL and create a token from the dashboard
+
+Set in `.env.local`:
+```bash
+TURSO_DATABASE_URL=libsql://your-database.turso.io
+TURSO_AUTH_TOKEN=your-auth-token
+```
+
+#### 6. Initialize Database Schema
+```bash
+npm run db:push
+```
+
+#### Verification
+The application will automatically validate your environment configuration on startup. If any required variables are missing or invalid, you'll see a clear error message explaining what needs to be fixed.
 
 ### Development
 Install dependencies and start the dev server:
@@ -49,9 +127,49 @@ Visit `http://localhost:3000` for the dashboard, `/transactions` for the ledger 
 5. Toggle **Auto-commit** to instantly merge the rows into `data/transactions/<month>.json` and append to `imports/history.json`.
 
 ### Testing & linting
-Run ESLint to ensure code quality:
+Run ESLint and type checking to ensure code quality:
 ```bash
 npm run lint
+npm run type-check
+npm run test
 ```
 
-Because the backing store is JSON, you can create fixtures by editing files under `data/`. For production use you’ll likely migrate to a database, but this layout keeps iteration fast while prototyping the LLM pipeline.
+### Environment Variables Reference
+
+All environment variables and their purposes:
+
+| Variable | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `OPENAI_API_KEY` | Yes | OpenAI API key for transaction extraction | `sk-proj-...` |
+| `OPENAI_IMPORT_MODEL` | No | Model for transaction extraction | `gpt-4o-mini` (default) |
+| `NEXTAUTH_SECRET` | Yes | Secret for JWT signing (min 32 chars) | Generate with `openssl rand -base64 32` |
+| `NEXTAUTH_URL` | Yes | Base URL of application | `http://localhost:3000` |
+| `AUTH_USER_EMAIL` | Yes | Admin email for authentication | `admin@example.com` |
+| `AUTH_USER_PASSWORD_HASH` | Yes | Bcrypt hash of admin password | Generate with bcryptjs |
+| `TURSO_DATABASE_URL` | Yes | Turso database connection URL | `libsql://your-db.turso.io` |
+| `TURSO_AUTH_TOKEN` | Yes | Turso authentication token | From Turso dashboard or CLI |
+| `NODE_ENV` | No | Node environment | `development`, `production`, or `test` |
+
+**Security Notes:**
+- Never commit `.env.local` to version control
+- Keep your API keys and tokens secure
+- Use strong passwords for `AUTH_USER_PASSWORD_HASH`
+- Rotate secrets regularly in production
+
+### Troubleshooting
+
+**Environment validation fails on startup:**
+- Check that all required variables are set in `.env.local`
+- Verify that values match the expected format (e.g., API key starts with `sk-`)
+- Ensure `NEXTAUTH_SECRET` is at least 32 characters
+- Confirm password hash starts with `$2` (bcrypt format)
+
+**Database connection fails:**
+- Verify `TURSO_DATABASE_URL` starts with `libsql://`
+- Check that your Turso auth token hasn't expired
+- Run `turso db show <database-name>` to verify database exists
+
+**Authentication not working:**
+- Regenerate your password hash using the bcryptjs command
+- Ensure email matches exactly (case-sensitive)
+- Clear browser cookies and try again

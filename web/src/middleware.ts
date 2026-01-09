@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
+// Validate environment on first request
+import "./lib/init";
+
 /**
  * Middleware to protect API routes
  * All /api/* routes require authentication except /api/auth/*
