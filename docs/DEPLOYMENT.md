@@ -13,9 +13,10 @@ AUTH_USER_PASSWORD_HASH=...
 ```
 
 ## Disable Vercel Auto-deploy
-Vercel dashboard → Project → Settings → Git:
-- **Ignored Build Step:** `exit 0` (skips all Vercel auto-builds)
-- Or: Production Branch → leave empty
+Already configured in `web/vercel.json`:
+```json
+{ "git": { "deploymentEnabled": false } }
+```
 
 ## GitHub Secrets (required)
 Settings → Secrets → Actions:
