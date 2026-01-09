@@ -12,21 +12,30 @@ AUTH_USER_EMAIL=...
 AUTH_USER_PASSWORD_HASH=...
 ```
 
-## Auto-deploy
-| Branch | Env |
-|--------|-----|
-| main | Production |
-| develop | Preview |
-| feature/* | Preview |
+## Disable Vercel Auto-deploy
+Already configured in `web/vercel.json`:
+```json
+{ "git": { "deploymentEnabled": false } }
+```
+
+## GitHub Secrets (required)
+Settings → Secrets → Actions:
+```
+VERCEL_TOKEN=<vercel tokens create>
+VERCEL_ORG_ID=<vercel project ls → orgId>
+VERCEL_PROJECT_ID=<vercel project ls → projectId>
+```
 
 ## CI Pipeline
-PR → lint + type-check + test → build → Vercel
+```
+PR → lint + type-check + test + build + security
+main push → all above + deploy job
+```
 
-## Release
+## Release Flow
 ```bash
-git checkout main && git merge release/v{ver}
-git tag v{ver} && git push origin main --tags
-# Vercel auto-deploys
+/pm "Ship v1.2.0"
+# Release agent: merge to main → CI triggers → deploy job runs
 ```
 
 ## Rollback
