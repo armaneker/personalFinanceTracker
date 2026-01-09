@@ -138,9 +138,9 @@ jobs:
         run: |
           cd web
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }} \
-            --build-env TURSO_DATABASE_URL="file:./dummy.db" \
-            --build-env TURSO_AUTH_TOKEN="dummy"
+          export TURSO_DATABASE_URL="file:./dummy.db"
+          export TURSO_AUTH_TOKEN="dummy"
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
