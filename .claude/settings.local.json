@@ -22,7 +22,11 @@
       "Bash(git merge:*)",
       "Bash(git fetch:*)",
       "Bash(git branch:*)",
-      "Bash(node -e \"console.log\\(require\\(''bcryptjs''\\).hashSync\\(''admin123'', 10\\)\\)\")"
+      "Bash(node -e \"console.log\\(require\\(''bcryptjs''\\).hashSync\\(''admin123'', 10\\)\\)\")",
+      "Skill(engineer)",
+      "Bash(gh issue view:*)",
+      "Bash(git pull:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }
