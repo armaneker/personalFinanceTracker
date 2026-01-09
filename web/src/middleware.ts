@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-// Validate environment on first request
-import "./lib/init";
-
 /**
  * Middleware to protect API routes
  * All /api/* routes require authentication except /api/auth/*
  * Unauthenticated requests to protected routes receive 401
  * Unauthenticated access to pages redirects to /login
+ *
+ * Note: Environment validation runs in instrumentation.ts (Node.js runtime)
+ * instead of here (Edge Runtime) since Edge doesn't support process.exit()
  */
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
