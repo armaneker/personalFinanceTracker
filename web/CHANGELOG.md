@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-01-10
+
+### Summary
+Bug fixes and UX improvements for credit card statement import. Improved error handling provides actionable feedback, while auto-extraction from PDFs simplifies the import workflow from 5+ manual fields to a streamlined 3-step process.
+
+### Added
+- Auto-extraction of metadata from PDF statements (#36)
+  - Statement month extracted from "Hesap Kesim Tarihi" date field
+  - Card auto-matched by last 4 digits from masked card numbers
+  - Cardholder name extracted and fuzzy-matched to owners
+- Extraction preview step with editable fields (#36)
+- Model name validation with typo detection (#35)
+- Comprehensive LLM error handling with detailed messages (#35)
+
+### Changed
+- Simplified import UX from 5+ fields to 3-step flow: Upload → Extract & Preview → Confirm (#36)
+- Error messages now provide actionable information instead of generic "Import failed" (#35)
+- Statement name auto-filled from filename instead of manual entry (#36)
+
+### Removed
+- Statement name manual input field (uses filename automatically) (#36)
+- Statement text input field (PDF-only workflow) (#36)
+- Auto-commit checkbox (extraction creates pending review by default) (#36)
+
+### Fixed
+- LLMError now properly handled in error normalization chain (#35)
+- Invalid model names (e.g., `gpt-4.1-mini`) now detected with helpful suggestions (#35)
+- Import errors now show detailed error codes and context instead of generic messages (#35)
+
+### Documentation
+- Updated `.env.example` with model name clarifications (#35)
+- Added warning about common model name typo (`gpt-4.1-mini` vs `gpt-4o-mini`) (#35)
+
 ## [1.0.0] - 2026-01-10
 
 ### Summary
@@ -103,6 +136,7 @@ First stable production release of Personal Finance Tracker. This release marks 
 - Basic Next.js setup
 - Initial file structure
 
+[1.1.0]: https://github.com/armaneker/personalFinanceTracker/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/armaneker/personalFinanceTracker/compare/v0.4.0...v1.0.0
 [0.4.0]: https://github.com/armaneker/personalFinanceTracker/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/armaneker/personalFinanceTracker/compare/v0.2.0...v0.3.0
