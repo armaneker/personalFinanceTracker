@@ -122,6 +122,7 @@ export async function POST(request: Request) {
       summary: validated.summary,
       warnings: validated.warnings ?? [],
       autoCommitted: Boolean(data.autoCommit),
+      metadata: validated.metadata,
     });
   } catch (error) {
     return errorResponse(error);

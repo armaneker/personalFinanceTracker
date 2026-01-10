@@ -78,9 +78,17 @@ const newCategorySchema = z.object({
   color: z.string().optional(),
 });
 
+const metadataSchema = z.object({
+  statement_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  statement_month: z.string().regex(/^\d{4}-\d{2}$/).optional(),
+  card_last4: z.string().optional(),
+  cardholder_name: z.string().optional(),
+});
+
 export const statementExtractionSchema = z.object({
   run_id: z.string().optional(),
   model: z.string().optional(),
+  metadata: metadataSchema.optional(),
   summary: summarySchema,
   transactions: z.array(transactionSchema),
   warnings: z.array(z.string()).optional().default([]),
@@ -110,6 +118,52 @@ function getClient(): OpenAI {
   return cachedClient;
 }
 
+/**
+ * Validate the configured model name
+ * Throws LLMError if model name appears invalid
+ */
+function validateModelName(model: string): void {
+  // Common valid OpenAI models for structured outputs
+  const validModels = [
+    "gpt-4o",
+    "gpt-4o-mini",
+    "gpt-4-turbo",
+    "gpt-4-turbo-preview",
+    "gpt-3.5-turbo",
+  ];
+
+  // Check for common typos
+  const commonTypos = [
+    { typo: "gpt-4.1-mini", correct: "gpt-4o-mini" },
+    { typo: "gpt-41-mini", correct: "gpt-4o-mini" },
+    { typo: "gpt-4-o-mini", correct: "gpt-4o-mini" },
+    { typo: "gpt4o-mini", correct: "gpt-4o-mini" },
+    { typo: "gpt-4.0-mini", correct: "gpt-4o-mini" },
+  ];
+
+  // Check for exact typo match
+  const typo = commonTypos.find((t) => t.typo === model);
+  if (typo) {
+    throw new LLMError(
+      `Invalid model name "${model}". Did you mean "${typo.correct}"? Please update OPENAI_IMPORT_MODEL in your .env.local file.`,
+      LLMErrorCode.MODEL_NOT_FOUND,
+      {
+        statusCode: 400,
+        retryable: false,
+        details: { providedModel: model, suggestedModel: typo.correct }
+      }
+    );
+  }
+
+  // Warn if model doesn't match known valid models (but don't throw - new models may be added)
+  if (!validModels.includes(model) && !model.startsWith("gpt-")) {
+    llmLogger.warn(
+      { model, validModels },
+      `Model "${model}" is not in the list of known valid models. This may cause API errors.`
+    );
+  }
+}
+
 // ============================================================================
 // Prompt Builder
 // ============================================================================
@@ -122,12 +176,19 @@ Rules:
 - Dates must be ISO 8601 YYYY-MM-DD. If day is missing infer best guess.
 - Provide statement summary totals and currency.
 - Include warnings for ambiguous rows.
+- Extract metadata from statement: statement date (to determine month), card last 4 digits, and cardholder name.
 `;
 
 function buildPrompt(input: StatementExtractionPrompt): string {
   const schema = {
     run_id: "string",
     model: "string",
+    metadata: {
+      statement_date: "YYYY-MM-DD (extract from statement 'Hesap Kesim Tarihi' or similar)",
+      statement_month: "YYYY-MM (derived from statement_date)",
+      card_last4: "string (last 4 digits from masked card number like '4743********8479')",
+      cardholder_name: "string (extract from statement, e.g., 'SN. ARMAN EKER')",
+    },
     summary: {
       transactions: "number",
       total_spend: "number (positive total of charges)",
@@ -340,6 +401,10 @@ export async function extractTransactionsWithLLM(
 ): Promise<StatementExtraction> {
   const client = getClient();
   const model = process.env.OPENAI_IMPORT_MODEL ?? "gpt-4o-mini";
+
+  // Validate model name early to catch configuration errors
+  validateModelName(model);
+
   const startTime = Date.now();
 
   // Log the start of the LLM call
