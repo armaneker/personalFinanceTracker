@@ -216,32 +216,58 @@ export default function PendingImportsView({ initialRuns }: Props) {
                   No transactions extracted in this run.
                 </p>
               ) : (
-                <div className="mt-3 overflow-x-auto">
-                  <table className="min-w-full divide-y divide-slate-200 text-sm">
-                    <thead>
-                      <tr className="text-left text-xs uppercase tracking-wide text-slate-500">
-                        <th className="px-3 py-2">Date</th>
-                        <th className="px-3 py-2">Merchant</th>
-                        <th className="px-3 py-2">Card</th>
-                        <th className="px-3 py-2 text-right">Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 text-slate-700">
-                      {run.sample_transactions.map((tx) => (
-                        <tr key={tx.id}>
-                          <td className="whitespace-nowrap px-3 py-2">
-                            {format(new Date(tx.transaction_date), "dd MMM yyyy")}
-                          </td>
-                          <td className="px-3 py-2">{tx.merchant}</td>
-                          <td className="px-3 py-2">{tx.card_id}</td>
-                          <td className="whitespace-nowrap px-3 py-2 text-right font-medium">
+                <>
+                  {/* Mobile card view for sample transactions */}
+                  <div className="mt-3 md:hidden space-y-2">
+                    {run.sample_transactions.map((tx) => (
+                      <div
+                        key={tx.id}
+                        className="rounded-lg border border-slate-100 bg-slate-50 p-3"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <p className="font-medium text-slate-900 truncate">{tx.merchant}</p>
+                            <p className="text-xs text-slate-500">{tx.card_id}</p>
+                          </div>
+                          <p className="font-semibold text-slate-900 flex-shrink-0">
                             {formatMoney(tx.amount, run.summary.currency)}
-                          </td>
+                          </p>
+                        </div>
+                        <p className="mt-1 text-xs text-slate-500">
+                          {format(new Date(tx.transaction_date), "dd MMM yyyy")}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Desktop table view for sample transactions */}
+                  <div className="mt-3 hidden md:block overflow-x-auto">
+                    <table className="min-w-full divide-y divide-slate-200 text-sm">
+                      <thead>
+                        <tr className="text-left text-xs uppercase tracking-wide text-slate-500">
+                          <th className="px-3 py-2">Date</th>
+                          <th className="px-3 py-2">Merchant</th>
+                          <th className="px-3 py-2">Card</th>
+                          <th className="px-3 py-2 text-right">Amount</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 text-slate-700">
+                        {run.sample_transactions.map((tx) => (
+                          <tr key={tx.id}>
+                            <td className="whitespace-nowrap px-3 py-2">
+                              {format(new Date(tx.transaction_date), "dd MMM yyyy")}
+                            </td>
+                            <td className="px-3 py-2">{tx.merchant}</td>
+                            <td className="px-3 py-2">{tx.card_id}</td>
+                            <td className="whitespace-nowrap px-3 py-2 text-right font-medium">
+                              {formatMoney(tx.amount, run.summary.currency)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
               )}
               {run.sample_count < run.total_transactions && (
                 <p className="mt-2 text-xs text-slate-500">
@@ -260,7 +286,41 @@ export default function PendingImportsView({ initialRuns }: Props) {
                   <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
                     All transactions ({details[run.run_id].transactions.length})
                   </p>
-                  <div className="mt-3 overflow-x-auto">
+
+                  {/* Mobile card view for all transactions */}
+                  <div className="mt-3 md:hidden space-y-2 max-h-96 overflow-y-auto">
+                    {details[run.run_id].transactions.map((tx) => (
+                      <div
+                        key={tx.id}
+                        className="rounded-lg border border-slate-200 bg-white p-3 space-y-2"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <p className="font-medium text-slate-900 truncate">{tx.merchant}</p>
+                            {tx.description && (
+                              <p className="text-xs text-slate-500 truncate">{tx.description}</p>
+                            )}
+                          </div>
+                          <p className="font-semibold text-slate-900 flex-shrink-0">
+                            {formatMoney(tx.amount, run.summary.currency)}
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap gap-2 text-xs text-slate-500">
+                          <span>{format(new Date(tx.transaction_date), "dd MMM yyyy")}</span>
+                          <span>Card: {tx.card_id}</span>
+                          {tx.owner_id && <span>Owner: {tx.owner_id}</span>}
+                        </div>
+                        {tx.original_currency && (
+                          <p className="text-xs text-slate-500">
+                            Original: {tx.original_currency} {Math.abs(tx.original_amount ?? 0).toFixed(2)}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Desktop table view for all transactions */}
+                  <div className="mt-3 hidden md:block overflow-x-auto">
                     <table className="min-w-full divide-y divide-slate-200 text-sm">
                       <thead>
                         <tr className="text-left text-xs uppercase tracking-wide text-slate-500">
@@ -307,26 +367,24 @@ export default function PendingImportsView({ initialRuns }: Props) {
               )}
 
               <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-end">
-                <div className="flex items-center gap-3">
-                  {run.total_transactions > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => toggleDetails(run.run_id)}
-                      className="rounded-md border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-100"
-                    >
-                      {expandedRun === run.run_id
-                        ? "Hide transactions"
-                        : detailLoading === run.run_id
-                          ? "Loading..."
-                          : "View transactions"}
-                    </button>
-                  )}
-                </div>
+                {run.total_transactions > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => toggleDetails(run.run_id)}
+                    className="rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-100 min-h-11 w-full md:w-auto"
+                  >
+                    {expandedRun === run.run_id
+                      ? "Hide transactions"
+                      : detailLoading === run.run_id
+                        ? "Loading..."
+                        : "View transactions"}
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => approve(run.run_id)}
                   disabled={approvingId === run.run_id}
-                  className="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+                  className="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 min-h-11 w-full md:w-auto"
                 >
                   {approvingId === run.run_id ? "Approving..." : "Approve & commit"}
                 </button>
@@ -334,7 +392,7 @@ export default function PendingImportsView({ initialRuns }: Props) {
                   type="button"
                   onClick={() => remove(run.run_id)}
                   disabled={deletingId === run.run_id}
-                  className="rounded-md border border-red-300 px-4 py-2 text-sm font-semibold text-red-600 shadow-sm transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-md border border-red-300 px-4 py-2 text-sm font-semibold text-red-600 shadow-sm transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 min-h-11 w-full md:w-auto"
                 >
                   {deletingId === run.run_id ? "Removing..." : "Discard"}
                 </button>

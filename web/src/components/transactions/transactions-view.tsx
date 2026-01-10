@@ -176,11 +176,11 @@ export default function TransactionsView({
         </div>
       </header>
 
-      <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-5">
+      <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm grid-cols-1 sm:grid-cols-2 md:grid-cols-5">
         <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
           Month
           <select
-            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
+            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11"
             value={filters.month}
             onChange={(event) =>
               setFilters((prev) => ({ ...prev, month: event.target.value ?? "" }))
@@ -196,7 +196,7 @@ export default function TransactionsView({
         <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
           Card
           <select
-            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
+            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11"
             value={filters.cardId ?? ""}
             onChange={(event) =>
               setFilters((prev) => ({
@@ -216,7 +216,7 @@ export default function TransactionsView({
         <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
           Owner
           <select
-            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
+            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11"
             value={filters.ownerId ?? ""}
             onChange={(event) =>
               setFilters((prev) => ({
@@ -236,7 +236,7 @@ export default function TransactionsView({
         <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
           Category
           <select
-            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
+            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11"
             value={filters.categoryId ?? ""}
             onChange={(event) =>
               setFilters((prev) => ({
@@ -253,10 +253,10 @@ export default function TransactionsView({
             ))}
           </select>
         </label>
-        <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
+        <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500 sm:col-span-2 md:col-span-1">
           Search
           <input
-            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
+            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11"
             placeholder="Merchant or note"
             value={filters.search ?? ""}
             onChange={(event) =>
@@ -319,7 +319,89 @@ export default function TransactionsView({
                   </p>
                 </div>
               </header>
-              <div className="overflow-x-auto">
+              {/* Mobile card view */}
+              <div className="md:hidden space-y-3">
+                {rows.map((row) => (
+                  <div
+                    key={row.id}
+                    className="rounded-lg border border-slate-100 bg-slate-50 p-4 space-y-3"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="font-medium text-slate-900">{row.merchant}</p>
+                        {row.description && (
+                          <p className="text-xs text-slate-500">{row.description}</p>
+                        )}
+                      </div>
+                      <p className="font-semibold text-slate-900">
+                        {formatMoney(row.amount, row.currency)}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-between text-sm text-slate-600">
+                      <span>{format(new Date(row.transaction_date), "dd MMM yyyy")}</span>
+                      {row.original_currency && row.original_amount !== undefined && (
+                        <span className="text-xs text-slate-500">
+                          {`${row.original_currency} ${Math.abs(row.original_amount).toFixed(2)}`}
+                        </span>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <label className="flex flex-col text-xs font-medium text-slate-500">
+                        Owner
+                        <select
+                          value={row.owner_id}
+                          className="mt-1 w-full rounded-md border border-slate-300 px-2 py-2 text-sm text-slate-700 min-h-11"
+                          onChange={(event) =>
+                            updateTransaction(row, { owner_id: event.target.value })
+                          }
+                          disabled={savingId === row.id}
+                        >
+                          {owners.map((owner) => (
+                            <option key={owner.id} value={owner.id}>
+                              {owner.label}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <label className="flex flex-col text-xs font-medium text-slate-500">
+                        Category
+                        <select
+                          value={row.category_id}
+                          className="mt-1 w-full rounded-md border border-slate-300 px-2 py-2 text-sm text-slate-700 min-h-11"
+                          onChange={(event) =>
+                            updateTransaction(row, {
+                              category_id: event.target.value,
+                              llm_category_id: event.target.value,
+                            })
+                          }
+                          disabled={savingId === row.id}
+                        >
+                          {categories.map((category) => (
+                            <option key={category.id} value={category.id}>
+                              {category.name}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    </div>
+                    {row.notes && (
+                      <p className="text-xs text-slate-600">Notes: {row.notes}</p>
+                    )}
+                    <div className="flex justify-end pt-2 border-t border-slate-200">
+                      <button
+                        className="min-h-11 min-w-11 px-4 py-2 text-sm font-semibold text-red-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                        onClick={() => deleteTransactionRow(row)}
+                        disabled={savingId === row.id}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop table view */}
+              <div className="hidden md:block overflow-x-auto">
                 <table className="min-w-full divide-y divide-slate-200 text-sm">
                   <thead>
                     <tr className="text-left text-xs uppercase tracking-wide text-slate-500">
