@@ -190,3 +190,35 @@ export async function loadPendingExtractionWithMeta(
     savedAt: result[0].savedAt,
   };
 }
+
+/**
+ * Get an import run by ID
+ */
+export async function getImportRunById(
+  userId: string,
+  runId: string,
+): Promise<ImportRun | null> {
+  const result = await db
+    .select()
+    .from(importRuns)
+    .where(and(eq(importRuns.runId, runId), eq(importRuns.userId, userId)))
+    .limit(1);
+
+  if (result.length === 0) {
+    return null;
+  }
+
+  return toApiType(result[0]);
+}
+
+/**
+ * Delete an import run
+ */
+export async function deleteImportRun(
+  userId: string,
+  runId: string,
+): Promise<void> {
+  await db
+    .delete(importRuns)
+    .where(and(eq(importRuns.runId, runId), eq(importRuns.userId, userId)));
+}

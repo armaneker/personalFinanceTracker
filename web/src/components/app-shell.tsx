@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { href: "/transactions", label: "Transactions" },
   { href: "/imports", label: "Imports" },
   { href: "/imports/pending", label: "Pending" },
+  { href: "/imports/history", label: "History" },
   { href: "/categories", label: "Categories" },
 ];
 
