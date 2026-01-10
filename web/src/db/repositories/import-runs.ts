@@ -1,12 +1,9 @@
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 
 import { db } from "../index";
 import { importRuns, pendingExtractions } from "../schema";
 import type { ImportRun as ImportRunEntity } from "../schema";
 import type { ImportRun } from "@/lib/types";
-
-// Default user ID for single-user mode (will be replaced with actual auth)
-const DEFAULT_USER_ID = "default-user";
 
 /**
  * Convert database entity to API type
@@ -33,9 +30,9 @@ function toApiType(entity: ImportRunEntity): ImportRun {
 }
 
 /**
- * Get import history for the current user
+ * Get import history for a user
  */
-export async function getImportHistory(userId: string = DEFAULT_USER_ID): Promise<ImportRun[]> {
+export async function getImportHistory(userId: string): Promise<ImportRun[]> {
   const result = await db
     .select()
     .from(importRuns)
@@ -49,8 +46,8 @@ export async function getImportHistory(userId: string = DEFAULT_USER_ID): Promis
  * Append a new import run to history
  */
 export async function appendImportHistory(
+  userId: string,
   entry: ImportRun,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<void> {
   await db.insert(importRuns).values({
     runId: entry.run_id,
@@ -72,11 +69,10 @@ export async function appendImportHistory(
  * Update an import run status
  */
 export async function updateImportRun(
+  userId: string,
   runId: string,
   updates: Partial<ImportRun>,
-  _userId: string = DEFAULT_USER_ID,
 ): Promise<void> {
-  // TODO: Add user ownership check when multi-tenancy is enabled
   await db
     .update(importRuns)
     .set({
@@ -87,24 +83,24 @@ export async function updateImportRun(
       error: updates.error,
       fingerprint: updates.fingerprint,
     })
-    .where(eq(importRuns.runId, runId));
+    .where(and(eq(importRuns.runId, runId), eq(importRuns.userId, userId)));
 }
 
 /**
  * Save a pending extraction
  */
 export async function savePendingExtraction(
+  userId: string,
   runId: string,
   payload: unknown,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<void> {
   const now = new Date().toISOString();
 
-  // Check if exists
+  // Check if exists for this user
   const existing = await db
     .select()
     .from(pendingExtractions)
-    .where(eq(pendingExtractions.runId, runId))
+    .where(and(eq(pendingExtractions.runId, runId), eq(pendingExtractions.userId, userId)))
     .limit(1);
 
   if (existing.length > 0) {
@@ -115,7 +111,7 @@ export async function savePendingExtraction(
         payload: JSON.stringify(payload),
         savedAt: now,
       })
-      .where(eq(pendingExtractions.runId, runId));
+      .where(and(eq(pendingExtractions.runId, runId), eq(pendingExtractions.userId, userId)));
   } else {
     // Insert
     await db.insert(pendingExtractions).values({
@@ -131,21 +127,16 @@ export async function savePendingExtraction(
  * Load a pending extraction
  */
 export async function loadPendingExtraction(
+  userId: string,
   runId: string,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<unknown | null> {
   const result = await db
     .select()
     .from(pendingExtractions)
-    .where(eq(pendingExtractions.runId, runId))
+    .where(and(eq(pendingExtractions.runId, runId), eq(pendingExtractions.userId, userId)))
     .limit(1);
 
   if (result.length === 0) {
-    return null;
-  }
-
-  // Verify user ownership
-  if (result[0].userId !== userId) {
     return null;
   }
 
@@ -156,17 +147,18 @@ export async function loadPendingExtraction(
  * Delete a pending extraction
  */
 export async function deletePendingExtraction(
+  userId: string,
   runId: string,
-  _userId: string = DEFAULT_USER_ID,
 ): Promise<void> {
-  // TODO: Add user ownership check when multi-tenancy is enabled
-  await db.delete(pendingExtractions).where(eq(pendingExtractions.runId, runId));
+  await db
+    .delete(pendingExtractions)
+    .where(and(eq(pendingExtractions.runId, runId), eq(pendingExtractions.userId, userId)));
 }
 
 /**
- * List all pending run IDs for the current user
+ * List all pending run IDs for a user
  */
-export async function listPendingRunIds(userId: string = DEFAULT_USER_ID): Promise<string[]> {
+export async function listPendingRunIds(userId: string): Promise<string[]> {
   const result = await db
     .select({ runId: pendingExtractions.runId })
     .from(pendingExtractions)
@@ -180,21 +172,16 @@ export async function listPendingRunIds(userId: string = DEFAULT_USER_ID): Promi
  * Load a pending extraction with metadata
  */
 export async function loadPendingExtractionWithMeta(
+  userId: string,
   runId: string,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<{ data: unknown; savedAt: string } | null> {
   const result = await db
     .select()
     .from(pendingExtractions)
-    .where(eq(pendingExtractions.runId, runId))
+    .where(and(eq(pendingExtractions.runId, runId), eq(pendingExtractions.userId, userId)))
     .limit(1);
 
   if (result.length === 0) {
-    return null;
-  }
-
-  // Verify user ownership
-  if (result[0].userId !== userId) {
     return null;
   }
 

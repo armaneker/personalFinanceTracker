@@ -5,9 +5,6 @@ import { transactions } from "../schema";
 import type { Transaction as TransactionEntity } from "../schema";
 import type { TransactionRecord, TransactionFile, TransactionFileMeta } from "@/lib/types";
 
-// Default user ID for single-user mode (will be replaced with actual auth)
-const DEFAULT_USER_ID = "default-user";
-
 /**
  * Convert database entity to API type
  */
@@ -87,9 +84,9 @@ function getMonth(transactionDate: string): string {
 }
 
 /**
- * List all transaction months for the current user
+ * List all transaction months for a user
  */
-export async function listTransactionMonths(userId: string = DEFAULT_USER_ID): Promise<string[]> {
+export async function listTransactionMonths(userId: string): Promise<string[]> {
   const result = await db
     .selectDistinct({ month: transactions.transactionDate })
     .from(transactions)
@@ -108,8 +105,8 @@ export async function listTransactionMonths(userId: string = DEFAULT_USER_ID): P
  * Load all transactions for a specific month
  */
 export async function loadTransactionFile(
+  userId: string,
   month: string,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<TransactionFile | null> {
   const result = await db
     .select()
@@ -138,10 +135,10 @@ export async function loadTransactionFile(
 }
 
 /**
- * Load all transactions for the current user
+ * Load all transactions for a user
  */
 export async function loadAllTransactions(
-  userId: string = DEFAULT_USER_ID,
+  userId: string,
 ): Promise<TransactionRecord[]> {
   const result = await db
     .select()
@@ -156,9 +153,9 @@ export async function loadAllTransactions(
  * Save a transaction file (upsert all transactions for the month)
  */
 export async function saveTransactionFile(
+  userId: string,
   month: string,
   data: TransactionFile,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<void> {
   // Delete existing transactions for this month
   await db
@@ -177,21 +174,24 @@ export async function saveTransactionFile(
  * Create or update a single transaction
  */
 export async function createOrUpdateTransaction(
+  userId: string,
   month: string,
   transaction: TransactionRecord,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<TransactionRecord> {
   const existing = await db
     .select()
     .from(transactions)
-    .where(eq(transactions.id, transaction.id))
+    .where(and(eq(transactions.id, transaction.id), eq(transactions.userId, userId)))
     .limit(1);
 
   if (existing.length > 0) {
     // Update - omit id and userId from the update values
     const dbValues = toDbValues(transaction, userId);
     const { id: _id, userId: _uid, ...updateValues } = dbValues;
-    await db.update(transactions).set(updateValues).where(eq(transactions.id, transaction.id));
+    await db
+      .update(transactions)
+      .set(updateValues)
+      .where(and(eq(transactions.id, transaction.id), eq(transactions.userId, userId)));
   } else {
     // Insert
     await db.insert(transactions).values(toDbValues(transaction, userId));
@@ -204,9 +204,9 @@ export async function createOrUpdateTransaction(
  * Delete a transaction
  */
 export async function deleteTransaction(
+  userId: string,
   month: string,
   transactionId: string,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<void> {
   await db
     .delete(transactions)
@@ -217,8 +217,8 @@ export async function deleteTransaction(
  * Get a single transaction by ID
  */
 export async function getTransactionById(
+  userId: string,
   transactionId: string,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<TransactionRecord | null> {
   const result = await db
     .select()

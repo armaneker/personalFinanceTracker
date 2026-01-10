@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { approvePendingRun, discardPendingRun, getPendingRunDetail } from "@/lib/importer";
 import { errorResponse, validateRequestBody, successResponse } from "@/lib/api-utils";
+import { requireUserId } from "@/lib/auth";
 
 const overridesSchema = z
   .object({
@@ -21,6 +22,7 @@ export async function POST(
   context: { params: { runId: string } | Promise<{ runId: string }> },
 ) {
   try {
+    const userId = await requireUserId();
     const params = await context.params;
     const runId = params.runId;
     const payload = await request.json().catch(() => ({}));
@@ -29,7 +31,7 @@ export async function POST(
       overridesSchema
     ).catch(() => undefined);
 
-    const result = await approvePendingRun(runId, data ?? undefined);
+    const result = await approvePendingRun(userId, runId, data ?? undefined);
     return successResponse({ ok: true, result });
   } catch (error) {
     return errorResponse(error);
@@ -41,9 +43,10 @@ export async function GET(
   context: { params: { runId: string } | Promise<{ runId: string }> },
 ) {
   try {
+    const userId = await requireUserId();
     const params = await context.params;
     const runId = params.runId;
-    const detail = await getPendingRunDetail(runId);
+    const detail = await getPendingRunDetail(userId, runId);
     return successResponse(detail);
   } catch (error) {
     return errorResponse(error);
@@ -55,9 +58,10 @@ export async function DELETE(
   context: { params: { runId: string } | Promise<{ runId: string }> },
 ) {
   try {
+    const userId = await requireUserId();
     const params = await context.params;
     const runId = params.runId;
-    const result = await discardPendingRun(runId);
+    const result = await discardPendingRun(userId, runId);
     return successResponse({ ok: true, result });
   } catch (error) {
     return errorResponse(error);

@@ -7,6 +7,9 @@ import type { StatementExtractionInput } from './schemas'
 // Mock dependencies
 vi.mock('./data-store')
 
+// Test user ID for multi-user support
+const TEST_USER_ID = 'test-user-id'
+
 describe('category-service.ts', () => {
   const mockCategories: Category[] = [
     { id: 'cat-groceries', name: 'Groceries', color: '#22c55e' },
@@ -47,7 +50,7 @@ describe('category-service.ts', () => {
         ],
       }
 
-      await ensureCategories(extraction)
+      await ensureCategories(TEST_USER_ID, extraction)
 
       expect(dataStore.getCategories).toHaveBeenCalled()
       expect(dataStore.saveCategories).not.toHaveBeenCalled()
@@ -84,9 +87,10 @@ describe('category-service.ts', () => {
         ],
       }
 
-      await ensureCategories(extraction)
+      await ensureCategories(TEST_USER_ID, extraction)
 
       expect(dataStore.saveCategories).toHaveBeenCalledWith(
+        TEST_USER_ID,
         expect.arrayContaining([
           expect.objectContaining({
             id: 'cat-new',
@@ -121,9 +125,10 @@ describe('category-service.ts', () => {
         ],
       }
 
-      await ensureCategories(extraction)
+      await ensureCategories(TEST_USER_ID, extraction)
 
       expect(dataStore.saveCategories).toHaveBeenCalledWith(
+        TEST_USER_ID,
         expect.arrayContaining([
           expect.objectContaining({
             id: 'cat-transport',
@@ -157,9 +162,10 @@ describe('category-service.ts', () => {
         ],
       }
 
-      await ensureCategories(extraction)
+      await ensureCategories(TEST_USER_ID, extraction)
 
       expect(dataStore.saveCategories).toHaveBeenCalledWith(
+        TEST_USER_ID,
         expect.arrayContaining([
           expect.objectContaining({
             id: 'cat-entertainment',
@@ -193,7 +199,7 @@ describe('category-service.ts', () => {
         ],
       }
 
-      await ensureCategories(extraction)
+      await ensureCategories(TEST_USER_ID, extraction)
 
       // Should not crash and not save categories
       expect(dataStore.saveCategories).not.toHaveBeenCalled()
@@ -245,9 +251,9 @@ describe('category-service.ts', () => {
         ],
       }
 
-      await ensureCategories(extraction)
+      await ensureCategories(TEST_USER_ID, extraction)
 
-      const savedCategories = vi.mocked(dataStore.saveCategories).mock.calls[0]?.[0]
+      const savedCategories = vi.mocked(dataStore.saveCategories).mock.calls[0]?.[1]
       // Note: All categories are saved (existing + new), so length is > 2
       expect(savedCategories).toBeDefined()
       expect(savedCategories?.length).toBeGreaterThanOrEqual(5) // At least 2 existing + 3 new
@@ -291,7 +297,7 @@ describe('category-service.ts', () => {
         ],
       }
 
-      await ensureCategories(extraction)
+      await ensureCategories(TEST_USER_ID, extraction)
 
       expect(dataStore.saveCategories).not.toHaveBeenCalled()
     })

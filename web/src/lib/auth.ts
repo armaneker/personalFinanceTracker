@@ -1,11 +1,12 @@
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, getServerSession as nextAuthGetServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 
+import { getUserByEmail } from "@/db/repositories/users";
+
 /**
  * Auth configuration for NextAuth.js
- * Uses Credentials provider for single-user authentication
- * Credentials are validated against environment variables
+ * Uses Credentials provider with database-backed user authentication
  */
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -17,24 +18,24 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
+          console.log("[AUTH] Missing credentials");
           return null;
         }
 
-        const userEmail = process.env.AUTH_USER_EMAIL;
-        const userPasswordHash = process.env.AUTH_USER_PASSWORD_HASH;
+        console.log("[AUTH] Attempting login for:", credentials.email);
 
-        if (!userEmail || !userPasswordHash) {
-          console.error("AUTH_USER_EMAIL or AUTH_USER_PASSWORD_HASH not configured");
-          return null;
-        }
+        // Query user from database
+        const user = await getUserByEmail(credentials.email);
 
-        // Check if email matches
-        if (credentials.email !== userEmail) {
+        if (!user) {
+          console.log("[AUTH] User not found:", credentials.email);
           return null;
         }
 
         // Verify password against stored hash
-        const isValidPassword = await compare(credentials.password, userPasswordHash);
+        const isValidPassword = await compare(credentials.password, user.passwordHash);
+
+        console.log("[AUTH] Password validation:", isValidPassword);
 
         if (!isValidPassword) {
           return null;
@@ -42,9 +43,9 @@ export const authOptions: NextAuthOptions = {
 
         // Return user object on successful authentication
         return {
-          id: "1",
-          email: userEmail,
-          name: "Admin",
+          id: user.id,
+          email: user.email,
+          name: user.name ?? undefined,
         };
       },
     }),
@@ -71,3 +72,23 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
+/**
+ * Get the current session with user ID
+ * Returns null if not authenticated
+ */
+export async function getServerSession() {
+  return nextAuthGetServerSession(authOptions);
+}
+
+/**
+ * Get the current user ID from session
+ * Throws an error if not authenticated
+ */
+export async function requireUserId(): Promise<string> {
+  const session = await getServerSession();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+  return session.user.id;
+}

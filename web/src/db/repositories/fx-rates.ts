@@ -4,9 +4,6 @@ import { db } from "../index";
 import { fxRates } from "../schema";
 import type { FxRate, NewFxRate } from "../schema";
 
-// Default user ID for single-user mode (will be replaced with actual auth)
-const DEFAULT_USER_ID = "default-user";
-
 /**
  * FX rate source types
  */
@@ -34,7 +31,7 @@ function generateFxRateId(base: string, target: string, date: string): string {
  * Get a cached FX rate for a specific date
  */
 export async function getRate(
-  userId: string = DEFAULT_USER_ID,
+  userId: string,
   baseCurrency: string,
   targetCurrency: string,
   date: string,
@@ -59,7 +56,7 @@ export async function getRate(
  * Save an FX rate to the cache
  */
 export async function saveRate(
-  userId: string = DEFAULT_USER_ID,
+  userId: string,
   params: SaveFxRateParams,
 ): Promise<FxRate> {
   const base = params.baseCurrency.toUpperCase();
@@ -101,7 +98,7 @@ export async function saveRate(
  * Get the most recent FX rate for a currency pair (for fallback)
  */
 export async function getLatestRate(
-  userId: string = DEFAULT_USER_ID,
+  userId: string,
   baseCurrency: string,
   targetCurrency: string,
 ): Promise<FxRate | null> {
@@ -124,7 +121,7 @@ export async function getLatestRate(
 /**
  * Get all cached rates for a user
  */
-export async function getAllRates(userId: string = DEFAULT_USER_ID): Promise<FxRate[]> {
+export async function getAllRates(userId: string): Promise<FxRate[]> {
   return db
     .select()
     .from(fxRates)
@@ -136,7 +133,7 @@ export async function getAllRates(userId: string = DEFAULT_USER_ID): Promise<FxR
  * Delete old FX rates (older than specified days)
  */
 export async function deleteOldRates(
-  userId: string = DEFAULT_USER_ID,
+  userId: string,
   daysToKeep: number = 90,
 ): Promise<number> {
   const cutoffDate = new Date();
@@ -147,7 +144,7 @@ export async function deleteOldRates(
   const toDelete = await db
     .select()
     .from(fxRates)
-    .where(and(eq(fxRates.userId, userId)));
+    .where(eq(fxRates.userId, userId));
 
   const oldRates = toDelete.filter((r) => r.date < cutoffStr);
 

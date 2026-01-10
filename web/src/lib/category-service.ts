@@ -6,8 +6,8 @@ import { slugifyId } from "./utils";
  * Ensure all categories referenced in extraction exist in the category store.
  * Auto-creates missing categories with default colors.
  */
-export async function ensureCategories(extraction: StatementExtractionInput): Promise<void> {
-  const categories = await getCategories();
+export async function ensureCategories(userId: string, extraction: StatementExtractionInput): Promise<void> {
+  const categories = await getCategories(userId);
   const map = new Map(categories.map((cat) => [cat.id, cat]));
   let changed = false;
 
@@ -40,6 +40,6 @@ export async function ensureCategories(extraction: StatementExtractionInput): Pr
   });
 
   if (changed) {
-    await saveCategories(categories);
+    await saveCategories(userId, categories);
   }
 }

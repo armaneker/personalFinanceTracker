@@ -9,21 +9,23 @@ import { generateTransactionId } from "@/lib/ids";
 import { TransactionRecord } from "@/lib/types";
 import { errorResponse, validateRequestBody, successResponse, createdResponse } from "@/lib/api-utils";
 import { ErrorFactory } from "@/lib/errors";
+import { requireUserId } from "@/lib/auth";
 
 export async function GET(request: Request) {
   try {
+    const userId = await requireUserId();
     const { searchParams } = new URL(request.url);
     const monthParam = searchParams.get("month");
     const cardId = searchParams.get("cardId");
     const ownerId = searchParams.get("ownerId");
     const categoryId = searchParams.get("categoryId");
 
-    const months = await listTransactionMonths();
+    const months = await listTransactionMonths(userId);
     if (months.length === 0) {
       return successResponse({ month: null, transactions: [] });
     }
     const month = monthParam ?? months[0];
-    const file = await loadTransactionFile(month);
+    const file = await loadTransactionFile(userId, month);
     if (!file) {
       return successResponse({ month, transactions: [] });
     }
@@ -51,6 +53,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const userId = await requireUserId();
     const input = await validateRequestBody(request, transactionUpsertSchema);
     const now = new Date().toISOString();
 
@@ -74,7 +77,7 @@ export async function POST(request: Request) {
       flags: input.flags ?? { review: false, duplicate: false },
     };
 
-    const saved = await createOrUpdateTransaction(input.month, record);
+    const saved = await createOrUpdateTransaction(userId, input.month, record);
     return createdResponse({ transaction: saved });
   } catch (error) {
     return errorResponse(error);
@@ -83,13 +86,14 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    const userId = await requireUserId();
     const payload = await request.json();
     const { month, transactionId } = payload ?? {};
     if (!month || !transactionId) {
       throw ErrorFactory.validationError("month and transactionId are required");
     }
 
-    await deleteTransaction(month, transactionId);
+    await deleteTransaction(userId, month, transactionId);
     return successResponse({ ok: true });
   } catch (error) {
     return errorResponse(error);

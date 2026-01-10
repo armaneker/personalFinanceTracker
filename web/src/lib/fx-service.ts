@@ -5,9 +5,6 @@ import {
   type FxRateSource,
 } from "@/db/repositories/fx-rates";
 
-// Default user ID for single-user mode
-const DEFAULT_USER_ID = "default-user";
-
 // Rate limiting: max 1 request per second
 let lastApiCallTime = 0;
 const MIN_API_INTERVAL_MS = 1000;
@@ -140,7 +137,7 @@ export async function getRate(
   baseCurrency: string,
   targetCurrency: string,
   date: string,
-  userId: string = DEFAULT_USER_ID,
+  userId: string,
 ): Promise<{ rate: number; source: FxRateSource } | null> {
   const base = baseCurrency.toUpperCase();
   const target = targetCurrency.toUpperCase();
@@ -209,7 +206,7 @@ export async function getRateWithFallback(
   baseCurrency: string,
   targetCurrency: string,
   date: string,
-  userId: string = DEFAULT_USER_ID,
+  userId: string,
 ): Promise<{ rate: number; source: FxRateSource }> {
   const result = await getRate(baseCurrency, targetCurrency, date, userId);
 
@@ -230,7 +227,7 @@ export async function setManualRate(
   targetCurrency: string,
   rate: number,
   date: string,
-  userId: string = DEFAULT_USER_ID,
+  userId: string,
 ): Promise<void> {
   const base = baseCurrency.toUpperCase();
   const target = targetCurrency.toUpperCase();
@@ -254,7 +251,7 @@ export async function convertAmount(
   fromCurrency: string,
   toCurrency: string,
   date: string,
-  userId: string = DEFAULT_USER_ID,
+  userId: string,
 ): Promise<FxConversionResult> {
   const from = fromCurrency.toUpperCase();
   const to = toCurrency.toUpperCase();

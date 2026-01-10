@@ -1,12 +1,9 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 import { db } from "../index";
 import { cards } from "../schema";
 import type { Card as CardEntity } from "../schema";
 import type { Card } from "@/lib/types";
-
-// Default user ID for single-user mode (will be replaced with actual auth)
-const DEFAULT_USER_ID = "default-user";
 
 /**
  * Convert database entity to API type
@@ -22,9 +19,9 @@ function toApiType(entity: CardEntity): Card {
 }
 
 /**
- * Get all cards for the current user
+ * Get all cards for a user
  */
-export async function getCards(userId: string = DEFAULT_USER_ID): Promise<Card[]> {
+export async function getCards(userId: string): Promise<Card[]> {
   const result = await db.select().from(cards).where(eq(cards.userId, userId));
   return result.map(toApiType);
 }
@@ -33,21 +30,16 @@ export async function getCards(userId: string = DEFAULT_USER_ID): Promise<Card[]
  * Get a single card by ID
  */
 export async function getCardById(
+  userId: string,
   cardId: string,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<Card | null> {
   const result = await db
     .select()
     .from(cards)
-    .where(eq(cards.id, cardId))
+    .where(and(eq(cards.id, cardId), eq(cards.userId, userId)))
     .limit(1);
 
   if (result.length === 0) {
-    return null;
-  }
-
-  // Verify user ownership
-  if (result[0].userId !== userId) {
     return null;
   }
 
@@ -57,10 +49,14 @@ export async function getCardById(
 /**
  * Create or update a card
  */
-export async function upsertCard(card: Card, userId: string = DEFAULT_USER_ID): Promise<Card> {
+export async function upsertCard(userId: string, card: Card): Promise<Card> {
   const now = new Date().toISOString();
 
-  const existing = await db.select().from(cards).where(eq(cards.id, card.id)).limit(1);
+  const existing = await db
+    .select()
+    .from(cards)
+    .where(and(eq(cards.id, card.id), eq(cards.userId, userId)))
+    .limit(1);
 
   if (existing.length > 0) {
     // Update
@@ -73,7 +69,7 @@ export async function upsertCard(card: Card, userId: string = DEFAULT_USER_ID): 
         currency: card.currency,
         updatedAt: now,
       })
-      .where(eq(cards.id, card.id));
+      .where(and(eq(cards.id, card.id), eq(cards.userId, userId)));
   } else {
     // Insert
     await db.insert(cards).values({
@@ -94,11 +90,10 @@ export async function upsertCard(card: Card, userId: string = DEFAULT_USER_ID): 
 /**
  * Delete a card
  */
-export async function deleteCard(cardId: string, _userId: string = DEFAULT_USER_ID): Promise<void> {
-  // TODO: Add user ownership check when multi-tenancy is enabled
+export async function deleteCard(userId: string, cardId: string): Promise<void> {
   const result = await db
     .delete(cards)
-    .where(eq(cards.id, cardId))
+    .where(and(eq(cards.id, cardId), eq(cards.userId, userId)))
     .returning({ id: cards.id });
 
   if (result.length === 0) {

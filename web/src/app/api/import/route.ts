@@ -15,6 +15,7 @@ import { generateRunId } from "@/lib/ids";
 import { getCategories } from "@/lib/data-store";
 import { errorResponse, validateRequestBody, successResponse } from "@/lib/api-utils";
 import { ErrorFactory } from "@/lib/errors";
+import { requireUserId } from "@/lib/auth";
 
 const requestSchema = z
   .object({
@@ -44,6 +45,7 @@ export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   try {
+    const userId = await requireUserId();
     const data = await validateRequestBody(request, requestSchema);
     const runId = generateRunId("run");
 
@@ -77,7 +79,7 @@ export async function POST(request: Request) {
     const normalizedText = statementText.replace(/\s+/g, " ").trim();
     const fingerprint = createHash("sha256").update(normalizedText).digest("hex");
 
-    const duplicate = await findExistingImportByFingerprint(fingerprint, data.cardId ?? undefined);
+    const duplicate = await findExistingImportByFingerprint(userId, fingerprint, data.cardId ?? undefined);
     if (duplicate) {
       const message = duplicate.type === "history"
         ? `Statement already imported (run ${duplicate.run_id}).`
@@ -85,7 +87,7 @@ export async function POST(request: Request) {
       throw ErrorFactory.duplicate(message, { duplicate });
     }
 
-    const categories = await getCategories();
+    const categories = await getCategories(userId);
 
     const extraction = await extractTransactionsWithLLM({
       statementName: data.statementName,
@@ -97,7 +99,7 @@ export async function POST(request: Request) {
     });
     const normalized = {
       ...extraction,
-      run_id: extraction.run_id ?? runId,
+      run_id: runId, // Always use server-generated unique ID, not LLM response
       model: extraction.model ?? process.env.OPENAI_IMPORT_MODEL ?? "gpt-4o-mini",
     };
     const validated = validateExtraction(normalized);
@@ -114,10 +116,10 @@ export async function POST(request: Request) {
       fingerprint,
     };
 
-    const prepared = await persistExtractionToPending(validated.run_id, validated, commitOptions);
+    const prepared = await persistExtractionToPending(userId, validated.run_id, validated, commitOptions);
 
     if (data.autoCommit) {
-      await commitExtraction(validated, commitOptions, prepared);
+      await commitExtraction(userId, validated, commitOptions, prepared);
     }
 
     return successResponse({

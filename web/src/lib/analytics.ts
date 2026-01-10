@@ -8,6 +8,10 @@ import {
 } from "./data-store";
 import { Category, Owner, TransactionRecord } from "./types";
 
+/**
+ * All analytics functions require a userId parameter for multi-user support.
+ */
+
 export interface BreakdownRow<T> {
   key: string;
   label: string;
@@ -48,19 +52,19 @@ function sumSpend(amounts: number[]): { totalSpent: number; net: number } {
   return { totalSpent, net };
 }
 
-export async function buildDashboardSummary(targetMonth?: string): Promise<DashboardSummary | null> {
-  const months = await listTransactionMonths();
+export async function buildDashboardSummary(userId: string, targetMonth?: string): Promise<DashboardSummary | null> {
+  const months = await listTransactionMonths(userId);
   if (months.length === 0) {
     return null;
   }
 
   const month = targetMonth ?? months[0];
-  const currentFile = await loadTransactionFile(month);
+  const currentFile = await loadTransactionFile(userId, month);
   if (!currentFile) {
     return null;
   }
 
-  const [categories, owners, cards] = await Promise.all([getCategories(), getOwners(), getCards()]);
+  const [categories, owners, cards] = await Promise.all([getCategories(userId), getOwners(userId), getCards(userId)]);
   const categoryMap = new Map(categories.map((cat) => [cat.id, cat]));
   const ownerMap = new Map(owners.map((owner) => [owner.id, owner]));
   const cardMap = new Map(cards.map((card) => [card.id, card]));
@@ -177,7 +181,7 @@ export async function buildDashboardSummary(targetMonth?: string): Promise<Dashb
   const trend: DashboardSummary["trend"] = [];
   let previous: { month: string; total_spent: number; net: number } | undefined;
   for (const trendMonth of months.slice().reverse()) {
-    const file = await loadTransactionFile(trendMonth);
+    const file = await loadTransactionFile(userId, trendMonth);
     if (!file) {
       continue;
     }
@@ -214,8 +218,8 @@ export async function buildDashboardSummary(targetMonth?: string): Promise<Dashb
   return summary;
 }
 
-export async function getTransactionsGroupedByCard() {
-  const [cards, months] = await Promise.all([getCards(), listTransactionMonths()]);
+export async function getTransactionsGroupedByCard(userId: string) {
+  const [cards, months] = await Promise.all([getCards(userId), listTransactionMonths(userId)]);
   const cardMap = new Map(cards.map((card) => [card.id, card]));
   const result: Array<{
     card_id: string;
@@ -225,7 +229,7 @@ export async function getTransactionsGroupedByCard() {
   }> = [];
 
   for (const month of months) {
-    const file = await loadTransactionFile(month);
+    const file = await loadTransactionFile(userId, month);
     if (!file) continue;
     const grouped = new Map<string, typeof file.transactions>();
     for (const tx of file.transactions) {
@@ -247,12 +251,12 @@ export async function getTransactionsGroupedByCard() {
   return result;
 }
 
-export async function getDistinctFilters() {
+export async function getDistinctFilters(userId: string) {
   const [cards, categories, owners, transactions] = await Promise.all([
-    getCards(),
-    getCategories(),
-    getOwners(),
-    loadAllTransactions(),
+    getCards(userId),
+    getCategories(userId),
+    getOwners(userId),
+    loadAllTransactions(userId),
   ]);
 
   return {
