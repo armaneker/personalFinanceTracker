@@ -78,9 +78,17 @@ const newCategorySchema = z.object({
   color: z.string().optional(),
 });
 
+const metadataSchema = z.object({
+  statement_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  statement_month: z.string().regex(/^\d{4}-\d{2}$/).optional(),
+  card_last4: z.string().optional(),
+  cardholder_name: z.string().optional(),
+});
+
 export const statementExtractionSchema = z.object({
   run_id: z.string().optional(),
   model: z.string().optional(),
+  metadata: metadataSchema.optional(),
   summary: summarySchema,
   transactions: z.array(transactionSchema),
   warnings: z.array(z.string()).optional().default([]),
@@ -168,12 +176,19 @@ Rules:
 - Dates must be ISO 8601 YYYY-MM-DD. If day is missing infer best guess.
 - Provide statement summary totals and currency.
 - Include warnings for ambiguous rows.
+- Extract metadata from statement: statement date (to determine month), card last 4 digits, and cardholder name.
 `;
 
 function buildPrompt(input: StatementExtractionPrompt): string {
   const schema = {
     run_id: "string",
     model: "string",
+    metadata: {
+      statement_date: "YYYY-MM-DD (extract from statement 'Hesap Kesim Tarihi' or similar)",
+      statement_month: "YYYY-MM (derived from statement_date)",
+      card_last4: "string (last 4 digits from masked card number like '4743********8479')",
+      cardholder_name: "string (extract from statement, e.g., 'SN. ARMAN EKER')",
+    },
     summary: {
       transactions: "number",
       total_spend: "number (positive total of charges)",

@@ -92,8 +92,16 @@ export interface StatementExtractionPrompt {
   categories: Category[];
 }
 
+export interface StatementMetadata {
+  statement_date?: string;
+  statement_month?: string;
+  card_last4?: string;
+  cardholder_name?: string;
+}
+
 export interface StatementExtraction {
   run_id: string;
+  metadata?: StatementMetadata;
   transactions: Array<
     Omit<TransactionRecord, "created_at" | "updated_at" | "flags" | "source_llm"> & {
       created_at?: string;
