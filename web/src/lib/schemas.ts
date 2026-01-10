@@ -50,6 +50,12 @@ export const transactionUpsertSchema = transactionRecordSchema.partial({
 export const statementExtractionSchema = z.object({
   run_id: z.string().min(1),
   model: z.string().min(1),
+  metadata: z.object({
+    statement_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+    statement_month: z.string().regex(/^\d{4}-\d{2}$/).optional(),
+    card_last4: z.string().optional(),
+    cardholder_name: z.string().optional(),
+  }).optional(),
   summary: z.object({
     transactions: z.number().int().nonnegative(),
     total_spend: z.number().nonnegative(),
