@@ -214,4 +214,93 @@ describe('POST /api/auth/signup', () => {
       })
     )
   })
+
+  it('returns 500 when database insert fails', async () => {
+    mockCreateUser.mockRejectedValue(new Error('Database connection failed'))
+
+    const newUser = {
+      email: 'test@example.com',
+      password: 'password123',
+    }
+
+    const request = createMockRequest('http://localhost:3000/api/auth/signup', {
+      method: 'POST',
+      body: newUser,
+    })
+
+    const response = await POST(request)
+
+    expect(response.status).toBe(500)
+
+    const data = await getResponseJson(response)
+    expect(data).toHaveProperty('error')
+    expect(data.code).toBe('DATABASE_ERROR')
+  })
+
+  it('returns 500 when user is not persisted', async () => {
+    mockCreateUser.mockResolvedValue(null)
+
+    const newUser = {
+      email: 'test@example.com',
+      password: 'password123',
+    }
+
+    const request = createMockRequest('http://localhost:3000/api/auth/signup', {
+      method: 'POST',
+      body: newUser,
+    })
+
+    const response = await POST(request)
+
+    expect(response.status).toBe(500)
+
+    const data = await getResponseJson(response)
+    expect(data).toHaveProperty('error')
+    expect(data.code).toBe('DATABASE_ERROR')
+  })
+
+  it('returns 409 for UNIQUE constraint violation during insert', async () => {
+    mockCreateUser.mockRejectedValue(new Error('UNIQUE constraint failed'))
+
+    const newUser = {
+      email: 'test@example.com',
+      password: 'password123',
+    }
+
+    const request = createMockRequest('http://localhost:3000/api/auth/signup', {
+      method: 'POST',
+      body: newUser,
+    })
+
+    const response = await POST(request)
+
+    expect(response.status).toBe(409)
+
+    const data = await getResponseJson(response)
+    expect(data).toHaveProperty('error')
+    expect(data.code).toBe('DUPLICATE')
+  })
+
+  it('returns 500 for database schema errors', async () => {
+    mockCreateUser.mockRejectedValue(new Error('no such column: password_hash'))
+
+    const newUser = {
+      email: 'test@example.com',
+      password: 'password123',
+    }
+
+    const request = createMockRequest('http://localhost:3000/api/auth/signup', {
+      method: 'POST',
+      body: newUser,
+    })
+
+    const response = await POST(request)
+
+    expect(response.status).toBe(500)
+
+    const data = await getResponseJson(response)
+    expect(data).toHaveProperty('error')
+    expect(data.code).toBe('DATABASE_ERROR')
+    expect(data.error).toContain('database configuration')
+  })
 })

@@ -3,7 +3,7 @@ import { hash } from "bcryptjs";
 
 import { getUserByEmail, createUser } from "@/db/repositories/users";
 import { errorResponse, validateRequestBody, createdResponse } from "@/lib/api-utils";
-import { ErrorFactory } from "@/lib/errors";
+import { ErrorFactory, ErrorCode, AppError } from "@/lib/errors";
 import { generateUserId } from "@/lib/ids";
 
 const signupSchema = z.object({
@@ -26,14 +26,46 @@ export async function POST(request: Request) {
     const passwordHash = await hash(password, 10);
 
     // Create the new user
-    const newUser = await createUser({
-      id: generateUserId(),
-      email,
-      passwordHash,
-      name: name ?? null,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
+    let newUser;
+    try {
+      newUser = await createUser({
+        id: generateUserId(),
+        email,
+        passwordHash,
+        name: name ?? null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+    } catch (createError) {
+      // Convert database errors to user-friendly errors
+      const message = createError instanceof Error ? createError.message : String(createError);
+
+      // Check for specific database errors
+      if (message.includes("schema") || message.includes("column")) {
+        throw ErrorFactory.databaseError(
+          "Unable to create account due to a database configuration issue. Please contact support.",
+          { originalError: message }
+        );
+      }
+
+      if (message.includes("UNIQUE constraint") || message.includes("duplicate")) {
+        throw ErrorFactory.duplicate("A user with this email already exists");
+      }
+
+      throw new AppError(
+        "Failed to create user account. Please try again.",
+        ErrorCode.DATABASE_ERROR,
+        500,
+        { originalError: message }
+      );
+    }
+
+    // Verify the user was actually created
+    if (!newUser || !newUser.id) {
+      throw ErrorFactory.databaseError(
+        "User account creation failed. Please try again."
+      );
+    }
 
     // Return user without password hash
     return createdResponse({
