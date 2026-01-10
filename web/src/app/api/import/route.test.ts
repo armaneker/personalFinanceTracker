@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createMockRequest, getResponseJson } from '@/test/api-test-utils'
 
+// Mock auth to return test user
+vi.mock('@/lib/auth', () => ({
+  requireUserId: vi.fn().mockResolvedValue('test-user-id'),
+}))
+
 // Mock dependencies
 vi.mock('@/lib/llm', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/llm')>()
@@ -34,17 +39,17 @@ vi.mock('@/lib/llm', async (importOriginal) => {
 
 vi.mock('@/lib/importer', () => ({
   validateExtraction: vi.fn((data) => data),
-  persistExtractionToPending: vi.fn().mockResolvedValue({
+  persistExtractionToPending: vi.fn((_userId, _runId, _data, _opts) => Promise.resolve({
     pendingFile: '/path/to/pending.json',
-  }),
-  commitExtraction: vi.fn().mockResolvedValue(undefined),
-  findExistingImportByFingerprint: vi.fn().mockResolvedValue(null),
+  })),
+  commitExtraction: vi.fn((_userId, _data, _opts, _prepared) => Promise.resolve(undefined)),
+  findExistingImportByFingerprint: vi.fn((_userId, _fingerprint, _cardId) => Promise.resolve(null)),
 }))
 
 vi.mock('@/lib/data-store', () => ({
-  getCategories: vi.fn().mockResolvedValue([
+  getCategories: vi.fn((_userId) => Promise.resolve([
     { id: 'cat-groceries', name: 'Groceries', color: '#22c55e' },
-  ]),
+  ])),
 }))
 
 vi.mock('@/lib/ids', () => ({
@@ -326,6 +331,7 @@ describe('POST /api/import', () => {
     await POST(request)
 
     expect(persistExtractionToPending).toHaveBeenCalledWith(
+      'test-user-id', // userId
       expect.any(String), // run_id
       expect.any(Object), // validated extraction
       expect.objectContaining({

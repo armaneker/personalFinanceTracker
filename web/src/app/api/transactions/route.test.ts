@@ -1,15 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createMockRequest, getResponseJson, mockData } from '@/test/api-test-utils'
 
+// Mock auth to return test user
+vi.mock('@/lib/auth', () => ({
+  requireUserId: vi.fn().mockResolvedValue('test-user-id'),
+}))
+
 // Mock the data-store module
 vi.mock('@/lib/data-store', () => ({
-  listTransactionMonths: vi.fn().mockResolvedValue(['2024-01', '2023-12']),
-  loadTransactionFile: vi.fn().mockResolvedValue({
+  listTransactionMonths: vi.fn((_userId) => Promise.resolve(['2024-01', '2023-12'])),
+  loadTransactionFile: vi.fn((_userId, _month) => Promise.resolve({
     meta: { month: '2024-01' },
     transactions: mockData.transactions,
-  }),
-  createOrUpdateTransaction: vi.fn((month, transaction) => Promise.resolve(transaction)),
-  deleteTransaction: vi.fn().mockResolvedValue(undefined),
+  })),
+  createOrUpdateTransaction: vi.fn((_userId, _month, transaction) => Promise.resolve(transaction)),
+  deleteTransaction: vi.fn((_userId, _month, _id) => Promise.resolve(undefined)),
 }))
 
 // Import after mocking

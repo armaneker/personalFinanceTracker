@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { GET } from './route'
 import { getResponseJson } from '@/test/api-test-utils'
+
+// Mock auth to return test user
+vi.mock('@/lib/auth', () => ({
+  requireUserId: vi.fn().mockResolvedValue('test-user-id'),
+}))
 
 // Mock the analytics module
 vi.mock('@/lib/analytics', () => ({
@@ -21,6 +25,9 @@ vi.mock('@/lib/analytics', () => ({
     },
   ]),
 }))
+
+// Import after mocking
+const { GET } = await import('./route')
 
 describe('GET /api/transactions/grouped', () => {
   beforeEach(() => {

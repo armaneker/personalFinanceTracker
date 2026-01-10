@@ -1,10 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createMockRequest, getResponseJson, mockData } from '@/test/api-test-utils'
 
+// Mock auth to return test user
+vi.mock('@/lib/auth', () => ({
+  requireUserId: vi.fn().mockResolvedValue('test-user-id'),
+}))
+
 // Mock the data-store module
 vi.mock('@/lib/data-store', () => ({
-  getCategories: vi.fn().mockResolvedValue(mockData.categories),
-  upsertCategory: vi.fn((category) => Promise.resolve(category)),
+  getCategories: vi.fn((_userId) => Promise.resolve(mockData.categories)),
+  upsertCategory: vi.fn((_userId, category) => Promise.resolve(category)),
 }))
 
 // Import after mocking

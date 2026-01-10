@@ -2,11 +2,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { NextRequest } from 'next/server'
 import { createMockRequest, getResponseJson, mockData } from '@/test/api-test-utils'
 
+// Mock auth to return test user
+vi.mock('@/lib/auth', () => ({
+  requireUserId: vi.fn().mockResolvedValue('test-user-id'),
+}))
+
 // Mock the data-store module
 vi.mock('@/lib/data-store', () => ({
-  getCategories: vi.fn().mockResolvedValue(mockData.categories),
-  upsertCategory: vi.fn((category) => Promise.resolve(category)),
-  deleteCategory: vi.fn().mockResolvedValue(undefined),
+  getCategories: vi.fn((_userId) => Promise.resolve(mockData.categories)),
+  upsertCategory: vi.fn((_userId, category) => Promise.resolve(category)),
+  deleteCategory: vi.fn((_userId, _id) => Promise.resolve(undefined)),
 }))
 
 // Import after mocking
@@ -133,6 +138,7 @@ describe('PUT /api/categories/[id]', () => {
     await PUT(request as unknown as NextRequest, context)
 
     expect(upsertCategory).toHaveBeenCalledWith(
+      'test-user-id',
       expect.objectContaining({
         id: 'cat-groceries',
         name: 'New Name',
@@ -189,7 +195,7 @@ describe('DELETE /api/categories/[id]', () => {
     const context = { params: { id: 'cat-dining' } }
     await DELETE(request as unknown as NextRequest, context)
 
-    expect(deleteCategory).toHaveBeenCalledWith('cat-dining')
+    expect(deleteCategory).toHaveBeenCalledWith('test-user-id', 'cat-dining')
   })
 
   it('returns 404 when delete fails', async () => {

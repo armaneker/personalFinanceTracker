@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { GET } from './route'
 import { createMockRequest, getResponseJson } from '@/test/api-test-utils'
+
+// Mock auth to return test user
+vi.mock('@/lib/auth', () => ({
+  requireUserId: vi.fn().mockResolvedValue('test-user-id'),
+}))
 
 // Mock the analytics module
 vi.mock('@/lib/analytics', () => ({
@@ -15,6 +19,9 @@ vi.mock('@/lib/analytics', () => ({
     ],
   }),
 }))
+
+// Import after mocking
+const { GET } = await import('./route')
 
 describe('GET /api/dashboard', () => {
   beforeEach(() => {
@@ -50,7 +57,7 @@ describe('GET /api/dashboard', () => {
     const request = createMockRequest('http://localhost:3000/api/dashboard?month=2024-02')
     await GET(request)
 
-    expect(buildDashboardSummary).toHaveBeenCalledWith('2024-02')
+    expect(buildDashboardSummary).toHaveBeenCalledWith('test-user-id', '2024-02')
   })
 
   it('calls buildDashboardSummary without month when not provided', async () => {
@@ -59,7 +66,7 @@ describe('GET /api/dashboard', () => {
     const request = createMockRequest('http://localhost:3000/api/dashboard')
     await GET(request)
 
-    expect(buildDashboardSummary).toHaveBeenCalledWith(undefined)
+    expect(buildDashboardSummary).toHaveBeenCalledWith('test-user-id', undefined)
   })
 
   it('returns null summary when no data exists', async () => {
