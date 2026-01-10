@@ -39,6 +39,9 @@ const requestSchema = z
     }
   });
 
+// Force Node.js runtime (Edge Runtime doesn't support pdf-parse, fs, crypto)
+export const runtime = 'nodejs';
+
 export async function POST(request: Request) {
   try {
     const data = await validateRequestBody(request, requestSchema);
