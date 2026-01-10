@@ -60,13 +60,16 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        // Store user ID from database in both id and sub fields
         token.id = user.id;
+        token.sub = user.id;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
+        // Use token.id (our custom field) or fall back to token.sub
+        session.user.id = (token.id as string) || token.sub || "";
       }
       return session;
     },
