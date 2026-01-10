@@ -110,6 +110,52 @@ function getClient(): OpenAI {
   return cachedClient;
 }
 
+/**
+ * Validate the configured model name
+ * Throws LLMError if model name appears invalid
+ */
+function validateModelName(model: string): void {
+  // Common valid OpenAI models for structured outputs
+  const validModels = [
+    "gpt-4o",
+    "gpt-4o-mini",
+    "gpt-4-turbo",
+    "gpt-4-turbo-preview",
+    "gpt-3.5-turbo",
+  ];
+
+  // Check for common typos
+  const commonTypos = [
+    { typo: "gpt-4.1-mini", correct: "gpt-4o-mini" },
+    { typo: "gpt-41-mini", correct: "gpt-4o-mini" },
+    { typo: "gpt-4-o-mini", correct: "gpt-4o-mini" },
+    { typo: "gpt4o-mini", correct: "gpt-4o-mini" },
+    { typo: "gpt-4.0-mini", correct: "gpt-4o-mini" },
+  ];
+
+  // Check for exact typo match
+  const typo = commonTypos.find((t) => t.typo === model);
+  if (typo) {
+    throw new LLMError(
+      `Invalid model name "${model}". Did you mean "${typo.correct}"? Please update OPENAI_IMPORT_MODEL in your .env.local file.`,
+      LLMErrorCode.MODEL_NOT_FOUND,
+      {
+        statusCode: 400,
+        retryable: false,
+        details: { providedModel: model, suggestedModel: typo.correct }
+      }
+    );
+  }
+
+  // Warn if model doesn't match known valid models (but don't throw - new models may be added)
+  if (!validModels.includes(model) && !model.startsWith("gpt-")) {
+    llmLogger.warn(
+      { model, validModels },
+      `Model "${model}" is not in the list of known valid models. This may cause API errors.`
+    );
+  }
+}
+
 // ============================================================================
 // Prompt Builder
 // ============================================================================
@@ -340,6 +386,10 @@ export async function extractTransactionsWithLLM(
 ): Promise<StatementExtraction> {
   const client = getClient();
   const model = process.env.OPENAI_IMPORT_MODEL ?? "gpt-4o-mini";
+
+  // Validate model name early to catch configuration errors
+  validateModelName(model);
+
   const startTime = Date.now();
 
   // Log the start of the LLM call

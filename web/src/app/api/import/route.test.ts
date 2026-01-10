@@ -2,31 +2,35 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createMockRequest, getResponseJson } from '@/test/api-test-utils'
 
 // Mock dependencies
-vi.mock('@/lib/llm', () => ({
-  extractTransactionsWithLLM: vi.fn().mockResolvedValue({
-    run_id: 'run-test-123',
-    model: 'gpt-4o-mini',
-    summary: {
-      transactions: 1,
-      total_spend: 500.0,
-      currency: 'TRY',
-    },
-    transactions: [
-      {
-        id: 'txn-001',
-        card_id: 'card-123',
-        owner_id: 'owner-1',
-        statement_ref: 'test-statement.pdf',
-        transaction_date: '2024-01-15',
-        merchant: 'Test Merchant',
-        amount: -500.0,
+vi.mock('@/lib/llm', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/llm')>()
+  return {
+    ...actual,
+    extractTransactionsWithLLM: vi.fn().mockResolvedValue({
+      run_id: 'run-test-123',
+      model: 'gpt-4o-mini',
+      summary: {
+        transactions: 1,
+        total_spend: 500.0,
         currency: 'TRY',
-        category_id: 'cat-groceries',
-        llm_category_id: 'cat-groceries',
       },
-    ],
-  }),
-}))
+      transactions: [
+        {
+          id: 'txn-001',
+          card_id: 'card-123',
+          owner_id: 'owner-1',
+          statement_ref: 'test-statement.pdf',
+          transaction_date: '2024-01-15',
+          merchant: 'Test Merchant',
+          amount: -500.0,
+          currency: 'TRY',
+          category_id: 'cat-groceries',
+          llm_category_id: 'cat-groceries',
+        },
+      ],
+    }),
+  }
+})
 
 vi.mock('@/lib/importer', () => ({
   validateExtraction: vi.fn((data) => data),
