@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { AppError, ErrorFactory } from "./errors";
+import { AppError, ErrorFactory, ErrorCode } from "./errors";
 import logger from "./logger";
+import { LLMError, LLMErrorCode } from "./llm";
 
 /**
  * Convert any error to an AppError
@@ -10,6 +11,49 @@ export function normalizeError(error: unknown): AppError {
   // Already an AppError
   if (error instanceof AppError) {
     return error;
+  }
+
+  // LLM-specific errors with detailed handling
+  if (error instanceof LLMError) {
+    // Map LLM error codes to appropriate AppError types
+    switch (error.code) {
+      case LLMErrorCode.MISSING_API_KEY:
+      case LLMErrorCode.AUTHENTICATION_FAILED:
+        return new AppError(
+          error.message,
+          ErrorCode.LLM_ERROR,
+          401,
+          { llmCode: error.code, details: error.details }
+        );
+
+      case LLMErrorCode.MODEL_NOT_FOUND:
+        // Return detailed error message with actionable fix
+        return ErrorFactory.llmError(
+          error.message,
+          { llmCode: error.code, details: error.details }
+        );
+
+      case LLMErrorCode.RATE_LIMITED:
+        return new AppError(
+          error.message,
+          ErrorCode.RATE_LIMIT_EXCEEDED,
+          429,
+          { llmCode: error.code, details: error.details }
+        );
+
+      case LLMErrorCode.VALIDATION_FAILED:
+      case LLMErrorCode.INVALID_RESPONSE:
+        return ErrorFactory.llmError(
+          error.message,
+          { llmCode: error.code, details: error.details }
+        );
+
+      default:
+        return ErrorFactory.llmError(
+          error.message,
+          { llmCode: error.code, details: error.details }
+        );
+    }
   }
 
   // Zod validation error
