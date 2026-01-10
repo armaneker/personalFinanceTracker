@@ -16,6 +16,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
     "@libsql/client": "^0.15.15",
     "bcryptjs": "^3.0.3",
     "date-fns": "^4.1.0",

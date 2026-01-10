@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 
 import { StatementExtraction, StatementExtractionPrompt } from "./types";
@@ -75,7 +75,7 @@ const summarySchema = z.object({
 const newCategorySchema = z.object({
   id: z.string(),
   name: z.string(),
-  color: z.string().nullish(), // Allow null, undefined, or string
+  color: z.string().nullish(),
 });
 
 const metadataSchema = z.object({
@@ -99,69 +99,23 @@ export const statementExtractionSchema = z.object({
 export type ValidatedStatementExtraction = z.infer<typeof statementExtractionSchema>;
 
 // ============================================================================
-// OpenAI Client
+// Claude Client
 // ============================================================================
 
-let cachedClient: OpenAI | null = null;
+let cachedClient: Anthropic | null = null;
 
-function getClient(): OpenAI {
-  const apiKey = process.env.OPENAI_API_KEY;
+function getClient(): Anthropic {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     throw new LLMError(
-      "Missing OPENAI_API_KEY. Set it in your environment or .env.local file.",
+      "Missing ANTHROPIC_API_KEY. Set it in your environment or .env.local file.",
       LLMErrorCode.MISSING_API_KEY
     );
   }
   if (!cachedClient) {
-    cachedClient = new OpenAI({ apiKey });
+    cachedClient = new Anthropic({ apiKey });
   }
   return cachedClient;
-}
-
-/**
- * Validate the configured model name
- * Throws LLMError if model name appears invalid
- */
-function validateModelName(model: string): void {
-  // Common valid OpenAI models for structured outputs
-  const validModels = [
-    "gpt-4o",
-    "gpt-4o-mini",
-    "gpt-4-turbo",
-    "gpt-4-turbo-preview",
-    "gpt-3.5-turbo",
-  ];
-
-  // Check for common typos
-  const commonTypos = [
-    { typo: "gpt-4.1-mini", correct: "gpt-4o-mini" },
-    { typo: "gpt-41-mini", correct: "gpt-4o-mini" },
-    { typo: "gpt-4-o-mini", correct: "gpt-4o-mini" },
-    { typo: "gpt4o-mini", correct: "gpt-4o-mini" },
-    { typo: "gpt-4.0-mini", correct: "gpt-4o-mini" },
-  ];
-
-  // Check for exact typo match
-  const typo = commonTypos.find((t) => t.typo === model);
-  if (typo) {
-    throw new LLMError(
-      `Invalid model name "${model}". Did you mean "${typo.correct}"? Please update OPENAI_IMPORT_MODEL in your .env.local file.`,
-      LLMErrorCode.MODEL_NOT_FOUND,
-      {
-        statusCode: 400,
-        retryable: false,
-        details: { providedModel: model, suggestedModel: typo.correct }
-      }
-    );
-  }
-
-  // Warn if model doesn't match known valid models (but don't throw - new models may be added)
-  if (!validModels.includes(model) && !model.startsWith("gpt-")) {
-    llmLogger.warn(
-      { model, validModels },
-      `Model "${model}" is not in the list of known valid models. This may cause API errors.`
-    );
-  }
 }
 
 // ============================================================================
@@ -170,16 +124,20 @@ function validateModelName(model: string): void {
 
 const SYSTEM_PROMPT = `You are a personal finance data extractor. You take Turkish credit card statements and produce structured JSON.
 
+CRITICAL REQUIREMENTS:
+- You MUST extract EVERY SINGLE transaction from the statement. Do NOT stop early.
+- If there are 90+ transactions, you MUST output all 90+ transactions.
+- Do NOT truncate, summarize, or skip any transactions.
+- Continue generating until ALL transactions are included in the output.
+
 Rules:
-- Return valid JSON only. Use the schema provided.
+- Return valid JSON only. No markdown fences, no explanations - just the JSON object.
 - Amounts are decimal numbers. Charges should be negative, refunds positive.
 - Dates must be ISO 8601 YYYY-MM-DD. If day is missing infer best guess.
 - Provide statement summary totals and currency.
 - Include warnings for ambiguous rows.
 - Extract metadata from statement: statement date (to determine month), card last 4 digits, and cardholder name.
-- You MUST extract ALL transactions from the statement - do not skip any.
-- Do not summarize or truncate the transaction list.
-- If there are many transactions, include every single one.
+- Skip non-transaction lines (previous balance "BİR ÖNCEKİ HESAP ÖZETİ BAKİYENİZ", payment transfers "HESAPTAN AKTARIM", reward point additions like "MAXİPUAN İLAVE").
 `;
 
 function buildPrompt(input: StatementExtractionPrompt): string {
@@ -193,19 +151,19 @@ function buildPrompt(input: StatementExtractionPrompt): string {
       cardholder_name: "string (extract from statement, e.g., 'SN. ARMAN EKER')",
     },
     summary: {
-      transactions: "number",
+      transactions: "number (count of actual spending transactions)",
       total_spend: "number (positive total of charges)",
       currency: "TRY or other ISO currency code",
     },
     transactions: [
       {
-        id: "string unique id",
+        id: "string unique id (format: tx-YYYY-MM-DD-merchant-amount)",
         card_id: "string card identifier",
         owner_id: "string owner identifier or null",
         statement_ref: "string original filename",
         transaction_date: "YYYY-MM-DD",
         post_date: "YYYY-MM-DD or null",
-        merchant: "string merchant title",
+        merchant: "string merchant title (cleaned up)",
         description: "string description or null",
         amount: "number (negative charge, positive refund)",
         currency: "string currency code",
@@ -227,13 +185,12 @@ function buildPrompt(input: StatementExtractionPrompt): string {
 
   const categoriesSummary = input.categories.map((cat) => ({ id: cat.id, name: cat.name }));
 
-  return `
-Output ONLY valid JSON following this schema (enforced via response_format). Do not include markdown fences.
+  return `Output ONLY valid JSON following this schema. Do not include markdown fences or any text before/after the JSON.
 
 Statement metadata:
 - Statement name: ${input.statementName}
-- Card id: ${input.cardId ?? "unknown"}
-- Owner id: ${input.ownerId ?? "unknown"}
+- Card id: ${input.cardId ?? "detect from statement (format: card-issuer-last4)"}
+- Owner id: ${input.ownerId ?? "owner-arman"}
 - Target month: ${input.month ?? "detect from data"}
 
 Existing categories (id -> name):
@@ -250,37 +207,40 @@ ${input.statementText}
 Schema (for reference):
 ${JSON.stringify(schema, null, 2)}
 
-IMPORTANT: Extract every transaction. The statement may have 50-100+ transactions. Do not skip, summarize, or truncate any transactions.
-`;
+CRITICAL: This statement has many transactions across multiple pages. You MUST extract ALL of them - every single line item that represents a purchase or refund.
+Do NOT stop after 10-20 transactions. Continue until you have extracted every transaction from every page.
+The transactions array must contain ALL transactions from the statement, even if there are 80-100+ of them.
+
+Output the JSON now:`;
 }
 
 // ============================================================================
 // Error Handler
 // ============================================================================
 
-function handleOpenAIError(error: unknown): never {
-  if (error instanceof OpenAI.APIError) {
+function handleAnthropicError(error: unknown): never {
+  if (error instanceof Anthropic.APIError) {
     const status = error.status;
     const message = error.message;
 
     switch (status) {
       case 401:
         throw new LLMError(
-          "OpenAI API authentication failed. Please check your OPENAI_API_KEY is valid and has not expired.",
+          "Anthropic API authentication failed. Please check your ANTHROPIC_API_KEY is valid.",
           LLMErrorCode.AUTHENTICATION_FAILED,
           { statusCode: 401, retryable: false, cause: error }
         );
 
       case 404:
         throw new LLMError(
-          `OpenAI model not found. Ensure OPENAI_IMPORT_MODEL is set to a valid model name (e.g., gpt-4o-mini). Error: ${message}`,
+          `Anthropic model not found. Error: ${message}`,
           LLMErrorCode.MODEL_NOT_FOUND,
           { statusCode: 404, retryable: false, cause: error }
         );
 
       case 429:
         throw new LLMError(
-          "OpenAI API rate limit exceeded. Please wait a moment and try again, or check your API plan limits.",
+          "Anthropic API rate limit exceeded. Please wait a moment and try again.",
           LLMErrorCode.RATE_LIMITED,
           { statusCode: 429, retryable: true, cause: error }
         );
@@ -290,14 +250,14 @@ function handleOpenAIError(error: unknown): never {
       case 503:
       case 504:
         throw new LLMError(
-          `OpenAI server error (${status}). The service may be temporarily unavailable. Please try again later.`,
+          `Anthropic server error (${status}). Please try again later.`,
           LLMErrorCode.SERVER_ERROR,
           { statusCode: status, retryable: true, cause: error }
         );
 
       default:
         throw new LLMError(
-          `OpenAI API error: ${message}`,
+          `Anthropic API error: ${message}`,
           LLMErrorCode.SERVER_ERROR,
           { statusCode: status, retryable: status >= 500, cause: error }
         );
@@ -307,7 +267,7 @@ function handleOpenAIError(error: unknown): never {
   if (error instanceof Error) {
     if (error.message.includes("ECONNREFUSED") || error.message.includes("ETIMEDOUT")) {
       throw new LLMError(
-        "Network error connecting to OpenAI API. Please check your internet connection.",
+        "Network error connecting to Anthropic API. Please check your internet connection.",
         LLMErrorCode.NETWORK_ERROR,
         { retryable: true, cause: error }
       );
@@ -321,7 +281,7 @@ function handleOpenAIError(error: unknown): never {
   }
 
   throw new LLMError(
-    "An unknown error occurred while calling the OpenAI API.",
+    "An unknown error occurred while calling the Anthropic API.",
     LLMErrorCode.SERVER_ERROR,
     { retryable: false }
   );
@@ -348,9 +308,8 @@ async function sleep(ms: number): Promise<void> {
 }
 
 function calculateBackoffDelay(attempt: number, config: RetryConfig): number {
-  // Exponential backoff: baseDelay * 2^attempt with jitter
   const exponentialDelay = config.baseDelayMs * Math.pow(2, attempt);
-  const jitter = Math.random() * 0.3 * exponentialDelay; // 0-30% jitter
+  const jitter = Math.random() * 0.3 * exponentialDelay;
   return Math.min(exponentialDelay + jitter, config.maxDelayMs);
 }
 
@@ -365,15 +324,12 @@ async function withRetry<T>(
       return await operation();
     } catch (error) {
       lastError = error as Error;
-
-      // Check if error is retryable
       const isRetryable = error instanceof LLMError ? error.retryable : false;
 
       if (!isRetryable || attempt >= config.maxAttempts - 1) {
         throw error;
       }
 
-      // Calculate delay and wait before retrying
       const delayMs = calculateBackoffDelay(attempt, config);
       llmLogger.warn(
         {
@@ -382,9 +338,7 @@ async function withRetry<T>(
           delayMs: Math.round(delayMs),
           error: (error as Error).message,
         },
-        `LLM request failed (attempt ${attempt + 1}/${config.maxAttempts}): ${
-          (error as Error).message
-        }. Retrying in ${Math.round(delayMs)}ms...`
+        `LLM request failed (attempt ${attempt + 1}/${config.maxAttempts}). Retrying in ${Math.round(delayMs)}ms...`
       );
       await sleep(delayMs);
     }
@@ -405,14 +359,10 @@ export async function extractTransactionsWithLLM(
   input: StatementExtractionPrompt
 ): Promise<StatementExtraction> {
   const client = getClient();
-  const model = process.env.OPENAI_IMPORT_MODEL ?? "gpt-4o-mini";
-
-  // Validate model name early to catch configuration errors
-  validateModelName(model);
+  const model = process.env.CLAUDE_IMPORT_MODEL ?? "claude-sonnet-4-20250514";
 
   const startTime = Date.now();
 
-  // Log the start of the LLM call
   logLLMStart({
     operation: "extractTransactions",
     model,
@@ -423,41 +373,47 @@ export async function extractTransactionsWithLLM(
     const result = await withRetry(async () => {
       let response;
       try {
-        // GPT-5.2 models don't support custom temperature (only default value of 1)
-        const isGPT5 = model.startsWith("gpt-5");
-        const completionParams: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming = {
+        // Use streaming for long requests
+        const stream = client.messages.stream({
           model,
-          response_format: { type: "json_object" },
-          max_tokens: 16000, // Allow longer outputs for statements with many transactions (50-100+)
+          max_tokens: 32000,
+          system: SYSTEM_PROMPT,
           messages: [
-            { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: buildPrompt(input) },
           ],
-        };
-
-        // Only set temperature for non-GPT-5 models
-        if (!isGPT5) {
-          completionParams.temperature = 0;
-        }
-
-        response = await client.chat.completions.create(completionParams);
+        });
+        response = await stream.finalMessage();
       } catch (error) {
-        handleOpenAIError(error);
+        handleAnthropicError(error);
       }
 
-      const content = response.choices?.[0]?.message?.content;
+      // Extract text content from Claude's response
+      const textBlock = response.content.find((block) => block.type === "text");
+      const content = textBlock?.type === "text" ? textBlock.text : null;
+
       if (!content) {
         throw new LLMError(
-          "LLM returned no content in the response. This may indicate an issue with the model or prompt.",
+          "LLM returned no content in the response.",
           LLMErrorCode.EMPTY_RESPONSE,
           { retryable: true }
         );
       }
 
-      // Parse JSON
+      // Parse JSON - handle potential markdown fences
+      let jsonContent = content.trim();
+      if (jsonContent.startsWith("```json")) {
+        jsonContent = jsonContent.slice(7);
+      } else if (jsonContent.startsWith("```")) {
+        jsonContent = jsonContent.slice(3);
+      }
+      if (jsonContent.endsWith("```")) {
+        jsonContent = jsonContent.slice(0, -3);
+      }
+      jsonContent = jsonContent.trim();
+
       let parsed: unknown;
       try {
-        parsed = JSON.parse(content);
+        parsed = JSON.parse(jsonContent);
       } catch (error) {
         throw new LLMError(
           `Failed to parse LLM response as JSON: ${(error as Error).message}`,
@@ -480,35 +436,32 @@ export async function extractTransactionsWithLLM(
         );
       }
 
-      // Check for transaction count mismatch between reported summary and actual extracted transactions
+      // Check for transaction count mismatch
       const reportedCount = validationResult.data.summary.transactions;
       const actualCount = validationResult.data.transactions.length;
       if (reportedCount !== actualCount) {
         const mismatchWarning = `Transaction count mismatch: summary reports ${reportedCount} transactions but only ${actualCount} were extracted. Some transactions may have been missed.`;
         llmLogger.warn({ reportedCount, actualCount }, mismatchWarning);
-        // Add warning to the result
         validationResult.data.warnings = validationResult.data.warnings || [];
         validationResult.data.warnings.push(mismatchWarning);
       }
 
-      // Log successful completion with token usage
+      // Log successful completion
       const usage = response.usage;
       logLLMComplete({
         operation: "extractTransactions",
         model,
-        promptTokens: usage?.prompt_tokens,
-        completionTokens: usage?.completion_tokens,
-        totalTokens: usage?.total_tokens,
+        promptTokens: usage?.input_tokens,
+        completionTokens: usage?.output_tokens,
+        totalTokens: (usage?.input_tokens ?? 0) + (usage?.output_tokens ?? 0),
         durationMs: Date.now() - startTime,
       });
 
       return validationResult.data;
     });
 
-    // Cast to StatementExtraction (the validated data is compatible)
     return result as StatementExtraction;
   } catch (error) {
-    // Log the error with full context
     logLLMError("extractTransactions", error as Error, {
       model,
       statementName: input.statementName,
