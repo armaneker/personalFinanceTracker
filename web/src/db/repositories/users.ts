@@ -41,11 +41,34 @@ export async function createUser(user: NewUser): Promise<User> {
     updatedAt: now,
   };
 
-  await db.insert(users).values(newUser);
+  try {
+    // Perform the insert and capture the result to ensure it executes
+    const insertResult = await db.insert(users).values(newUser);
 
+    // For libsql/turso, check if rows were affected (available in some drivers)
+    // The insert should not silently fail
+    if (insertResult && typeof insertResult === 'object' && 'rowsAffected' in insertResult) {
+      if ((insertResult as { rowsAffected: number }).rowsAffected === 0) {
+        throw new Error("Insert did not affect any rows");
+      }
+    }
+  } catch (error) {
+    // Re-throw with more context for debugging
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to insert user into database: ${message}`);
+  }
+
+  // Verify the user was actually created by fetching it back
   const created = await getUserById(user.id);
   if (!created) {
-    throw new Error("Failed to create user");
+    throw new Error("User was not persisted to database after insert");
+  }
+
+  // Verify all required fields are present
+  if (!created.passwordHash) {
+    // Clean up the incomplete record
+    await db.delete(users).where(eq(users.id, user.id));
+    throw new Error("User record is missing password hash - database schema may be out of sync");
   }
 
   return created;
