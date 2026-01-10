@@ -114,7 +114,7 @@ export async function getPreparedExtraction(
     };
   }
 
-  const prepared = await prepareExtraction(record.extraction, record.options);
+  const prepared = await prepareExtraction(record.extraction, record.options, userId);
   record.prepared_records = prepared.records;
   record.months = prepared.months;
   await savePendingExtraction(userId, runId, record);
@@ -299,7 +299,7 @@ export async function persistExtractionToPending(
   payload: StatementExtractionInput,
   options: CommitExtractionOptions,
 ): Promise<PreparedExtraction> {
-  const prepared = await prepareExtraction(payload, options);
+  const prepared = await prepareExtraction(payload, options, userId);
   const record: StoredPendingExtraction = {
     version: 1,
     saved_at: new Date().toISOString(),

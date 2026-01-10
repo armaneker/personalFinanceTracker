@@ -111,7 +111,7 @@ export async function commitExtraction(
   await ensureCategories(userId, payload);
 
   // Prepare extraction if not precomputed
-  const prepared = precomputed ?? (await prepareExtraction(payload, options));
+  const prepared = precomputed ?? (await prepareExtraction(payload, options, userId));
 
   // Commit each transaction
   const commitMonths = new Set<string>();

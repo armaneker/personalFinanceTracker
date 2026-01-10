@@ -51,6 +51,7 @@ export async function buildTransactionRecord(
   runId: string,
   statementFile: string,
   overrides: { month: string; cardId?: string; ownerId?: string },
+  userId: string,
 ): Promise<PreparedRecord> {
   const timestamp = new Date().toISOString();
   const categoryId = extractionTx.category_id ?? extractionTx.llm_category_id ?? DEFAULT_CATEGORY;
@@ -59,7 +60,7 @@ export async function buildTransactionRecord(
   const code = extractionTx.currency?.toUpperCase() ?? "TRY";
   const conversion = code === "TRY"
     ? { amount: extractionTx.amount, currency: "TRY", originalCurrency: code, fxRate: 1, originalAmount: extractionTx.amount, source: "api" as const }
-    : await convertAmount(extractionTx.amount, code, "TRY", extractionTx.transaction_date || new Date().toISOString().slice(0, 10));
+    : await convertAmount(extractionTx.amount, code, "TRY", extractionTx.transaction_date || new Date().toISOString().slice(0, 10), userId);
 
   const record: TransactionRecord = {
     id: extractionTx.id || generateTransactionId(overrides.month),
@@ -104,6 +105,7 @@ export async function buildTransactionRecord(
 export async function prepareExtraction(
   payload: StatementExtractionInput,
   options: CommitExtractionOptions,
+  userId: string,
 ): Promise<PreparedExtraction> {
   const fallbackMonth = inferMonthFromExtraction(payload, options.month);
   const preparedRecords = await Promise.all(
@@ -112,7 +114,7 @@ export async function prepareExtraction(
         month: fallbackMonth,
         cardId: options.cardId,
         ownerId: options.ownerId,
-      }),
+      }, userId),
     ),
   );
 
