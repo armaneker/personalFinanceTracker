@@ -13,7 +13,6 @@ import {
   XAxis,
   YAxis,
   Cell,
-  PieLabelRenderProps,
 } from "recharts";
 
 import { DashboardSummary } from "@/lib/analytics";

@@ -1,7 +1,7 @@
 'use client';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 
 const NAV_ITEMS = [
@@ -102,11 +102,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Close mobile menu when route changes
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
 
   // Don't show app shell on login page
   if (pathname === "/login") {
