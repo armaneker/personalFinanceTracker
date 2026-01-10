@@ -75,7 +75,7 @@ const summarySchema = z.object({
 const newCategorySchema = z.object({
   id: z.string(),
   name: z.string(),
-  color: z.string().optional(),
+  color: z.string().nullish(), // Allow null, undefined, or string
 });
 
 const metadataSchema = z.object({
@@ -418,15 +418,23 @@ export async function extractTransactionsWithLLM(
     const result = await withRetry(async () => {
       let response;
       try {
-        response = await client.chat.completions.create({
+        // GPT-5.2 models don't support custom temperature (only default value of 1)
+        const isGPT5 = model.startsWith("gpt-5");
+        const completionParams: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming = {
           model,
-          temperature: 0,
           response_format: { type: "json_object" },
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: buildPrompt(input) },
           ],
-        });
+        };
+
+        // Only set temperature for non-GPT-5 models
+        if (!isGPT5) {
+          completionParams.temperature = 0;
+        }
+
+        response = await client.chat.completions.create(completionParams);
       } catch (error) {
         handleOpenAIError(error);
       }

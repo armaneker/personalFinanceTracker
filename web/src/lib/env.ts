@@ -40,7 +40,10 @@ const envSchema = z.object({
   TURSO_DATABASE_URL: z
     .string()
     .min(1, "TURSO_DATABASE_URL is required")
-    .startsWith("libsql://", "TURSO_DATABASE_URL must start with 'libsql://'"),
+    .refine(
+      (url) => url.startsWith("libsql://") || url.startsWith("file:"),
+      "TURSO_DATABASE_URL must start with 'libsql://' or 'file:' for local development"
+    ),
   TURSO_AUTH_TOKEN: z
     .string()
     .min(1, "TURSO_AUTH_TOKEN is required"),
@@ -102,5 +105,22 @@ export function validateEnv(): Env {
 /**
  * Validated environment variables
  * Use this instead of process.env for type safety
+ *
+ * NOTE: This is initialized as null and populated after validation
+ * in instrumentation.ts to ensure proper timing with Next.js env loading
  */
-export const env = validateEnv();
+let _env: Env | null = null;
+
+export function getEnv(): Env {
+  if (!_env) {
+    _env = validateEnv();
+  }
+  return _env;
+}
+
+// Getter for backward compatibility
+export const env = new Proxy({} as Env, {
+  get(_, prop) {
+    return getEnv()[prop as keyof Env];
+  },
+});
