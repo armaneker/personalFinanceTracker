@@ -1,12 +1,9 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 import { db } from "../index";
 import { categories } from "../schema";
 import type { Category as CategoryEntity } from "../schema";
 import type { Category } from "@/lib/types";
-
-// Default user ID for single-user mode (will be replaced with actual auth)
-const DEFAULT_USER_ID = "default-user";
 
 /**
  * Convert database entity to API type
@@ -20,9 +17,9 @@ function toApiType(entity: CategoryEntity): Category {
 }
 
 /**
- * Get all categories for the current user
+ * Get all categories for a user
  */
-export async function getCategories(userId: string = DEFAULT_USER_ID): Promise<Category[]> {
+export async function getCategories(userId: string): Promise<Category[]> {
   const result = await db.select().from(categories).where(eq(categories.userId, userId));
   return result.map(toApiType);
 }
@@ -31,21 +28,16 @@ export async function getCategories(userId: string = DEFAULT_USER_ID): Promise<C
  * Get a single category by ID
  */
 export async function getCategoryById(
+  userId: string,
   categoryId: string,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<Category | null> {
   const result = await db
     .select()
     .from(categories)
-    .where(eq(categories.id, categoryId))
+    .where(and(eq(categories.id, categoryId), eq(categories.userId, userId)))
     .limit(1);
 
   if (result.length === 0) {
-    return null;
-  }
-
-  // Verify user ownership
-  if (result[0].userId !== userId) {
     return null;
   }
 
@@ -56,8 +48,8 @@ export async function getCategoryById(
  * Save all categories (replace all)
  */
 export async function saveCategories(
+  userId: string,
   newCategories: Category[],
-  userId: string = DEFAULT_USER_ID,
 ): Promise<void> {
   const now = new Date().toISOString();
 
@@ -83,15 +75,15 @@ export async function saveCategories(
  * Create or update a category
  */
 export async function upsertCategory(
+  userId: string,
   category: Category,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<Category> {
   const now = new Date().toISOString();
 
   const existing = await db
     .select()
     .from(categories)
-    .where(eq(categories.id, category.id))
+    .where(and(eq(categories.id, category.id), eq(categories.userId, userId)))
     .limit(1);
 
   if (existing.length > 0) {
@@ -103,7 +95,7 @@ export async function upsertCategory(
         color: category.color ?? null,
         updatedAt: now,
       })
-      .where(eq(categories.id, category.id));
+      .where(and(eq(categories.id, category.id), eq(categories.userId, userId)));
   } else {
     // Insert
     await db.insert(categories).values({
@@ -123,13 +115,12 @@ export async function upsertCategory(
  * Delete a category
  */
 export async function deleteCategory(
+  userId: string,
   categoryId: string,
-  _userId: string = DEFAULT_USER_ID,
 ): Promise<void> {
-  // TODO: Add user ownership check when multi-tenancy is enabled
   const result = await db
     .delete(categories)
-    .where(eq(categories.id, categoryId))
+    .where(and(eq(categories.id, categoryId), eq(categories.userId, userId)))
     .returning({ id: categories.id });
 
   if (result.length === 0) {

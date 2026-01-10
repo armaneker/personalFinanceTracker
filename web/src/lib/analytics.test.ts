@@ -6,6 +6,9 @@ import type { Category, Owner, Card, TransactionFile, TransactionRecord } from '
 // Mock the data-store module
 vi.mock('./data-store')
 
+// Test user ID for multi-user support
+const TEST_USER_ID = 'test-user-id'
+
 describe('analytics.ts', () => {
   const mockCategories: Category[] = [
     { id: 'cat-groceries', name: 'Groceries', color: '#22c55e' },
@@ -37,7 +40,7 @@ describe('analytics.ts', () => {
     it('should return null when there are no transaction months', async () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue([])
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       expect(result).toBeNull()
     })
@@ -46,7 +49,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(null)
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       expect(result).toBeNull()
     })
@@ -75,7 +78,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(mockTransactionFile)
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       expect(result).not.toBeNull()
       expect(result?.total_spent).toBe(500.00)
@@ -122,7 +125,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(mockTransactionFile)
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       expect(result?.total_spent).toBe(800.50)
       expect(result?.net).toBe(-800.50)
@@ -167,7 +170,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(mockTransactionFile)
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       // Only negative amounts count as spending
       expect(result?.total_spent).toBe(1000.00)
@@ -228,7 +231,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(mockTransactionFile)
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       expect(result?.by_category).toHaveLength(2)
 
@@ -286,7 +289,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(mockTransactionFile)
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       expect(result?.by_owner).toHaveLength(2)
 
@@ -341,7 +344,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(mockTransactionFile)
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       expect(result?.by_card).toHaveLength(2)
 
@@ -376,7 +379,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(mockTransactionFile)
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       expect(result).not.toBeNull()
 
@@ -440,7 +443,7 @@ describe('analytics.ts', () => {
         return null
       })
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       expect(result?.month).toBe('2024-02')
       expect(result?.trend).toHaveLength(2)
@@ -498,7 +501,7 @@ describe('analytics.ts', () => {
         return null
       })
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       expect(result?.vs_previous).toBeDefined()
       expect(result?.vs_previous?.month).toBe('2024-01')
@@ -516,7 +519,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(mockTransactionFile)
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       expect(result).not.toBeNull()
       expect(result?.total_spent).toBe(0)
@@ -551,7 +554,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-02', '2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(month1)
 
-      const result = await buildDashboardSummary('2024-01')
+      const result = await buildDashboardSummary(TEST_USER_ID, '2024-01')
 
       expect(result?.month).toBe('2024-01')
       expect(result?.total_spent).toBe(1000.00)
@@ -581,7 +584,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(mockTransactionFile)
 
-      const result = await buildDashboardSummary()
+      const result = await buildDashboardSummary(TEST_USER_ID)
 
       expect(result?.total_spent).toBe(0)
       expect(result?.by_category[0]?.percentage).toBe(0)
@@ -628,7 +631,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(month1)
 
-      const result = await getTransactionsGroupedByCard()
+      const result = await getTransactionsGroupedByCard(TEST_USER_ID)
 
       expect(result).toHaveLength(2)
       expect(result[0]?.card_id).toBe('card-visa')
@@ -665,7 +668,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-01'])
       vi.mocked(dataStore.loadTransactionFile).mockResolvedValue(month1)
 
-      const result = await getTransactionsGroupedByCard()
+      const result = await getTransactionsGroupedByCard(TEST_USER_ID)
 
       expect(result).toHaveLength(1)
       expect(result[0]?.card_name).toBe('card-unknown')
@@ -675,7 +678,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.getCards).mockResolvedValue(mockCards)
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue([])
 
-      const result = await getTransactionsGroupedByCard()
+      const result = await getTransactionsGroupedByCard(TEST_USER_ID)
 
       expect(result).toHaveLength(0)
     })
@@ -719,7 +722,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.getOwners).mockResolvedValue(mockOwners)
       vi.mocked(dataStore.loadAllTransactions).mockResolvedValue(mockTransactions)
 
-      const result = await getDistinctFilters()
+      const result = await getDistinctFilters(TEST_USER_ID)
 
       expect(result.cards).toEqual(mockCards)
       expect(result.categories).toEqual(mockCategories)
@@ -734,7 +737,7 @@ describe('analytics.ts', () => {
       vi.mocked(dataStore.getOwners).mockResolvedValue(mockOwners)
       vi.mocked(dataStore.loadAllTransactions).mockResolvedValue([])
 
-      const result = await getDistinctFilters()
+      const result = await getDistinctFilters(TEST_USER_ID)
 
       expect(result.years).toEqual([])
       expect(result.merchants).toEqual([])

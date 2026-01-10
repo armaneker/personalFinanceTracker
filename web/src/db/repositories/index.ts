@@ -1,4 +1,5 @@
 // Re-export all repositories
+export * from "./users";
 export * from "./cards";
 export * from "./categories";
 export * from "./owners";

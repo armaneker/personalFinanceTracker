@@ -1,12 +1,9 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 import { db } from "../index";
 import { owners } from "../schema";
 import type { Owner as OwnerEntity } from "../schema";
 import type { Owner } from "@/lib/types";
-
-// Default user ID for single-user mode (will be replaced with actual auth)
-const DEFAULT_USER_ID = "default-user";
 
 /**
  * Convert database entity to API type
@@ -19,9 +16,9 @@ function toApiType(entity: OwnerEntity): Owner {
 }
 
 /**
- * Get all owners for the current user
+ * Get all owners for a user
  */
-export async function getOwners(userId: string = DEFAULT_USER_ID): Promise<Owner[]> {
+export async function getOwners(userId: string): Promise<Owner[]> {
   const result = await db.select().from(owners).where(eq(owners.userId, userId));
   return result.map(toApiType);
 }
@@ -30,21 +27,16 @@ export async function getOwners(userId: string = DEFAULT_USER_ID): Promise<Owner
  * Get a single owner by ID
  */
 export async function getOwnerById(
+  userId: string,
   ownerId: string,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<Owner | null> {
   const result = await db
     .select()
     .from(owners)
-    .where(eq(owners.id, ownerId))
+    .where(and(eq(owners.id, ownerId), eq(owners.userId, userId)))
     .limit(1);
 
   if (result.length === 0) {
-    return null;
-  }
-
-  // Verify user ownership
-  if (result[0].userId !== userId) {
     return null;
   }
 
@@ -55,15 +47,15 @@ export async function getOwnerById(
  * Create or update an owner
  */
 export async function upsertOwner(
+  userId: string,
   owner: Owner,
-  userId: string = DEFAULT_USER_ID,
 ): Promise<Owner> {
   const now = new Date().toISOString();
 
   const existing = await db
     .select()
     .from(owners)
-    .where(eq(owners.id, owner.id))
+    .where(and(eq(owners.id, owner.id), eq(owners.userId, userId)))
     .limit(1);
 
   if (existing.length > 0) {
@@ -74,7 +66,7 @@ export async function upsertOwner(
         label: owner.label,
         updatedAt: now,
       })
-      .where(eq(owners.id, owner.id));
+      .where(and(eq(owners.id, owner.id), eq(owners.userId, userId)));
   } else {
     // Insert
     await db.insert(owners).values({
@@ -93,13 +85,12 @@ export async function upsertOwner(
  * Delete an owner
  */
 export async function deleteOwner(
+  userId: string,
   ownerId: string,
-  _userId: string = DEFAULT_USER_ID,
 ): Promise<void> {
-  // TODO: Add user ownership check when multi-tenancy is enabled
   const result = await db
     .delete(owners)
-    .where(eq(owners.id, ownerId))
+    .where(and(eq(owners.id, ownerId), eq(owners.userId, userId)))
     .returning({ id: owners.id });
 
   if (result.length === 0) {

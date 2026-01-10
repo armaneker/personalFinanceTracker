@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getCategories, upsertCategory } from "@/lib/data-store";
 import { slugifyId } from "@/lib/utils";
 import { errorResponse, validateRequestBody, successResponse, createdResponse } from "@/lib/api-utils";
+import { requireUserId } from "@/lib/auth";
 
 const createSchema = z.object({
   name: z.string().min(1),
@@ -11,7 +12,8 @@ const createSchema = z.object({
 
 export async function GET() {
   try {
-    const categories = await getCategories();
+    const userId = await requireUserId();
+    const categories = await getCategories(userId);
     return successResponse({ categories });
   } catch (error) {
     return errorResponse(error);
@@ -20,9 +22,10 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const userId = await requireUserId();
     const { name, color } = await validateRequestBody(request, createSchema);
     const id = slugifyId(name, "cat");
-    const category = await upsertCategory({ id, name, color });
+    const category = await upsertCategory(userId, { id, name, color });
 
     return createdResponse({ category });
   } catch (error) {

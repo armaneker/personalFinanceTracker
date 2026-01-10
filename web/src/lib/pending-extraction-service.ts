@@ -4,6 +4,10 @@ import {
   loadPendingExtractionWithMeta,
   savePendingExtraction,
 } from "./data-store";
+
+/**
+ * All pending extraction functions require a userId parameter for multi-user support.
+ */
 import { TransactionRecord, ImportRunSummary } from "./types";
 import { statementExtractionSchema, StatementExtractionInput } from "./schemas";
 import { sanitizeExtraction } from "./validation";
@@ -62,6 +66,7 @@ export interface ApprovePendingOverrides {
  * Get prepared extraction from stored record, computing if needed
  */
 export async function getPreparedExtraction(
+  userId: string,
   runId: string,
   record: StoredPendingExtraction,
 ): Promise<PreparedExtraction> {
@@ -112,7 +117,7 @@ export async function getPreparedExtraction(
   const prepared = await prepareExtraction(record.extraction, record.options);
   record.prepared_records = prepared.records;
   record.months = prepared.months;
-  await savePendingExtraction(runId, record);
+  await savePendingExtraction(userId, runId, record);
   return prepared;
 }
 
@@ -135,6 +140,7 @@ function isStoredPendingExtraction(data: unknown): data is StoredPendingExtracti
  * Normalize and migrate pending extraction record to current format
  */
 export async function normalizePendingExtractionRecord(
+  userId: string,
   runId: string,
   raw: unknown,
   savedAt: string,
@@ -155,10 +161,10 @@ export async function normalizePendingExtractionRecord(
         month: detectedMonth,
       };
       if (!normalized.prepared_records) {
-        await savePendingExtraction(runId, normalized);
+        await savePendingExtraction(userId, runId, normalized);
       }
     } else if (!raw.saved_at && !normalized.prepared_records) {
-      await savePendingExtraction(runId, normalized);
+      await savePendingExtraction(userId, runId, normalized);
     }
     return normalized;
   }
@@ -182,7 +188,7 @@ export async function normalizePendingExtractionRecord(
       },
       prepared_records: undefined,
     };
-    await savePendingExtraction(runId, normalized);
+    await savePendingExtraction(userId, runId, normalized);
     return normalized;
   } catch {
     return null;
@@ -193,29 +199,30 @@ export async function normalizePendingExtractionRecord(
  * Load stored pending extraction by run ID
  */
 export async function loadStoredPendingExtraction(
+  userId: string,
   runId: string,
 ): Promise<StoredPendingExtraction | null> {
-  const meta = await loadPendingExtractionWithMeta(runId);
+  const meta = await loadPendingExtractionWithMeta(userId, runId);
   if (!meta) {
     return null;
   }
-  return normalizePendingExtractionRecord(runId, meta.data, meta.savedAt);
+  return normalizePendingExtractionRecord(userId, runId, meta.data, meta.savedAt);
 }
 
 /**
  * List all pending run summaries
  */
-export async function listPendingRunSummaries(): Promise<PendingRunSummary[]> {
-  const ids = await listPendingRunIds();
+export async function listPendingRunSummaries(userId: string): Promise<PendingRunSummary[]> {
+  const ids = await listPendingRunIds(userId);
   const summaries: PendingRunSummary[] = [];
 
   for (const runId of ids) {
-    const meta = await loadPendingExtractionWithMeta(runId);
+    const meta = await loadPendingExtractionWithMeta(userId, runId);
     if (!meta) continue;
-    const record = await normalizePendingExtractionRecord(runId, meta.data, meta.savedAt);
+    const record = await normalizePendingExtractionRecord(userId, runId, meta.data, meta.savedAt);
     if (!record) continue;
     const { extraction, options } = record;
-    const prepared = await getPreparedExtraction(runId, record);
+    const prepared = await getPreparedExtraction(userId, runId, record);
     const transactions = prepared.records;
     const sampleSize = Math.min(transactions.length, 5);
     const firstTx = transactions[0]?.record;
@@ -247,19 +254,19 @@ export async function listPendingRunSummaries(): Promise<PendingRunSummary[]> {
 /**
  * Get detailed information about a pending run
  */
-export async function getPendingRunDetail(runId: string): Promise<PendingRunDetail> {
-  const record = await loadStoredPendingExtraction(runId);
+export async function getPendingRunDetail(userId: string, runId: string): Promise<PendingRunDetail> {
+  const record = await loadStoredPendingExtraction(userId, runId);
   if (!record) {
     throw new Error(`Pending run ${runId} not found`);
   }
 
-  const summaries = await listPendingRunSummaries();
+  const summaries = await listPendingRunSummaries(userId);
   const summary = summaries.find((run) => run.run_id === runId);
   if (!summary) {
     throw new Error(`Unable to load summary for ${runId}`);
   }
 
-  const prepared = await getPreparedExtraction(runId, record);
+  const prepared = await getPreparedExtraction(userId, runId, record);
 
   return {
     summary,
@@ -271,12 +278,12 @@ export async function getPendingRunDetail(runId: string): Promise<PendingRunDeta
 /**
  * Discard a pending run
  */
-export async function discardPendingRun(runId: string) {
-  const record = await loadStoredPendingExtraction(runId);
+export async function discardPendingRun(userId: string, runId: string) {
+  const record = await loadStoredPendingExtraction(userId, runId);
   if (!record) {
     throw new Error(`Pending run ${runId} not found`);
   }
-  await deletePendingExtraction(runId);
+  await deletePendingExtraction(userId, runId);
   return {
     run_id: runId,
     summary: record.extraction.summary,
@@ -287,6 +294,7 @@ export async function discardPendingRun(runId: string) {
  * Persist extraction to pending storage
  */
 export async function persistExtractionToPending(
+  userId: string,
   runId: string,
   payload: StatementExtractionInput,
   options: CommitExtractionOptions,
@@ -300,6 +308,6 @@ export async function persistExtractionToPending(
     prepared_records: prepared.records,
     months: prepared.months,
   };
-  await savePendingExtraction(runId, record);
+  await savePendingExtraction(userId, runId, record);
   return prepared;
 }

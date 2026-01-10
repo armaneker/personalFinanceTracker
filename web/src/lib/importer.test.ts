@@ -17,6 +17,9 @@ vi.mock('./ids', () => ({
   generateTransactionId: vi.fn((month) => `txn-${month}-${Date.now()}`),
 }))
 
+// Test user ID for multi-user support
+const TEST_USER_ID = 'test-user-id'
+
 describe('importer.ts', () => {
   const mockCategories: Category[] = [
     { id: 'cat-groceries', name: 'Groceries', color: '#22c55e' },
@@ -26,7 +29,7 @@ describe('importer.ts', () => {
   beforeEach(() => {
     vi.mocked(dataStore.getCategories).mockResolvedValue(mockCategories)
     vi.mocked(dataStore.saveCategories).mockResolvedValue()
-    vi.mocked(dataStore.createOrUpdateTransaction).mockImplementation(async (_month, tx) => tx)
+    vi.mocked(dataStore.createOrUpdateTransaction).mockImplementation(async (_userId, _month, tx) => tx)
     vi.mocked(dataStore.appendImportHistory).mockResolvedValue()
     vi.mocked(dataStore.savePendingExtraction).mockResolvedValue()
 
@@ -52,7 +55,7 @@ describe('importer.ts', () => {
 
   describe('findExistingImportByFingerprint', () => {
     it('should return null for empty fingerprint', async () => {
-      const result = await findExistingImportByFingerprint('')
+      const result = await findExistingImportByFingerprint(TEST_USER_ID, '')
 
       expect(result).toBeNull()
     })
@@ -70,7 +73,7 @@ describe('importer.ts', () => {
         },
       ])
 
-      const result = await findExistingImportByFingerprint('fp-12345')
+      const result = await findExistingImportByFingerprint(TEST_USER_ID, 'fp-12345')
 
       expect(result).toEqual({
         type: 'history',
@@ -101,7 +104,7 @@ describe('importer.ts', () => {
         },
       ])
 
-      const result = await findExistingImportByFingerprint('fp-12345', 'card-mastercard')
+      const result = await findExistingImportByFingerprint(TEST_USER_ID, 'fp-12345', 'card-mastercard')
 
       expect(result?.run_id).toBe('run-002')
     })
@@ -110,7 +113,7 @@ describe('importer.ts', () => {
       vi.mocked(dataStore.getImportHistory).mockResolvedValue([])
       vi.mocked(dataStore.listPendingRunIds).mockResolvedValue([])
 
-      const result = await findExistingImportByFingerprint('fp-nonexistent')
+      const result = await findExistingImportByFingerprint(TEST_USER_ID, 'fp-nonexistent')
 
       expect(result).toBeNull()
     })
@@ -143,7 +146,7 @@ describe('importer.ts', () => {
         ],
       }
 
-      await commitExtraction(extraction, {
+      await commitExtraction(TEST_USER_ID, extraction, {
         statementFile: 'statement.pdf',
         cardId: 'card-visa',
         fingerprint: 'fp-12345',
@@ -151,6 +154,7 @@ describe('importer.ts', () => {
 
       expect(dataStore.createOrUpdateTransaction).toHaveBeenCalledTimes(1)
       expect(dataStore.appendImportHistory).toHaveBeenCalledWith(
+        TEST_USER_ID,
         expect.objectContaining({
           run_id: 'run-001',
           statement_file: 'statement.pdf',
@@ -192,11 +196,11 @@ describe('importer.ts', () => {
         ],
       }
 
-      await commitExtraction(extraction, {
+      await commitExtraction(TEST_USER_ID, extraction, {
         statementFile: 'statement.pdf',
       })
 
-      expect(categoryService.ensureCategories).toHaveBeenCalledWith(extraction)
+      expect(categoryService.ensureCategories).toHaveBeenCalledWith(TEST_USER_ID, extraction)
     })
   })
 

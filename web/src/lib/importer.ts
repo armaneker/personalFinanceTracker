@@ -7,6 +7,8 @@
  * - transaction-builder.ts: Transaction record building and preparation
  * - pending-extraction-service.ts: Pending run management
  * - fx-service.ts: Currency conversion (already extracted)
+ *
+ * All functions require a userId parameter for multi-user support.
  */
 
 import {
@@ -15,6 +17,7 @@ import {
   getImportHistory,
   listPendingRunIds,
   loadPendingExtractionWithMeta,
+  deletePendingExtraction,
 } from "./data-store";
 import { StatementExtractionInput } from "./schemas";
 import { ensureCategories } from "./category-service";
@@ -54,13 +57,14 @@ export interface ExistingImportMatch {
  * Find existing import by fingerprint in history or pending runs
  */
 export async function findExistingImportByFingerprint(
+  userId: string,
   fingerprint: string,
   cardId?: string,
 ): Promise<ExistingImportMatch | null> {
   if (!fingerprint) return null;
 
   // Check import history first
-  const history = await getImportHistory();
+  const history = await getImportHistory(userId);
   const historyMatch = history.find(
     (entry) => entry.fingerprint === fingerprint && (!cardId || entry.card_id === cardId),
   );
@@ -73,11 +77,11 @@ export async function findExistingImportByFingerprint(
   }
 
   // Check pending runs
-  const pendingIds = await listPendingRunIds();
+  const pendingIds = await listPendingRunIds(userId);
   for (const runId of pendingIds) {
-    const meta = await loadPendingExtractionWithMeta(runId);
+    const meta = await loadPendingExtractionWithMeta(userId, runId);
     if (!meta) continue;
-    const record = await normalizePendingExtractionRecord(runId, meta.data, meta.savedAt);
+    const record = await normalizePendingExtractionRecord(userId, runId, meta.data, meta.savedAt);
     if (!record) continue;
     if (
       record.options?.fingerprint === fingerprint &&
@@ -98,12 +102,13 @@ export async function findExistingImportByFingerprint(
  * Commit extraction to database and history
  */
 export async function commitExtraction(
+  userId: string,
   payload: StatementExtractionInput,
   options: CommitExtractionOptions,
   precomputed?: PreparedExtraction,
 ) {
   // Ensure all categories exist
-  await ensureCategories(payload);
+  await ensureCategories(userId, payload);
 
   // Prepare extraction if not precomputed
   const prepared = precomputed ?? (await prepareExtraction(payload, options));
@@ -118,11 +123,11 @@ export async function commitExtraction(
       model: payload.model,
       ...item.record.source_llm,
     };
-    await createOrUpdateTransaction(item.month, item.record);
+    await createOrUpdateTransaction(userId, item.month, item.record);
   }
 
   // Record in import history
-  await appendImportHistory({
+  await appendImportHistory(userId, {
     run_id: payload.run_id,
     statement_file: options.statementFile,
     card_id: options.cardId ?? "unknown-card",
@@ -143,6 +148,7 @@ export async function commitExtraction(
  * Approve and commit a pending run
  */
 export async function approvePendingRun(
+  userId: string,
   runId: string,
   overrides?: {
     month?: string;
@@ -151,7 +157,7 @@ export async function approvePendingRun(
     statementFile?: string;
   },
 ) {
-  const record = await loadStoredPendingExtraction(runId);
+  const record = await loadStoredPendingExtraction(userId, runId);
   if (!record) {
     throw new Error(`Pending run ${runId} not found`);
   }
@@ -171,12 +177,11 @@ export async function approvePendingRun(
       `pending-${runId}`,
   };
 
-  const prepared = await getPreparedExtraction(runId, record);
-  await commitExtraction(record.extraction, finalOptions, prepared);
+  const prepared = await getPreparedExtraction(userId, runId, record);
+  await commitExtraction(userId, record.extraction, finalOptions, prepared);
 
-  // Import and delete pending extraction
-  const { deletePendingExtraction } = await import("./data-store");
-  await deletePendingExtraction(runId);
+  // Delete pending extraction
+  await deletePendingExtraction(userId, runId);
 
   return {
     run_id: runId,
