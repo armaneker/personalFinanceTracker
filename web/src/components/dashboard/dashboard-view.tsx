@@ -107,7 +107,7 @@ export default function DashboardView({ summary, months }: Props) {
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">
+          <h1 className="text-xl sm:text-2xl font-semibold text-slate-900">
             {new Date(`${activeSummary.month}-01`).toLocaleDateString("tr-TR", {
               year: "numeric",
               month: "long",
@@ -120,7 +120,7 @@ export default function DashboardView({ summary, months }: Props) {
         <select
           value={selectedMonth}
           onChange={(event) => setSelectedMonth(event.target.value)}
-          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 sm:w-56"
+          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 sm:w-56 min-h-11"
         >
           {months.map((monthOption) => (
             <option key={monthOption} value={monthOption}>
@@ -173,13 +173,13 @@ export default function DashboardView({ summary, months }: Props) {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm lg:col-span-2">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Spending trend</h2>
+            <h2 className="text-base sm:text-lg font-semibold text-slate-900">Spending trend</h2>
             {isLoading && <span className="text-xs text-slate-400">Refreshing...</span>}
           </div>
-          <div className="mt-4 h-64">
+          <div className="mt-4 h-48 sm:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={activeSummary.trend}>
                 <defs>
@@ -189,8 +189,8 @@ export default function DashboardView({ summary, months }: Props) {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
+                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} width={60} />
                 <Tooltip formatter={(value: number) => formatMoney(value, currency)} />
                 <Area
                   type="monotone"
@@ -204,21 +204,18 @@ export default function DashboardView({ summary, months }: Props) {
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">Category split</h2>
+        <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
+          <h2 className="text-base sm:text-lg font-semibold text-slate-900">Category split</h2>
           <div className="mt-4 flex items-center justify-center">
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
                   data={categoryData}
                   dataKey="value"
                   nameKey="name"
-                  label={({ name, percent }: PieLabelRenderProps) => {
-                    const pct = typeof percent === "number" ? percent : 0;
-                    return pct ? `${name} ${(pct * 100).toFixed(0)}%` : name;
-                  }}
-                  outerRadius={80}
-                  innerRadius={40}
+                  label={false}
+                  outerRadius={70}
+                  innerRadius={35}
                 >
                   {categoryData.map((entry) => (
                     <Cell
@@ -244,49 +241,49 @@ export default function DashboardView({ summary, months }: Props) {
           <ul className="mt-4 space-y-2">
             {categoryData.map((row) => (
               <li key={row.key} className="flex justify-between text-sm text-slate-600">
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 min-w-0">
                   <span
-                    className="h-2 w-2 rounded-full"
+                    className="h-2 w-2 flex-shrink-0 rounded-full"
                     style={{ backgroundColor: categoryColors.get(row.key) ?? "#3b82f6" }}
                   />
-                  {row.name}
+                  <span className="truncate">{row.name}</span>
                 </span>
-                <span>{formatMoney(row.value, currency)}</span>
+                <span className="flex-shrink-0 ml-2">{formatMoney(row.value, currency)}</span>
               </li>
             ))}
           </ul>
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">By owner</h2>
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
+          <h2 className="text-base sm:text-lg font-semibold text-slate-900">By owner</h2>
           <ul className="mt-4 space-y-3">
             {activeSummary.by_owner.map((row) => (
-              <li key={row.key} className="flex items-center justify-between text-sm text-slate-600">
-                <div>
-                  <p className="font-medium text-slate-900">{row.label}</p>
+              <li key={row.key} className="flex items-center justify-between text-sm text-slate-600 gap-2">
+                <div className="min-w-0">
+                  <p className="font-medium text-slate-900 truncate">{row.label}</p>
                   <p className="text-xs text-slate-500">
                     {row.count} transactions • {row.percentage.toFixed(1)}%
                   </p>
                 </div>
-                <p className="font-medium">{formatMoney(row.total, currency)}</p>
+                <p className="font-medium flex-shrink-0">{formatMoney(row.total, currency)}</p>
               </li>
             ))}
           </ul>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">By card</h2>
+        <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
+          <h2 className="text-base sm:text-lg font-semibold text-slate-900">By card</h2>
           <ul className="mt-4 space-y-3">
             {activeSummary.by_card.map((row) => (
-              <li key={row.key} className="flex items-center justify-between text-sm text-slate-600">
-                <div>
-                  <p className="font-medium text-slate-900">{row.label}</p>
+              <li key={row.key} className="flex items-center justify-between text-sm text-slate-600 gap-2">
+                <div className="min-w-0">
+                  <p className="font-medium text-slate-900 truncate">{row.label}</p>
                   <p className="text-xs text-slate-500">
                     {row.count} transactions • {row.percentage.toFixed(1)}%
                   </p>
                 </div>
-                <p className="font-medium">{formatMoney(row.total, currency)}</p>
+                <p className="font-medium flex-shrink-0">{formatMoney(row.total, currency)}</p>
               </li>
             ))}
           </ul>

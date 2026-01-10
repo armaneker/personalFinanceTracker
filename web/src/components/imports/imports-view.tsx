@@ -110,15 +110,15 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+        className="space-y-6 rounded-xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm"
       >
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
           <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
             Statement name
             <input
               required
               type="text"
-              className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
+              className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11 w-full"
               value={statementName}
               onChange={(event) => setStatementName(event.target.value)}
               placeholder="October Statement.pdf"
@@ -129,7 +129,7 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
             Month
             <input
               type="month"
-              className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
+              className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11 w-full"
               value={month}
               onChange={(event) => setMonth(event.target.value)}
             />
@@ -138,7 +138,7 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
           <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
             Card
             <select
-              className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
+              className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11 w-full"
               value={cardId}
               onChange={(event) => setCardId(event.target.value)}
             >
@@ -153,7 +153,7 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
           <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
             Owner
             <select
-              className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
+              className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11 w-full"
               value={ownerId}
               onChange={(event) => setOwnerId(event.target.value)}
             >
@@ -176,7 +176,7 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
             type="file"
             accept="application/pdf"
             onChange={handleFileChange}
-            className="mt-3 text-sm text-slate-600"
+            className="mt-3 text-sm text-slate-600 w-full"
           />
           {statementPdfBase64 && (
             <p className="mt-2 text-xs text-emerald-600">
@@ -189,7 +189,7 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
           <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
             Statement text
             <textarea
-              className="mt-1 h-48 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
+              className="mt-1 h-48 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 w-full"
               placeholder="Paste plain text statement here if PDF upload fails."
               value={statementText}
               onChange={(event) => setStatementText(event.target.value)}
@@ -197,21 +197,21 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
           </label>
         </div>
 
-        <label className="flex items-center gap-3 text-sm text-slate-600">
+        <label className="flex items-center gap-3 text-sm text-slate-600 min-h-11">
           <input
             type="checkbox"
             checked={autoCommit}
             onChange={(event) => setAutoCommit(event.target.checked)}
-            className="h-4 w-4 rounded border-slate-400"
+            className="h-5 w-5 rounded border-slate-400"
           />
-          Auto-commit transactions after the LLM extraction (skip manual review)
+          <span>Auto-commit transactions after the LLM extraction (skip manual review)</span>
         </label>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+            className="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 min-h-11 w-full sm:w-auto"
           >
             {isSubmitting ? "Importing..." : "Run import"}
           </button>
