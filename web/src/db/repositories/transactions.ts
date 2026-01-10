@@ -232,3 +232,32 @@ export async function getTransactionById(
 
   return toApiType(result[0]);
 }
+
+/**
+ * Delete transactions by statement reference
+ */
+export async function deleteTransactionsByStatementRef(
+  userId: string,
+  statementRef: string,
+): Promise<number> {
+  const result = await db
+    .delete(transactions)
+    .where(and(eq(transactions.userId, userId), eq(transactions.statementRef, statementRef)));
+
+  return result.rowsAffected ?? 0;
+}
+
+/**
+ * Count transactions by statement reference
+ */
+export async function countTransactionsByStatementRef(
+  userId: string,
+  statementRef: string,
+): Promise<number> {
+  const result = await db
+    .select({ id: transactions.id })
+    .from(transactions)
+    .where(and(eq(transactions.userId, userId), eq(transactions.statementRef, statementRef)));
+
+  return result.length;
+}

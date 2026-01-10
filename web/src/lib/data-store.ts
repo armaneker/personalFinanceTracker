@@ -124,3 +124,19 @@ export async function loadPendingExtractionWithMeta(
 ): Promise<{ data: unknown; savedAt: string } | null> {
   return importRunsRepo.loadPendingExtractionWithMeta(userId, runId);
 }
+
+export async function getImportRunById(userId: string, runId: string): Promise<ImportRun | null> {
+  return importRunsRepo.getImportRunById(userId, runId);
+}
+
+export async function deleteImportRun(userId: string, runId: string): Promise<void> {
+  await importRunsRepo.deleteImportRun(userId, runId);
+}
+
+export async function deleteTransactionsByStatementRef(userId: string, statementRef: string): Promise<number> {
+  return transactionsRepo.deleteTransactionsByStatementRef(userId, statementRef);
+}
+
+export async function countTransactionsByStatementRef(userId: string, statementRef: string): Promise<number> {
+  return transactionsRepo.countTransactionsByStatementRef(userId, statementRef);
+}
