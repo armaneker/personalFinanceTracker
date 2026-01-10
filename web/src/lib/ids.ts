@@ -10,3 +10,7 @@ export function generateRunId(prefix: string) {
 export function generateTransactionId(month: string) {
   return `tx-${month}-${nanoid()}`;
 }
+
+export function generateUserId() {
+  return `usr-${nanoid()}`;
+}
