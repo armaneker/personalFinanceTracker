@@ -437,7 +437,7 @@ describe('analytics.ts', () => {
       }
 
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-02', '2024-01'])
-      vi.mocked(dataStore.loadTransactionFile).mockImplementation(async (month) => {
+      vi.mocked(dataStore.loadTransactionFile).mockImplementation(async (_userId, month) => {
         if (month === '2024-01') return month1
         if (month === '2024-02') return month2
         return null
@@ -495,7 +495,7 @@ describe('analytics.ts', () => {
       }
 
       vi.mocked(dataStore.listTransactionMonths).mockResolvedValue(['2024-02', '2024-01'])
-      vi.mocked(dataStore.loadTransactionFile).mockImplementation(async (month) => {
+      vi.mocked(dataStore.loadTransactionFile).mockImplementation(async (_userId, month) => {
         if (month === '2024-01') return month1
         if (month === '2024-02') return month2
         return null
