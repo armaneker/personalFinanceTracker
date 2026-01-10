@@ -177,6 +177,9 @@ Rules:
 - Provide statement summary totals and currency.
 - Include warnings for ambiguous rows.
 - Extract metadata from statement: statement date (to determine month), card last 4 digits, and cardholder name.
+- You MUST extract ALL transactions from the statement - do not skip any.
+- Do not summarize or truncate the transaction list.
+- If there are many transactions, include every single one.
 `;
 
 function buildPrompt(input: StatementExtractionPrompt): string {
@@ -246,6 +249,8 @@ ${input.statementText}
 
 Schema (for reference):
 ${JSON.stringify(schema, null, 2)}
+
+IMPORTANT: Extract every transaction. The statement may have 50-100+ transactions. Do not skip, summarize, or truncate any transactions.
 `;
 }
 
@@ -423,6 +428,7 @@ export async function extractTransactionsWithLLM(
         const completionParams: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming = {
           model,
           response_format: { type: "json_object" },
+          max_tokens: 16000, // Allow longer outputs for statements with many transactions (50-100+)
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: buildPrompt(input) },
@@ -472,6 +478,17 @@ export async function extractTransactionsWithLLM(
           LLMErrorCode.VALIDATION_FAILED,
           { retryable: false, details: validationResult.error.issues }
         );
+      }
+
+      // Check for transaction count mismatch between reported summary and actual extracted transactions
+      const reportedCount = validationResult.data.summary.transactions;
+      const actualCount = validationResult.data.transactions.length;
+      if (reportedCount !== actualCount) {
+        const mismatchWarning = `Transaction count mismatch: summary reports ${reportedCount} transactions but only ${actualCount} were extracted. Some transactions may have been missed.`;
+        llmLogger.warn({ reportedCount, actualCount }, mismatchWarning);
+        // Add warning to the result
+        validationResult.data.warnings = validationResult.data.warnings || [];
+        validationResult.data.warnings.push(mismatchWarning);
       }
 
       // Log successful completion with token usage
