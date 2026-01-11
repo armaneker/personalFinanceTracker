@@ -2,20 +2,13 @@
 
 import { useMemo, useState } from "react";
 import useSWR from "swr";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-  Cell,
-} from "recharts";
 
 import { DashboardSummary } from "@/lib/analytics";
+import { Category } from "@/lib/types";
+import HeroMetrics from "./hero-metrics";
+import SpendingTrendChart from "./spending-trend-chart";
+import TopCategories from "./top-categories";
+import RecentTransactions from "./recent-transactions";
 
 type Props = {
   summary: DashboardSummary | null;
@@ -35,18 +28,6 @@ const fetcher = (url: string) =>
       throw error;
     });
 
-function formatMoney(value: number, currency: string) {
-  try {
-    return new Intl.NumberFormat("tr-TR", {
-      style: "currency",
-      currency,
-      maximumFractionDigits: 2,
-    }).format(value);
-  } catch {
-    return `${value.toFixed(2)} ${currency}`;
-  }
-}
-
 export default function DashboardView({ summary, months }: Props) {
   const [selectedMonth, setSelectedMonth] = useState(summary?.month ?? months[0] ?? "");
   const fallback = summary && selectedMonth === summary.month ? { summary } : undefined;
@@ -62,30 +43,28 @@ export default function DashboardView({ summary, months }: Props) {
   const activeSummary = (data?.summary ?? null) as DashboardSummary | null;
   const currency = activeSummary?.currency ?? "TRY";
 
-  const categoryColors = useMemo(() => {
-    if (!activeSummary) return new Map<string, string>();
-    return new Map(
-      activeSummary.by_category.map((row, index) => [
-        row.key,
-        row.entity?.color ??
-          ["#3b82f6", "#22c55e", "#ef4444", "#eab308", "#a855f7", "#14b8a6"][index % 6],
-      ]),
-    );
+  const categoryMap = useMemo(() => {
+    if (!activeSummary) return new Map<string, Category>();
+    const map = new Map<string, Category>();
+    for (const row of activeSummary.by_category) {
+      if (row.entity) {
+        map.set(row.key, row.entity);
+      }
+    }
+    return map;
   }, [activeSummary]);
 
-  const categoryData = useMemo(() => {
-    if (!activeSummary) return [];
-    return activeSummary.by_category.map((row) => ({
-      key: row.key,
-      name: row.label,
-      value: row.total,
-      percentage: row.percentage,
-    }));
-  }, [activeSummary]);
+  // Fetch transactions for recent transactions component
+  const { data: txData } = useSWR(
+    selectedMonth ? `/api/transactions?month=${selectedMonth}` : null,
+    fetcher,
+  );
+
+  const recentTransactions = txData?.transactions ?? [];
 
   if (error) {
     return (
-      <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+      <div className="rounded-xl bg-red-50 p-6 text-sm text-red-700 shadow-sm">
         Failed to load dashboard: {error.message}
       </div>
     );
@@ -93,200 +72,73 @@ export default function DashboardView({ summary, months }: Props) {
 
   if (!activeSummary) {
     return (
-      <div className="rounded-md border border-slate-200 bg-white p-6 text-sm text-slate-500">
-        No data available yet. Import a statement to get started.
+      <div className="rounded-xl bg-white p-8 text-center shadow-sm">
+        <p className="text-slate-500">No data available yet. Import a statement to get started.</p>
       </div>
     );
   }
 
-  const changeLabel =
-    activeSummary.vs_previous && activeSummary.vs_previous.change >= 0 ? "↑" : "↓";
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header with month selector */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold text-slate-900">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
             {new Date(`${activeSummary.month}-01`).toLocaleDateString("tr-TR", {
               year: "numeric",
               month: "long",
             })}
           </h1>
-          <p className="text-sm text-slate-500">
-            Monthly spend overview and breakdown by category and owner.
+          <p className="mt-1 text-sm text-slate-500">
+            Your monthly spending overview
           </p>
         </div>
-        <select
-          value={selectedMonth}
-          onChange={(event) => setSelectedMonth(event.target.value)}
-          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 sm:w-56 min-h-11"
-        >
-          {months.map((monthOption) => (
-            <option key={monthOption} value={monthOption}>
-              {new Date(`${monthOption}-01`).toLocaleDateString("tr-TR", {
-                year: "numeric",
-                month: "long",
-              })}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs uppercase tracking-wider text-slate-500">Total spent</p>
-          <p className="mt-2 text-2xl font-semibold text-slate-900">
-            {formatMoney(activeSummary.total_spent, currency)}
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
-            {activeSummary.transactions} transactions
-          </p>
-        </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs uppercase tracking-wider text-slate-500">Net balance</p>
-          <p className="mt-2 text-2xl font-semibold text-slate-900">
-            {formatMoney(activeSummary.net, currency)}
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
-            Includes refunds and adjustments
-          </p>
-        </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs uppercase tracking-wider text-slate-500">vs previous</p>
-          {activeSummary.vs_previous ? (
-            <div className="mt-2 space-y-1">
-              <p className="text-2xl font-semibold text-slate-900">
-                {changeLabel} {formatMoney(Math.abs(activeSummary.vs_previous.change), currency)}
-              </p>
-              <p className="text-xs text-slate-500">
-                {activeSummary.vs_previous.pct_change.toFixed(1)}% compared to{" "}
-                {new Date(`${activeSummary.vs_previous.month}-01`).toLocaleDateString("tr-TR", {
-                  month: "short",
-                  year: "numeric",
-                })}
-              </p>
-            </div>
-          ) : (
-            <p className="mt-2 text-sm text-slate-500">No previous month data.</p>
+        <div className="flex items-center gap-2">
+          {isLoading && (
+            <span className="text-xs text-slate-400">Refreshing...</span>
           )}
+          <select
+            value={selectedMonth}
+            onChange={(event) => setSelectedMonth(event.target.value)}
+            className="rounded-xl border-0 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-48"
+          >
+            {months.map((monthOption) => (
+              <option key={monthOption} value={monthOption}>
+                {new Date(`${monthOption}-01`).toLocaleDateString("tr-TR", {
+                  year: "numeric",
+                  month: "long",
+                })}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm lg:col-span-2">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base sm:text-lg font-semibold text-slate-900">Spending trend</h2>
-            {isLoading && <span className="text-xs text-slate-400">Refreshing...</span>}
-          </div>
-          <div className="mt-4 h-48 sm:h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={activeSummary.trend}>
-                <defs>
-                  <linearGradient id="trendColor" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} width={60} />
-                <Tooltip formatter={(value: number) => formatMoney(value, currency)} />
-                <Area
-                  type="monotone"
-                  dataKey="total_spent"
-                  stroke="#3b82f6"
-                  fillOpacity={1}
-                  fill="url(#trendColor)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+      {/* Hero Metrics */}
+      <HeroMetrics
+        totalSpent={activeSummary.total_spent}
+        currency={currency}
+        vsLastMonth={
+          activeSummary.vs_previous
+            ? {
+                change: activeSummary.vs_previous.change,
+                pctChange: activeSummary.vs_previous.pct_change,
+              }
+            : undefined
+        }
+      />
 
-        <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
-          <h2 className="text-base sm:text-lg font-semibold text-slate-900">Category split</h2>
-          <div className="mt-4 flex items-center justify-center">
-            <ResponsiveContainer width="100%" height={200}>
-              <PieChart>
-                <Pie
-                  data={categoryData}
-                  dataKey="value"
-                  nameKey="name"
-                  label={false}
-                  outerRadius={70}
-                  innerRadius={35}
-                >
-                  {categoryData.map((entry) => (
-                    <Cell
-                      key={entry.key}
-                      fill={categoryColors.get(entry.key) ?? "#3b82f6"}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(
-                    value: number,
-                    _name: string,
-                    item: { payload?: { percentage?: number } | undefined },
-                  ) => {
-                    const pctSource = item?.payload?.percentage;
-                    const pct = typeof pctSource === "number" ? pctSource : Number(pctSource ?? 0);
-                    return `${formatMoney(value, currency)} • ${pct.toFixed(1)}%`;
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <ul className="mt-4 space-y-2">
-            {categoryData.map((row) => (
-              <li key={row.key} className="flex justify-between text-sm text-slate-600">
-                <span className="flex items-center gap-2 min-w-0">
-                  <span
-                    className="h-2 w-2 flex-shrink-0 rounded-full"
-                    style={{ backgroundColor: categoryColors.get(row.key) ?? "#3b82f6" }}
-                  />
-                  <span className="truncate">{row.name}</span>
-                </span>
-                <span className="flex-shrink-0 ml-2">{formatMoney(row.value, currency)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      {/* Spending Trend Chart */}
+      <SpendingTrendChart data={activeSummary.trend} currency={currency} />
 
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-        <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
-          <h2 className="text-base sm:text-lg font-semibold text-slate-900">By owner</h2>
-          <ul className="mt-4 space-y-3">
-            {activeSummary.by_owner.map((row) => (
-              <li key={row.key} className="flex items-center justify-between text-sm text-slate-600 gap-2">
-                <div className="min-w-0">
-                  <p className="font-medium text-slate-900 truncate">{row.label}</p>
-                  <p className="text-xs text-slate-500">
-                    {row.count} transactions • {row.percentage.toFixed(1)}%
-                  </p>
-                </div>
-                <p className="font-medium flex-shrink-0">{formatMoney(row.total, currency)}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
-          <h2 className="text-base sm:text-lg font-semibold text-slate-900">By card</h2>
-          <ul className="mt-4 space-y-3">
-            {activeSummary.by_card.map((row) => (
-              <li key={row.key} className="flex items-center justify-between text-sm text-slate-600 gap-2">
-                <div className="min-w-0">
-                  <p className="font-medium text-slate-900 truncate">{row.label}</p>
-                  <p className="text-xs text-slate-500">
-                    {row.count} transactions • {row.percentage.toFixed(1)}%
-                  </p>
-                </div>
-                <p className="font-medium flex-shrink-0">{formatMoney(row.total, currency)}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
+      {/* Bottom Grid: Top Categories and Recent Transactions */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <TopCategories categories={activeSummary.by_category} currency={currency} />
+        <RecentTransactions
+          transactions={recentTransactions}
+          categories={categoryMap}
+          currency={currency}
+        />
       </div>
     </div>
   );
