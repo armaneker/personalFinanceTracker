@@ -18,7 +18,11 @@ import {
   listPendingRunIds,
   loadPendingExtractionWithMeta,
   deletePendingExtraction,
+  getCards,
+  getOwners,
 } from "./data-store";
+import { upsertCard } from "@/db/repositories/cards";
+import { upsertOwner } from "@/db/repositories/owners";
 import { StatementExtractionInput } from "./schemas";
 import { ensureCategories } from "./category-service";
 import {
@@ -51,6 +55,65 @@ export interface ExistingImportMatch {
   type: "history" | "pending";
   run_id: string;
   month?: string;
+}
+
+/**
+ * Ensure that the card exists for the user.
+ * If the card doesn't exist, create it with default values.
+ * This is necessary to satisfy foreign key constraints.
+ */
+async function ensureCardExists(userId: string, cardId: string): Promise<void> {
+  const cards = await getCards(userId);
+  const cardExists = cards.some(card => card.id === cardId);
+
+  if (!cardExists) {
+    // Auto-create the card with default values
+    // Try to parse card info from the ID (format: card-issuer-last4)
+    const parts = cardId.split('-');
+    let issuer = 'Unknown';
+    let last4 = '0000';
+
+    if (parts.length >= 3) {
+      // e.g., card-visa-1234 -> issuer: visa, last4: 1234
+      issuer = parts[1]?.charAt(0).toUpperCase() + parts[1]?.slice(1) || 'Unknown';
+      last4 = parts[parts.length - 1] || '0000';
+    }
+
+    await upsertCard(userId, {
+      id: cardId,
+      name: cardId === 'unknown-card' ? 'Unknown Card' : `${issuer} ${last4}`,
+      issuer,
+      last4,
+      currency: 'TRY',
+    });
+  }
+}
+
+/**
+ * Ensure that the owner exists for the user.
+ * If the owner doesn't exist, create it with default values.
+ * This is necessary to satisfy foreign key constraints.
+ */
+async function ensureOwnerExists(userId: string, ownerId: string): Promise<void> {
+  const ownerList = await getOwners(userId);
+  const ownerExists = ownerList.some(owner => owner.id === ownerId);
+
+  if (!ownerExists) {
+    // Auto-create the owner with default values
+    // Try to parse owner label from the ID (format: owner-name)
+    const parts = ownerId.split('-');
+    let label = 'Unknown';
+
+    if (parts.length >= 2) {
+      // e.g., owner-arman -> label: Arman
+      label = parts.slice(1).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+    }
+
+    await upsertOwner(userId, {
+      id: ownerId,
+      label,
+    });
+  }
 }
 
 /**
@@ -112,6 +175,32 @@ export async function commitExtraction(
 
   // Prepare extraction if not precomputed
   const prepared = precomputed ?? (await prepareExtraction(payload, options, userId));
+
+  // Ensure all cards and owners exist (auto-create if needed)
+  // Collect all unique card and owner IDs from transactions
+  const uniqueCardIds = new Set<string>();
+  const uniqueOwnerIds = new Set<string>();
+  for (const item of prepared.records) {
+    if (item.record.card_id) {
+      uniqueCardIds.add(item.record.card_id);
+    }
+    if (item.record.owner_id) {
+      uniqueOwnerIds.add(item.record.owner_id);
+    }
+  }
+  // Also add the import-level card ID
+  const importCardId = options.cardId ?? prepared.records[0]?.record.card_id ?? "unknown-card";
+  uniqueCardIds.add(importCardId);
+
+  // Ensure each card exists
+  for (const cid of uniqueCardIds) {
+    await ensureCardExists(userId, cid);
+  }
+
+  // Ensure each owner exists
+  for (const oid of uniqueOwnerIds) {
+    await ensureOwnerExists(userId, oid);
+  }
 
   // Commit each transaction
   const commitMonths = new Set<string>();

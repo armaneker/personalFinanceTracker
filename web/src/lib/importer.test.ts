@@ -13,6 +13,12 @@ import type { StatementExtractionInput } from './schemas'
 vi.mock('./data-store')
 vi.mock('./fx-service')
 vi.mock('./category-service')
+vi.mock('@/db/repositories/cards', () => ({
+  upsertCard: vi.fn().mockResolvedValue({}),
+}))
+vi.mock('@/db/repositories/owners', () => ({
+  upsertOwner: vi.fn().mockResolvedValue({}),
+}))
 vi.mock('./ids', () => ({
   generateTransactionId: vi.fn((month) => `txn-${month}-${Date.now()}`),
 }))
@@ -32,6 +38,9 @@ describe('importer.ts', () => {
     vi.mocked(dataStore.createOrUpdateTransaction).mockImplementation(async (_userId, _month, tx) => tx)
     vi.mocked(dataStore.appendImportHistory).mockResolvedValue()
     vi.mocked(dataStore.savePendingExtraction).mockResolvedValue()
+    // Mock getCards and getOwners to return empty arrays (cards/owners will be auto-created)
+    vi.mocked(dataStore.getCards).mockResolvedValue([])
+    vi.mocked(dataStore.getOwners).mockResolvedValue([])
 
     // Mock category service
     vi.mocked(categoryService.ensureCategories).mockResolvedValue()
