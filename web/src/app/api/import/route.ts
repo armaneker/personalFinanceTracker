@@ -37,7 +37,7 @@ const requestSchema = z
     }
   });
 
-// Force Node.js runtime (Edge Runtime doesn't support pdf-parse, fs, crypto)
+// Force Node.js runtime (Edge Runtime doesn't support crypto.createHash)
 export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
@@ -49,23 +49,12 @@ export async function POST(request: Request) {
     let statementText = data.statementText ?? "";
     if (!statementText && data.statementPdfBase64) {
       try {
-        // Dynamic imports to avoid loading pdfjs-dist browser APIs (DOMMatrix) at module load time
-        const { PDFParse } = await import("pdf-parse");
-        const path = await import("node:path");
-        const { pathToFileURL } = await import("node:url");
-
+        // Use unpdf for serverless-compatible PDF text extraction
+        const { extractText, getDocumentProxy } = await import("unpdf");
         const buffer = Buffer.from(data.statementPdfBase64, "base64");
-        const workerUrl = pathToFileURL(
-          path.join(process.cwd(), "node_modules/pdfjs-dist/build/pdf.worker.min.mjs"),
-        ).href;
-        PDFParse.setWorker(workerUrl);
-        const parser = new PDFParse({ data: buffer });
-        try {
-          const parsed = await parser.getText();
-          statementText = parsed.text;
-        } finally {
-          await parser.destroy();
-        }
+        const pdf = await getDocumentProxy(new Uint8Array(buffer));
+        const { text } = await extractText(pdf, { mergePages: true });
+        statementText = text;
       } catch (error) {
         throw ErrorFactory.pdfParseError(
           "Failed to parse PDF file",
