@@ -82,14 +82,27 @@ async function ensureCardExists(userId: string, cardId: string): Promise<void> {
     }
 
     console.log(`[ensureCardExists] Creating card ${cardId} with issuer=${issuer}, last4=${last4}`);
-    await upsertCard(userId, {
-      id: cardId,
-      name: cardId === 'unknown-card' ? 'Unknown Card' : `${issuer} ${last4}`,
-      issuer,
-      last4,
-      currency: 'TRY',
-    });
-    console.log(`[ensureCardExists] Card ${cardId} created successfully`);
+    try {
+      await upsertCard(userId, {
+        id: cardId,
+        name: cardId === 'unknown-card' ? 'Unknown Card' : `${issuer} ${last4}`,
+        issuer,
+        last4,
+        currency: 'TRY',
+      });
+      console.log(`[ensureCardExists] Card ${cardId} created successfully`);
+
+      // Verify the card was actually created
+      const verifyCards = await getCards(userId);
+      const verified = verifyCards.some(c => c.id === cardId);
+      console.log(`[ensureCardExists] Verification: card ${cardId} exists = ${verified}`);
+      if (!verified) {
+        throw new Error(`Card ${cardId} was not persisted after upsert`);
+      }
+    } catch (error) {
+      console.error(`[ensureCardExists] FAILED to create card ${cardId}:`, error);
+      throw error;
+    }
   }
 }
 

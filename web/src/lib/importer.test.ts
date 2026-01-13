@@ -9,15 +9,25 @@ import * as categoryService from './category-service'
 import type { Category } from './types'
 import type { StatementExtractionInput } from './schemas'
 
+// Track created cards and owners for verification
+const createdCards: Array<{ id: string; name: string; issuer: string; last4: string; currency: string }> = []
+const createdOwners: Array<{ id: string; label: string }> = []
+
 // Mock dependencies
 vi.mock('./data-store')
 vi.mock('./fx-service')
 vi.mock('./category-service')
 vi.mock('@/db/repositories/cards', () => ({
-  upsertCard: vi.fn().mockResolvedValue({}),
+  upsertCard: vi.fn().mockImplementation(async (_userId, card) => {
+    createdCards.push(card)
+    return card
+  }),
 }))
 vi.mock('@/db/repositories/owners', () => ({
-  upsertOwner: vi.fn().mockResolvedValue({}),
+  upsertOwner: vi.fn().mockImplementation(async (_userId, owner) => {
+    createdOwners.push(owner)
+    return owner
+  }),
 }))
 vi.mock('./ids', () => ({
   generateTransactionId: vi.fn((month) => `txn-${month}-${Date.now()}`),
@@ -38,9 +48,13 @@ describe('importer.ts', () => {
     vi.mocked(dataStore.createOrUpdateTransaction).mockImplementation(async (_userId, _month, tx) => tx)
     vi.mocked(dataStore.appendImportHistory).mockResolvedValue()
     vi.mocked(dataStore.savePendingExtraction).mockResolvedValue()
-    // Mock getCards and getOwners to return empty arrays (cards/owners will be auto-created)
-    vi.mocked(dataStore.getCards).mockResolvedValue([])
-    vi.mocked(dataStore.getOwners).mockResolvedValue([])
+    // Clear created cards/owners before each test
+    createdCards.length = 0
+    createdOwners.length = 0
+
+    // Mock getCards and getOwners to return created items (simulates persistence)
+    vi.mocked(dataStore.getCards).mockImplementation(async () => [...createdCards])
+    vi.mocked(dataStore.getOwners).mockImplementation(async () => [...createdOwners])
 
     // Mock category service
     vi.mocked(categoryService.ensureCategories).mockResolvedValue()
