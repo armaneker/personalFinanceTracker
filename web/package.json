@@ -13,7 +13,8 @@
     "test:coverage": "vitest run --coverage",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:migrate:statement-month": "tsx scripts/add-statement-month-column.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
