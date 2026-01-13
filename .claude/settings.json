@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsx -e \"\nimport { createClient } from ''@libsql/client'';\n\nconst client = createClient\\({\n  url: ''libsql://personal-finance-armaneker.aws-eu-west-1.turso.io'',\n  authToken: ''eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJleHAiOjE3OTk1ODAyMzYsImdpZCI6IjhmZjY2ODY1LTVjNTAtNGMwZC1hZmViLTU0Yjg0NGQ4YWEzMiIsImlhdCI6MTc2ODA0NDIzNiwicmlkIjoiYmRhMGEyNmQtYjU2OC00NTE1LWExNWEtOTk1ZWVmNmM3ZTYzIn0.lvEmYe4mFKTQhLrulIqsCIdJENcv6Yf77HUqA-2p64Wd-32nFxm34RttD5qGL_MMWtIN9g7AXjI8atxlMM95CQ''\n}\\);\n\n\\(async \\(\\) => {\n  try {\n    console.log\\(''=== Users Table ===''\\);\n    const users = await client.execute\\(''SELECT * FROM users''\\);\n    console.log\\(JSON.stringify\\(users.rows, null, 2\\)\\);\n    \n    console.log\\(''\\\\n=== Pending Extractions ===''\\);\n    const pending = await client.execute\\(''SELECT run_id, user_id, saved_at FROM pending_extractions''\\);\n    console.log\\(JSON.stringify\\(pending.rows, null, 2\\)\\);\n  } catch \\(error: any\\) {\n    console.error\\(''Error:'', error.message\\);\n  }\n}\\)\\(\\);\n\")"
+    ]
+  }
+}
