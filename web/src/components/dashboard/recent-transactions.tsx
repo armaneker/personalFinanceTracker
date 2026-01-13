@@ -46,22 +46,22 @@ export default function RecentTransactions({
 
   if (recentTransactions.length === 0) {
     return (
-      <div className="rounded-xl bg-white p-6 shadow-sm">
+      <div className="rounded-xl bg-white dark:bg-slate-800 p-6 shadow-sm">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">Recent Transactions</h2>
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Recent Transactions</h2>
         </div>
-        <p className="mt-4 text-sm text-slate-500">No transactions available yet.</p>
+        <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">No transactions available yet.</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm">
+    <div className="rounded-xl bg-white dark:bg-slate-800 p-6 shadow-sm">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-slate-900">Recent Transactions</h2>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Recent Transactions</h2>
         <Link
           href="/transactions"
-          className="text-sm font-medium text-blue-600 hover:text-blue-700"
+          className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
         >
           View all
         </Link>
@@ -85,10 +85,10 @@ export default function RecentTransactions({
                   />
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate font-medium text-slate-900">{tx.merchant}</p>
-                  <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <p className="truncate font-medium text-slate-900 dark:text-white">{tx.merchant}</p>
+                  <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                     <span>{formatDate(tx.transaction_date)}</span>
-                    <span className="text-slate-300">|</span>
+                    <span className="text-slate-300 dark:text-slate-600">|</span>
                     <span
                       className="rounded-md px-1.5 py-0.5 text-xs"
                       style={{
@@ -103,7 +103,7 @@ export default function RecentTransactions({
               </div>
               <p
                 className={`flex-shrink-0 font-medium ${
-                  isExpense ? "text-slate-900" : "text-emerald-600"
+                  isExpense ? "text-slate-900 dark:text-white" : "text-emerald-600 dark:text-emerald-400"
                 }`}
               >
                 {isExpense ? "-" : "+"}
