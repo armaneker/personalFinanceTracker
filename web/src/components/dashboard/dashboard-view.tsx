@@ -128,7 +128,7 @@ export default function DashboardView({ summary, months }: Props) {
           <select
             value={selectedMonth}
             onChange={(event) => setSelectedMonth(event.target.value)}
-            className="rounded-xl border-0 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-48"
+            className="rounded-xl border-0 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px] w-full sm:w-48"
           >
             {months.map((monthOption) => (
               <option key={monthOption} value={monthOption}>
