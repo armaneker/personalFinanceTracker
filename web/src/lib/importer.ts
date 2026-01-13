@@ -63,8 +63,10 @@ export interface ExistingImportMatch {
  * This is necessary to satisfy foreign key constraints.
  */
 async function ensureCardExists(userId: string, cardId: string): Promise<void> {
+  console.log(`[ensureCardExists] Checking card ${cardId} for user ${userId}`);
   const cards = await getCards(userId);
   const cardExists = cards.some(card => card.id === cardId);
+  console.log(`[ensureCardExists] Card exists: ${cardExists}, existing cards: ${cards.map(c => c.id).join(', ')}`);
 
   if (!cardExists) {
     // Auto-create the card with default values
@@ -79,6 +81,7 @@ async function ensureCardExists(userId: string, cardId: string): Promise<void> {
       last4 = parts[parts.length - 1] || '0000';
     }
 
+    console.log(`[ensureCardExists] Creating card ${cardId} with issuer=${issuer}, last4=${last4}`);
     await upsertCard(userId, {
       id: cardId,
       name: cardId === 'unknown-card' ? 'Unknown Card' : `${issuer} ${last4}`,
@@ -86,6 +89,7 @@ async function ensureCardExists(userId: string, cardId: string): Promise<void> {
       last4,
       currency: 'TRY',
     });
+    console.log(`[ensureCardExists] Card ${cardId} created successfully`);
   }
 }
 
@@ -188,9 +192,10 @@ export async function commitExtraction(
       uniqueOwnerIds.add(item.record.owner_id);
     }
   }
-  // Also add the import-level card ID
-  const importCardId = options.cardId ?? prepared.records[0]?.record.card_id ?? "unknown-card";
+  // Also add the import-level card ID (this is what gets stored in import_runs)
+  const importCardId = options.cardId ?? "unknown-card";
   uniqueCardIds.add(importCardId);
+  console.log(`[commitExtraction] User: ${userId}, Cards to ensure: ${Array.from(uniqueCardIds).join(', ')}, Owners to ensure: ${Array.from(uniqueOwnerIds).join(', ')}`);
 
   // Ensure each card exists
   for (const cid of uniqueCardIds) {
@@ -201,6 +206,7 @@ export async function commitExtraction(
   for (const oid of uniqueOwnerIds) {
     await ensureOwnerExists(userId, oid);
   }
+  console.log(`[commitExtraction] All cards and owners ensured, proceeding with commit`)
 
   // Commit each transaction
   const commitMonths = new Set<string>();
