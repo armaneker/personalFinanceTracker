@@ -10,6 +10,7 @@ import {
   ClockIcon,
   ArchiveBoxIcon,
   TagIcon,
+  UserIcon,
 } from "@/components/ui/icons";
 
 interface NavItem {
@@ -43,6 +44,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Settings",
     items: [
       { href: "/categories", label: "Categories", icon: TagIcon },
+      { href: "/settings", label: "Settings", icon: UserIcon },
     ],
   },
 ];
