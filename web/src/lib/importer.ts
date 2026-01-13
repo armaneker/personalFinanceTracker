@@ -137,6 +137,7 @@ export async function commitExtraction(
       Array.from(commitMonths)[0] ??
       payload.transactions[0]?.transaction_date.slice(0, 7) ??
       "unknown",
+    statement_month: payload.metadata?.statement_month,
     imported_at: new Date().toISOString(),
     status: "completed",
     summary: payload.summary,
