@@ -38,14 +38,22 @@ export async function middleware(request: NextRequest) {
   });
 
   // Handle API routes - return 401 for unauthenticated requests
+  // Add no-store header to prevent edge caching of error responses
   if (pathname.startsWith("/api")) {
     if (!token) {
       return NextResponse.json(
         { error: "Unauthorized" },
-        { status: 401 }
+        {
+          status: 401,
+          headers: {
+            "Cache-Control": "no-store, no-cache, must-revalidate",
+          }
+        }
       );
     }
-    return NextResponse.next();
+    const response = NextResponse.next();
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+    return response;
   }
 
   // Handle protected pages - redirect to login
