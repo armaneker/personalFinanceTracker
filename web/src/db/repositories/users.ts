@@ -93,3 +93,21 @@ export async function updateUser(
 
   return getUserById(userId);
 }
+
+/**
+ * Update a user's password
+ */
+export async function updateUserPassword(
+  userId: string,
+  passwordHash: string
+): Promise<void> {
+  const now = new Date().toISOString();
+
+  await db
+    .update(users)
+    .set({
+      passwordHash,
+      updatedAt: now,
+    })
+    .where(eq(users.id, userId));
+}

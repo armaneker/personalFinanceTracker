@@ -35,6 +35,18 @@ function formatMoney(amount: number, currency: string) {
   }
 }
 
+function formatStatementPeriod(yearMonth: string): string {
+  // Parse YYYY-MM format and return "Month Year" (e.g., "December 2025")
+  const [year, month] = yearMonth.split("-");
+  if (!year || !month) return yearMonth;
+
+  const date = new Date(parseInt(year), parseInt(month) - 1, 1);
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
+
 export default function ImportHistoryView({ initialHistory }: Props) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -142,7 +154,16 @@ export default function ImportHistoryView({ initialHistory }: Props) {
                 </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-3">
+              <div className="grid gap-4 sm:grid-cols-4">
+                <div className="rounded-lg border border-slate-100 bg-slate-50 p-4">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">Statement Period</p>
+                  <p className="mt-2 text-lg font-semibold text-slate-900">
+                    {run.statement_month
+                      ? formatStatementPeriod(run.statement_month)
+                      : formatStatementPeriod(run.month)}
+                  </p>
+                  <p className="text-xs text-slate-500">Billing cycle</p>
+                </div>
                 <div className="rounded-lg border border-slate-100 bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-wide text-slate-500">Transactions</p>
                   <p className="mt-2 text-xl font-semibold text-slate-900">

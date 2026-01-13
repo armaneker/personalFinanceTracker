@@ -97,6 +97,7 @@ export const importRuns = sqliteTable("import_runs", {
     .notNull()
     .references(() => cards.id),
   month: text("month").notNull(),
+  statementMonth: text("statement_month"), // YYYY-MM format, extracted from statement
   importedAt: text("imported_at").notNull(),
   status: text("status", { enum: ["pending", "completed", "failed"] }).notNull(),
   // Summary stored as individual columns
