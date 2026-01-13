@@ -27,7 +27,8 @@
       "Bash(gh issue view:*)",
       "Bash(git pull:*)",
       "Bash(npm run build:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(gh run list:*)"
     ]
   }
 }

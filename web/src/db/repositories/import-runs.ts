@@ -67,22 +67,34 @@ export async function appendImportHistory(
     fingerprint: entry.fingerprint ?? null,
   };
 
-  await db.insert(importRuns).values(values).onConflictDoUpdate({
-    target: importRuns.runId,
-    set: {
-      statementFile: values.statementFile,
-      cardId: values.cardId,
-      month: values.month,
-      statementMonth: values.statementMonth,
-      importedAt: values.importedAt,
-      status: values.status,
-      summaryTransactions: values.summaryTransactions,
-      summaryTotalSpend: values.summaryTotalSpend,
-      summaryCurrency: values.summaryCurrency,
-      error: values.error,
-      fingerprint: values.fingerprint,
-    },
-  });
+  console.log(`[appendImportHistory] Inserting/updating run ${entry.run_id} for user ${userId}, card ${entry.card_id}`);
+
+  try {
+    await db.insert(importRuns).values(values).onConflictDoUpdate({
+      target: importRuns.runId,
+      set: {
+        statementFile: values.statementFile,
+        cardId: values.cardId,
+        month: values.month,
+        statementMonth: values.statementMonth,
+        importedAt: values.importedAt,
+        status: values.status,
+        summaryTransactions: values.summaryTransactions,
+        summaryTotalSpend: values.summaryTotalSpend,
+        summaryCurrency: values.summaryCurrency,
+        error: values.error,
+        fingerprint: values.fingerprint,
+      },
+    });
+    console.log(`[appendImportHistory] Successfully inserted/updated run ${entry.run_id}`);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorCause = error instanceof Error && 'cause' in error ? (error as Error & { cause?: unknown }).cause : undefined;
+    console.error(`[appendImportHistory] FAILED to insert/update run ${entry.run_id}:`, errorMessage);
+    console.error(`[appendImportHistory] Error cause:`, errorCause);
+    console.error(`[appendImportHistory] Full error:`, error);
+    throw error;
+  }
 }
 
 /**
