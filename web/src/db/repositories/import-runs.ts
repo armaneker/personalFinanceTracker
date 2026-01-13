@@ -44,13 +44,14 @@ export async function getImportHistory(userId: string): Promise<ImportRun[]> {
 }
 
 /**
- * Append a new import run to history
+ * Append or update an import run in history
+ * Uses upsert to handle duplicate run_id (e.g., from retry attempts)
  */
 export async function appendImportHistory(
   userId: string,
   entry: ImportRun,
 ): Promise<void> {
-  await db.insert(importRuns).values({
+  const values = {
     runId: entry.run_id,
     userId,
     statementFile: entry.statement_file,
@@ -64,6 +65,23 @@ export async function appendImportHistory(
     summaryCurrency: entry.summary?.currency ?? null,
     error: entry.error ?? null,
     fingerprint: entry.fingerprint ?? null,
+  };
+
+  await db.insert(importRuns).values(values).onConflictDoUpdate({
+    target: importRuns.runId,
+    set: {
+      statementFile: values.statementFile,
+      cardId: values.cardId,
+      month: values.month,
+      statementMonth: values.statementMonth,
+      importedAt: values.importedAt,
+      status: values.status,
+      summaryTransactions: values.summaryTransactions,
+      summaryTotalSpend: values.summaryTotalSpend,
+      summaryCurrency: values.summaryCurrency,
+      error: values.error,
+      fingerprint: values.fingerprint,
+    },
   });
 }
 
