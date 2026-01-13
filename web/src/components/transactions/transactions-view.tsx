@@ -5,6 +5,8 @@ import useSWR from "swr";
 import { format } from "date-fns";
 
 import { Card, Category, Owner, TransactionFile, TransactionRecord } from "@/lib/types";
+import { SkeletonTransactionCard } from "@/components/ui/skeleton";
+import { EmptyState, DocumentIcon } from "@/components/ui/empty-state";
 
 type Props = {
   months: string[];
@@ -273,15 +275,28 @@ export default function TransactionsView({
       )}
 
       {isLoading && (
-        <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-500">
-          Loading transactions...
+        <div className="space-y-6">
+          <SkeletonTransactionCard rowCount={6} />
+          <SkeletonTransactionCard rowCount={4} />
         </div>
       )}
 
       {!isLoading && groupedByCard.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500">
-          No transactions match the current filters.
-        </div>
+        transactions.length === 0 ? (
+          <EmptyState
+            icon={<DocumentIcon />}
+            title="No transactions yet"
+            description="Import your first credit card statement to see your transactions here."
+            action={{
+              label: "Import Statement",
+              href: "/imports",
+            }}
+          />
+        ) : (
+          <div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500 text-center">
+            No transactions match the current filters.
+          </div>
+        )
       ) : (
         <div className="space-y-6">
           {groupedByCard.map(({ cardId, card, transactions: rows }) => (

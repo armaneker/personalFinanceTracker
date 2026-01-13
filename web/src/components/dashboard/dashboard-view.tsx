@@ -9,6 +9,13 @@ import HeroMetrics from "./hero-metrics";
 import SpendingTrendChart from "./spending-trend-chart";
 import TopCategories from "./top-categories";
 import RecentTransactions from "./recent-transactions";
+import DashboardEmpty from "./dashboard-empty";
+import Spinner from "@/components/ui/spinner";
+import {
+  SkeletonHeroMetrics,
+  SkeletonChart,
+  SkeletonCategoryList,
+} from "@/components/ui/skeleton";
 
 type Props = {
   summary: DashboardSummary | null;
@@ -70,12 +77,33 @@ export default function DashboardView({ summary, months }: Props) {
     );
   }
 
-  if (!activeSummary) {
+  // Show skeleton loading state when switching months
+  if (isLoading && !activeSummary) {
     return (
-      <div className="rounded-xl bg-white p-8 text-center shadow-sm">
-        <p className="text-slate-500">No data available yet. Import a statement to get started.</p>
+      <div className="space-y-8">
+        {/* Header skeleton */}
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <div>
+            <div className="h-8 w-48 animate-pulse rounded-md bg-slate-200" />
+            <div className="mt-2 h-4 w-32 animate-pulse rounded-md bg-slate-200" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Spinner size="sm" />
+            <div className="h-10 w-48 animate-pulse rounded-xl bg-slate-200" />
+          </div>
+        </div>
+        <SkeletonHeroMetrics />
+        <SkeletonChart />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <SkeletonCategoryList count={5} />
+          <SkeletonCategoryList count={5} />
+        </div>
       </div>
     );
+  }
+
+  if (!activeSummary) {
+    return <DashboardEmpty />;
   }
 
   return (
@@ -95,7 +123,7 @@ export default function DashboardView({ summary, months }: Props) {
         </div>
         <div className="flex items-center gap-2">
           {isLoading && (
-            <span className="text-xs text-slate-400">Refreshing...</span>
+            <Spinner size="sm" label="Refreshing..." />
           )}
           <select
             value={selectedMonth}
