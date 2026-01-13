@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import useSWR from "swr";
 import { format } from "date-fns";
 
@@ -50,6 +50,62 @@ interface FilterState {
   search?: string;
 }
 
+const FILTER_STORAGE_KEY = "transactions-filters";
+
+function ChevronDownIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className || "h-4 w-4"} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+    </svg>
+  );
+}
+
+function XMarkIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className || "h-4 w-4"} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+    </svg>
+  );
+}
+
+function FunnelIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className || "h-4 w-4"} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+    </svg>
+  );
+}
+
+function MagnifyingGlassIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className || "h-4 w-4"} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+    </svg>
+  );
+}
+
+interface FilterChipProps {
+  label: string;
+  value: string;
+  onRemove: () => void;
+}
+
+function FilterChip({ label, value, onRemove }: FilterChipProps) {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-700">
+      <span className="text-slate-500">{label}:</span>
+      <span className="font-medium">{value}</span>
+      <button
+        onClick={onRemove}
+        className="ml-0.5 rounded-full p-0.5 hover:bg-slate-200 transition-colors min-h-[22px] min-w-[22px] flex items-center justify-center"
+        aria-label={`Remove ${label} filter`}
+      >
+        <XMarkIcon className="h-3.5 w-3.5" />
+      </button>
+    </span>
+  );
+}
+
 export default function TransactionsView({
   months,
   cards,
@@ -58,15 +114,76 @@ export default function TransactionsView({
   initialMonth,
   initialFile,
 }: Props) {
-  const [filters, setFilters] = useState<FilterState>({
-    month: initialMonth ?? months[0] ?? "",
-    cardId: undefined,
-    ownerId: undefined,
-    categoryId: undefined,
-    search: "",
-  });
+  const [showMoreFilters, setShowMoreFilters] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Load persisted filters from localStorage
+  const getInitialFilters = useCallback((): FilterState => {
+    if (typeof window === "undefined") {
+      return {
+        month: initialMonth ?? months[0] ?? "",
+        cardId: undefined,
+        ownerId: undefined,
+        categoryId: undefined,
+        search: "",
+      };
+    }
+
+    try {
+      const stored = localStorage.getItem(FILTER_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored) as Partial<FilterState>;
+        // Validate month is still available
+        const validMonth = parsed.month && months.includes(parsed.month)
+          ? parsed.month
+          : initialMonth ?? months[0] ?? "";
+        return {
+          month: validMonth,
+          cardId: parsed.cardId,
+          ownerId: parsed.ownerId,
+          categoryId: parsed.categoryId,
+          search: parsed.search || "",
+        };
+      }
+    } catch {
+      // Ignore localStorage errors
+    }
+
+    return {
+      month: initialMonth ?? months[0] ?? "",
+      cardId: undefined,
+      ownerId: undefined,
+      categoryId: undefined,
+      search: "",
+    };
+  }, [initialMonth, months]);
+
+  const [filters, setFilters] = useState<FilterState>(getInitialFilters);
   const [savingId, setSavingId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Hydrate from localStorage on mount
+  useEffect(() => {
+    setFilters(getInitialFilters());
+    setIsHydrated(true);
+  }, [getInitialFilters]);
+
+  // Persist filters to localStorage
+  useEffect(() => {
+    if (!isHydrated) return;
+    try {
+      localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(filters));
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, [filters, isHydrated]);
+
+  // Auto-expand more filters if any advanced filter is active
+  useEffect(() => {
+    if (filters.cardId || filters.ownerId || filters.categoryId) {
+      setShowMoreFilters(true);
+    }
+  }, [filters.cardId, filters.ownerId, filters.categoryId]);
 
   const key = filters.month ? `/api/transactions?month=${filters.month}` : null;
   const fallback =
@@ -116,6 +233,53 @@ export default function TransactionsView({
       transactions: txs.sort((a, b) => (a.transaction_date < b.transaction_date ? 1 : -1)),
     }));
   }, [filteredTransactions, cards]);
+
+  // Count active advanced filters
+  const activeAdvancedFilterCount = useMemo(() => {
+    let count = 0;
+    if (filters.cardId) count++;
+    if (filters.ownerId) count++;
+    if (filters.categoryId) count++;
+    return count;
+  }, [filters]);
+
+  // Get active filter details for chips
+  const activeFilters = useMemo(() => {
+    const active: { key: keyof FilterState; label: string; value: string }[] = [];
+
+    if (filters.cardId) {
+      const card = cards.find(c => c.id === filters.cardId);
+      active.push({ key: "cardId", label: "Card", value: card?.name ?? filters.cardId });
+    }
+    if (filters.ownerId) {
+      const owner = owners.find(o => o.id === filters.ownerId);
+      active.push({ key: "ownerId", label: "Owner", value: owner?.label ?? filters.ownerId });
+    }
+    if (filters.categoryId) {
+      const category = categories.find(c => c.id === filters.categoryId);
+      active.push({ key: "categoryId", label: "Category", value: category?.name ?? filters.categoryId });
+    }
+    if (filters.search) {
+      active.push({ key: "search", label: "Search", value: filters.search });
+    }
+
+    return active;
+  }, [filters, cards, owners, categories]);
+
+  function clearFilter(key: keyof FilterState) {
+    setFilters(prev => ({ ...prev, [key]: key === "search" ? "" : undefined }));
+  }
+
+  function clearAllFilters() {
+    setFilters(prev => ({
+      month: prev.month,
+      cardId: undefined,
+      ownerId: undefined,
+      categoryId: undefined,
+      search: "",
+    }));
+    setShowMoreFilters(false);
+  }
 
   async function updateTransaction(
     transaction: TransactionRecord,
@@ -168,7 +332,7 @@ export default function TransactionsView({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">Transactions</h1>
@@ -178,94 +342,156 @@ export default function TransactionsView({
         </div>
       </header>
 
-      <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm grid-cols-1 sm:grid-cols-2 md:grid-cols-5">
-        <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
-          Month
-          <select
-            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11"
-            value={filters.month}
-            onChange={(event) =>
-              setFilters((prev) => ({ ...prev, month: event.target.value ?? "" }))
-            }
-          >
-            {months.map((month) => (
-              <option key={month} value={month}>
-                {format(new Date(`${month}-01`), "LLLL yyyy")}
-              </option>
+      {/* Filter Section */}
+      <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        {/* Primary Filters - Always visible */}
+        <div className="p-4">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+            {/* Search */}
+            <div className="relative sm:col-span-2 md:col-span-1 md:order-first">
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input
+                type="text"
+                className="w-full rounded-md border border-slate-300 pl-9 pr-3 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 min-h-[44px] focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition-colors"
+                placeholder="Search merchant or note..."
+                value={filters.search ?? ""}
+                onChange={(event) =>
+                  setFilters((prev) => ({ ...prev, search: event.target.value }))
+                }
+              />
+            </div>
+
+            {/* Month */}
+            <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
+              Month
+              <select
+                className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-[44px] focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition-colors"
+                value={filters.month}
+                onChange={(event) =>
+                  setFilters((prev) => ({ ...prev, month: event.target.value ?? "" }))
+                }
+              >
+                {months.map((month) => (
+                  <option key={month} value={month}>
+                    {format(new Date(`${month}-01`), "LLLL yyyy")}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            {/* More Filters Toggle */}
+            <div className="flex items-end">
+              <button
+                onClick={() => setShowMoreFilters(!showMoreFilters)}
+                className={`flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-colors min-h-[44px] w-full justify-center ${
+                  showMoreFilters || activeAdvancedFilterCount > 0
+                    ? "bg-slate-100 text-slate-900"
+                    : "bg-slate-50 text-slate-600 hover:bg-slate-100"
+                }`}
+              >
+                <FunnelIcon className="h-4 w-4" />
+                More Filters
+                {activeAdvancedFilterCount > 0 && (
+                  <span className="ml-1 rounded-full bg-slate-800 px-2 py-0.5 text-xs text-white">
+                    {activeAdvancedFilterCount}
+                  </span>
+                )}
+                <ChevronDownIcon className={`h-4 w-4 ml-auto transition-transform ${showMoreFilters ? "rotate-180" : ""}`} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Advanced Filters - Expandable */}
+        {showMoreFilters && (
+          <div className="border-t border-slate-200 bg-slate-50 p-4">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+              <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
+                Card
+                <select
+                  className="mt-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 min-h-[44px] focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition-colors"
+                  value={filters.cardId ?? ""}
+                  onChange={(event) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      cardId: event.target.value || undefined,
+                    }))
+                  }
+                >
+                  <option value="">All Cards</option>
+                  {cards.map((card) => (
+                    <option key={card.id} value={card.id}>
+                      {card.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
+                Owner
+                <select
+                  className="mt-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 min-h-[44px] focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition-colors"
+                  value={filters.ownerId ?? ""}
+                  onChange={(event) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      ownerId: event.target.value || undefined,
+                    }))
+                  }
+                >
+                  <option value="">All Owners</option>
+                  {owners.map((owner) => (
+                    <option key={owner.id} value={owner.id}>
+                      {owner.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
+                Category
+                <select
+                  className="mt-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 min-h-[44px] focus:border-slate-500 focus:ring-1 focus:ring-slate-500 transition-colors"
+                  value={filters.categoryId ?? ""}
+                  onChange={(event) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      categoryId: event.target.value || undefined,
+                    }))
+                  }
+                >
+                  <option value="">All Categories</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </div>
+        )}
+
+        {/* Active Filter Chips */}
+        {activeFilters.length > 0 && (
+          <div className="border-t border-slate-200 px-4 py-3 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-medium text-slate-500 uppercase tracking-wide mr-1">
+              Active:
+            </span>
+            {activeFilters.map((filter) => (
+              <FilterChip
+                key={filter.key}
+                label={filter.label}
+                value={filter.value}
+                onRemove={() => clearFilter(filter.key)}
+              />
             ))}
-          </select>
-        </label>
-        <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
-          Card
-          <select
-            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11"
-            value={filters.cardId ?? ""}
-            onChange={(event) =>
-              setFilters((prev) => ({
-                ...prev,
-                cardId: event.target.value || undefined,
-              }))
-            }
-          >
-            <option value="">All</option>
-            {cards.map((card) => (
-              <option key={card.id} value={card.id}>
-                {card.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
-          Owner
-          <select
-            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11"
-            value={filters.ownerId ?? ""}
-            onChange={(event) =>
-              setFilters((prev) => ({
-                ...prev,
-                ownerId: event.target.value || undefined,
-              }))
-            }
-          >
-            <option value="">All</option>
-            {owners.map((owner) => (
-              <option key={owner.id} value={owner.id}>
-                {owner.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
-          Category
-          <select
-            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11"
-            value={filters.categoryId ?? ""}
-            onChange={(event) =>
-              setFilters((prev) => ({
-                ...prev,
-                categoryId: event.target.value || undefined,
-              }))
-            }
-          >
-            <option value="">All</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500 sm:col-span-2 md:col-span-1">
-          Search
-          <input
-            className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11"
-            placeholder="Merchant or note"
-            value={filters.search ?? ""}
-            onChange={(event) =>
-              setFilters((prev) => ({ ...prev, search: event.target.value }))
-            }
-          />
-        </label>
+            <button
+              onClick={clearAllFilters}
+              className="ml-auto text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors px-2 py-1 min-h-[32px]"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
       </div>
 
       {errorMessage && (
@@ -298,10 +524,10 @@ export default function TransactionsView({
           </div>
         )
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {groupedByCard.map(({ cardId, card, transactions: rows }) => (
-            <div key={cardId} className="space-y-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <header className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div key={cardId} className="space-y-3 rounded-xl border border-slate-200 bg-white p-3 md:p-4 shadow-sm">
+              <header className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-3 gap-2">
                 <div>
                   <h2 className="text-lg font-semibold text-slate-900">
                     {card?.name ?? cardId}
@@ -310,7 +536,7 @@ export default function TransactionsView({
                     {rows.length} transactions
                   </p>
                 </div>
-                <div className="text-right text-sm text-slate-600">
+                <div className="text-left sm:text-right text-sm text-slate-600">
                   <p>
                     Total spent:{" "}
                     <span className="font-medium">
@@ -341,14 +567,14 @@ export default function TransactionsView({
                     key={row.id}
                     className="rounded-lg border border-slate-100 bg-slate-50 p-4 space-y-3"
                   >
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="font-medium text-slate-900">{row.merchant}</p>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-slate-900 truncate">{row.merchant}</p>
                         {row.description && (
-                          <p className="text-xs text-slate-500">{row.description}</p>
+                          <p className="text-xs text-slate-500 truncate">{row.description}</p>
                         )}
                       </div>
-                      <p className="font-semibold text-slate-900">
+                      <p className="font-semibold text-slate-900 whitespace-nowrap">
                         {formatMoney(row.amount, row.currency)}
                       </p>
                     </div>
@@ -365,7 +591,7 @@ export default function TransactionsView({
                         Owner
                         <select
                           value={row.owner_id}
-                          className="mt-1 w-full rounded-md border border-slate-300 px-2 py-2 text-sm text-slate-700 min-h-11"
+                          className="mt-1 w-full rounded-md border border-slate-300 px-2 py-2 text-sm text-slate-700 min-h-[44px]"
                           onChange={(event) =>
                             updateTransaction(row, { owner_id: event.target.value })
                           }
@@ -382,7 +608,7 @@ export default function TransactionsView({
                         Category
                         <select
                           value={row.category_id}
-                          className="mt-1 w-full rounded-md border border-slate-300 px-2 py-2 text-sm text-slate-700 min-h-11"
+                          className="mt-1 w-full rounded-md border border-slate-300 px-2 py-2 text-sm text-slate-700 min-h-[44px]"
                           onChange={(event) =>
                             updateTransaction(row, {
                               category_id: event.target.value,
@@ -404,7 +630,7 @@ export default function TransactionsView({
                     )}
                     <div className="flex justify-end pt-2 border-t border-slate-200">
                       <button
-                        className="min-h-11 min-w-11 px-4 py-2 text-sm font-semibold text-red-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                        className="min-h-[44px] min-w-[44px] px-4 py-2 text-sm font-semibold text-red-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
                         onClick={() => deleteTransactionRow(row)}
                         disabled={savingId === row.id}
                       >
