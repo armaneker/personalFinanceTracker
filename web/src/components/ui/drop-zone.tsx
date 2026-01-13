@@ -150,21 +150,21 @@ export function DropZone({
         onDrop={handleDrop}
         className={cn(
           'relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-all duration-200 cursor-pointer',
-          state === 'idle' && 'border-slate-300 bg-slate-50 hover:border-slate-400 hover:bg-slate-100',
-          state === 'dragover' && 'border-blue-500 bg-blue-50 scale-[1.02]',
-          state === 'uploading' && 'border-blue-400 bg-blue-50 cursor-wait',
-          state === 'success' && 'border-emerald-500 bg-emerald-50',
-          state === 'error' && 'border-red-400 bg-red-50'
+          state === 'idle' && 'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 hover:border-slate-400 dark:hover:border-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700',
+          state === 'dragover' && 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 scale-[1.02]',
+          state === 'uploading' && 'border-blue-400 bg-blue-50 dark:bg-blue-900/20 cursor-wait',
+          state === 'success' && 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20',
+          state === 'error' && 'border-red-400 bg-red-50 dark:bg-red-900/20'
         )}
       >
         {/* Icon */}
         <div className={cn(
           'mb-4 rounded-full p-4 transition-colors',
-          state === 'idle' && 'bg-slate-200 text-slate-500',
-          state === 'dragover' && 'bg-blue-200 text-blue-600',
-          state === 'uploading' && 'bg-blue-200 text-blue-600',
-          state === 'success' && 'bg-emerald-200 text-emerald-600',
-          state === 'error' && 'bg-red-200 text-red-600'
+          state === 'idle' && 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400',
+          state === 'dragover' && 'bg-blue-200 dark:bg-blue-800 text-blue-600 dark:text-blue-400',
+          state === 'uploading' && 'bg-blue-200 dark:bg-blue-800 text-blue-600 dark:text-blue-400',
+          state === 'success' && 'bg-emerald-200 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-400',
+          state === 'error' && 'bg-red-200 dark:bg-red-800 text-red-600 dark:text-red-400'
         )}>
           {state === 'success' ? (
             <CheckIcon className="h-8 w-8" />
@@ -178,13 +178,13 @@ export function DropZone({
         {/* Text content */}
         {state === 'idle' && (
           <>
-            <p className="text-base font-medium text-slate-700">
+            <p className="text-base font-medium text-slate-700 dark:text-slate-300">
               Drag PDF statement here
             </p>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               or click to browse
             </p>
-            <p className="mt-3 text-xs text-slate-400">
+            <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
               PDF statements from Turkish banks (max {maxSizeMB}MB)
             </p>
           </>
@@ -192,10 +192,10 @@ export function DropZone({
 
         {state === 'dragover' && (
           <>
-            <p className="text-base font-medium text-blue-700">
+            <p className="text-base font-medium text-blue-700 dark:text-blue-400">
               Drop your file here
             </p>
-            <p className="mt-1 text-sm text-blue-500">
+            <p className="mt-1 text-sm text-blue-500 dark:text-blue-400">
               Release to upload
             </p>
           </>
@@ -203,31 +203,31 @@ export function DropZone({
 
         {state === 'uploading' && (
           <>
-            <p className="text-base font-medium text-blue-700">
+            <p className="text-base font-medium text-blue-700 dark:text-blue-400">
               Processing...
             </p>
-            <p className="mt-1 text-sm text-blue-500">
+            <p className="mt-1 text-sm text-blue-500 dark:text-blue-400">
               {fileName}
             </p>
             {/* Progress bar */}
             <div className="mt-4 w-full max-w-xs">
-              <div className="h-2 w-full overflow-hidden rounded-full bg-blue-200">
+              <div className="h-2 w-full overflow-hidden rounded-full bg-blue-200 dark:bg-blue-800">
                 <div
-                  className="h-full bg-blue-600 transition-all duration-300"
+                  className="h-full bg-blue-600 dark:bg-blue-400 transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <p className="mt-1 text-center text-xs text-blue-600">{progress}%</p>
+              <p className="mt-1 text-center text-xs text-blue-600 dark:text-blue-400">{progress}%</p>
             </div>
           </>
         )}
 
         {state === 'success' && (
           <>
-            <p className="text-base font-medium text-emerald-700">
+            <p className="text-base font-medium text-emerald-700 dark:text-emerald-400">
               File ready
             </p>
-            <p className="mt-1 text-sm text-emerald-600">
+            <p className="mt-1 text-sm text-emerald-600 dark:text-emerald-400">
               {fileName} ({fileSize ? formatFileSize(fileSize) : ''})
             </p>
             <button
@@ -236,7 +236,7 @@ export function DropZone({
                 e.stopPropagation();
                 handleReset();
               }}
-              className="mt-3 text-xs text-emerald-700 underline hover:text-emerald-800"
+              className="mt-3 text-xs text-emerald-700 dark:text-emerald-400 underline hover:text-emerald-800 dark:hover:text-emerald-300"
             >
               Choose a different file
             </button>
@@ -245,10 +245,10 @@ export function DropZone({
 
         {state === 'error' && (
           <>
-            <p className="text-base font-medium text-red-700">
+            <p className="text-base font-medium text-red-700 dark:text-red-400">
               Upload failed
             </p>
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
               {error}
             </p>
             <button
@@ -257,7 +257,7 @@ export function DropZone({
                 e.stopPropagation();
                 handleReset();
               }}
-              className="mt-3 text-xs text-red-700 underline hover:text-red-800"
+              className="mt-3 text-xs text-red-700 dark:text-red-400 underline hover:text-red-800 dark:hover:text-red-300"
             >
               Try again
             </button>

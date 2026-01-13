@@ -137,8 +137,8 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold text-slate-900">Statement import</h1>
-        <p className="text-sm text-slate-500">
+        <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">Statement import</h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           Upload a PDF statement and we will automatically extract transactions, match your card and owner.
         </p>
       </header>
@@ -154,11 +154,11 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
 
       {/* Step 2: Extract & Preview button */}
       {statementPdfBase64 && !showPreview && (
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-700">Ready to extract</p>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Ready to extract</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                 {fileName} - Uses Claude AI to extract transactions
               </p>
             </div>
@@ -166,7 +166,7 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
               type="button"
               onClick={handleExtractPreview}
               disabled={isExtracting}
-              className="rounded-md bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+              className="rounded-md bg-slate-900 dark:bg-white px-5 py-2.5 text-sm font-semibold text-white dark:text-slate-900 shadow-sm transition hover:bg-slate-800 dark:hover:bg-slate-100 disabled:cursor-not-allowed disabled:bg-slate-400 dark:disabled:bg-slate-600"
             >
               {isExtracting ? (
                 <span className="flex items-center gap-2">
@@ -183,32 +183,32 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
 
       {/* Step 3: Show extracted preview with edit capability */}
       {showPreview && extractedMetadata && (
-        <div className="space-y-4 rounded-xl border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+        <div className="space-y-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20 p-6 shadow-sm">
           <div>
-            <p className="text-base font-semibold text-emerald-800">Extraction complete</p>
-            <p className="text-sm text-emerald-600">Review and confirm the extracted information</p>
+            <p className="text-base font-semibold text-emerald-800 dark:text-emerald-400">Extraction complete</p>
+            <p className="text-sm text-emerald-600 dark:text-emerald-500">Review and confirm the extracted information</p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
-            <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-600">
+            <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-400">
               Month
               <input
                 type="month"
-                className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 bg-white"
+                className="mt-1 rounded-md border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm text-slate-700 dark:text-white bg-white dark:bg-slate-700"
                 value={month}
                 onChange={(event) => setMonth(event.target.value)}
               />
               {extractedMetadata.statement_month && (
-                <span className="mt-1 text-xs text-emerald-600">
+                <span className="mt-1 text-xs text-emerald-600 dark:text-emerald-400">
                   Detected: {extractedMetadata.statement_month}
                 </span>
               )}
             </label>
 
-            <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-600">
+            <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-400">
               Card
               <select
-                className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 bg-white"
+                className="mt-1 rounded-md border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm text-slate-700 dark:text-white bg-white dark:bg-slate-700"
                 value={cardId}
                 onChange={(event) => setCardId(event.target.value)}
               >
@@ -219,16 +219,16 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
                 ))}
               </select>
               {extractedMetadata.card_last4 && (
-                <span className="mt-1 text-xs text-emerald-600">
+                <span className="mt-1 text-xs text-emerald-600 dark:text-emerald-400">
                   Matched: ****{extractedMetadata.card_last4}
                 </span>
               )}
             </label>
 
-            <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-600">
+            <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-400">
               Owner
               <select
-                className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 bg-white"
+                className="mt-1 rounded-md border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm text-slate-700 dark:text-white bg-white dark:bg-slate-700"
                 value={ownerId}
                 onChange={(event) => setOwnerId(event.target.value)}
               >
@@ -239,7 +239,7 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
                 ))}
               </select>
               {extractedMetadata.cardholder_name && (
-                <span className="mt-1 text-xs text-emerald-600">
+                <span className="mt-1 text-xs text-emerald-600 dark:text-emerald-400">
                   Matched: {extractedMetadata.cardholder_name}
                 </span>
               )}
@@ -250,7 +250,7 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
             <button
               type="button"
               onClick={handleConfirmImport}
-              className="rounded-md bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600"
+              className="rounded-md bg-emerald-700 dark:bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 dark:hover:bg-emerald-500"
             >
               Confirm Import
             </button>
@@ -260,7 +260,7 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
                 setShowPreview(false);
                 setExtractedMetadata(null);
               }}
-              className="rounded-md bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50"
+              className="rounded-md bg-white dark:bg-slate-700 px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-600 transition hover:bg-slate-50 dark:hover:bg-slate-600"
             >
               Cancel
             </button>
@@ -269,23 +269,23 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
       )}
 
       {error && (
-        <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4">
-          <ErrorIcon className="h-5 w-5 flex-shrink-0 text-red-500 mt-0.5" />
+        <div className="flex items-start gap-3 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4">
+          <ErrorIcon className="h-5 w-5 flex-shrink-0 text-red-500 dark:text-red-400 mt-0.5" />
           <div>
-            <p className="text-sm font-medium text-red-800">Import failed</p>
-            <p className="text-sm text-red-600 mt-1">{error}</p>
+            <p className="text-sm font-medium text-red-800 dark:text-red-400">Import failed</p>
+            <p className="text-sm text-red-600 dark:text-red-500 mt-1">{error}</p>
           </div>
         </div>
       )}
 
       {response && !showPreview && (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+        <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20 p-6 shadow-sm">
           <div className="flex items-start gap-3">
-            <SuccessIcon className="h-6 w-6 flex-shrink-0 text-emerald-500 mt-0.5" />
+            <SuccessIcon className="h-6 w-6 flex-shrink-0 text-emerald-500 dark:text-emerald-400 mt-0.5" />
             <div>
-              <p className="text-base font-semibold text-emerald-800">Import queued</p>
-              <p className="mt-1 text-sm text-emerald-700">
-                <span className="font-mono text-xs bg-emerald-100 px-1.5 py-0.5 rounded">{response.runId}</span>
+              <p className="text-base font-semibold text-emerald-800 dark:text-emerald-400">Import queued</p>
+              <p className="mt-1 text-sm text-emerald-700 dark:text-emerald-500">
+                <span className="font-mono text-xs bg-emerald-100 dark:bg-emerald-800 px-1.5 py-0.5 rounded">{response.runId}</span>
                 {" "}&bull;{" "}
                 {response.summary.transactions} transactions
                 {" "}&bull;{" "}
@@ -295,13 +295,13 @@ export default function ImportsView({ cards, owners, defaultMonth }: Props) {
                 })}
               </p>
               {response.warnings.length > 0 && (
-                <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-emerald-800">
+                <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-emerald-800 dark:text-emerald-400">
                   {response.warnings.map((warning) => (
                     <li key={warning}>{warning}</li>
                   ))}
                 </ul>
               )}
-              <p className="mt-3 text-xs text-emerald-600">
+              <p className="mt-3 text-xs text-emerald-600 dark:text-emerald-500">
                 {response.autoCommitted
                   ? "Transactions were written to the ledger automatically."
                   : "Review the pending import to approve and commit."}

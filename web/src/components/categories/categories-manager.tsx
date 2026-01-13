@@ -72,8 +72,8 @@ function ColorPalette({
           className={cn(
             "h-7 w-7 rounded-md border-2 transition-all",
             value === color.value
-              ? "border-slate-900 scale-110 shadow-md"
-              : "border-transparent hover:scale-105 hover:border-slate-300"
+              ? "border-slate-900 dark:border-white scale-110 shadow-md"
+              : "border-transparent hover:scale-105 hover:border-slate-300 dark:hover:border-slate-500"
           )}
           style={{ backgroundColor: color.value }}
         />
@@ -219,27 +219,27 @@ export default function CategoriesManager({ initialCategories }: Props) {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold text-slate-900">Categories</h1>
-        <p className="text-sm text-slate-500">
+        <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">Categories</h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           Manage spending categories used for dashboards and transactions.
         </p>
       </header>
 
       {error && (
-        <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-600">
+        <div className="rounded-md border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4 text-sm text-red-600 dark:text-red-400">
           {error}
         </div>
       )}
       {success && (
-        <div className="rounded-md border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
+        <div className="rounded-md border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20 p-4 text-sm text-emerald-700 dark:text-emerald-400">
           {success}
         </div>
       )}
 
       {/* Quick Add Presets */}
       {availablePresets.length > 0 && (
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-          <p className="text-sm font-medium text-slate-700 mb-3">Quick add common categories</p>
+        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm">
+          <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Quick add common categories</p>
           <div className="flex flex-wrap gap-2">
             {availablePresets.map((preset) => (
               <button
@@ -247,7 +247,7 @@ export default function CategoriesManager({ initialCategories }: Props) {
                 type="button"
                 onClick={() => quickAddCategory(preset)}
                 disabled={savingId === `preset-${preset.name}`}
-                className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-600 hover:border-slate-300 dark:hover:border-slate-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ColorChip color={preset.color} />
                 {savingId === `preset-${preset.name}` ? "Adding..." : preset.name}
@@ -260,21 +260,21 @@ export default function CategoriesManager({ initialCategories }: Props) {
       {/* Create Custom Category Form */}
       <form
         onSubmit={createCategory}
-        className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm space-y-4"
+        className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm space-y-4"
       >
-        <p className="text-sm font-medium text-slate-700">Create custom category</p>
+        <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Create custom category</p>
 
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-          <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
+          <label className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
             Name
             <input
-              className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11 w-full"
+              className="mt-1 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-700 dark:text-white min-h-11 w-full"
               placeholder="e.g. Subscriptions"
               value={newName}
               onChange={(event) => setNewName(event.target.value)}
             />
           </label>
-          <div className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500">
+          <div className="flex flex-col text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
             Color
             <div className="mt-1 flex items-center gap-3">
               <ColorChip color={newColor} className="h-8 w-8 rounded-md" />
@@ -291,7 +291,7 @@ export default function CategoriesManager({ initialCategories }: Props) {
           <button
             type="submit"
             disabled={savingId === "new"}
-            className="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 min-h-11"
+            className="rounded-md bg-slate-900 dark:bg-white px-4 py-2 text-sm font-semibold text-white dark:text-slate-900 shadow-sm transition hover:bg-slate-800 dark:hover:bg-slate-100 disabled:cursor-not-allowed disabled:bg-slate-400 min-h-11"
           >
             {savingId === "new" ? "Adding..." : "Add category"}
           </button>
@@ -299,8 +299,8 @@ export default function CategoriesManager({ initialCategories }: Props) {
       </form>
 
       {/* Existing Categories List */}
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <p className="text-sm font-medium text-slate-700 mb-4">
+      <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm">
+        <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">
           Your categories ({categories.length})
         </p>
 
@@ -341,16 +341,16 @@ export default function CategoriesManager({ initialCategories }: Props) {
 
             {/* Desktop table view */}
             <div className="hidden md:block overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-200 text-sm">
+              <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700 text-sm">
                 <thead>
-                  <tr className="text-left text-xs uppercase tracking-wide text-slate-500">
+                  <tr className="text-left text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
                     <th className="px-3 py-2">Color</th>
                     <th className="px-3 py-2">Name</th>
                     <th className="px-3 py-2">ID</th>
                     <th className="px-3 py-2 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-700 text-slate-700 dark:text-slate-300">
                   {categories.map((category) => (
                     <CategoryRow
                       key={category.id}
@@ -393,23 +393,23 @@ function MobileCategoryCard({ category, onSave, onDelete, isBusy }: RowProps) {
   }
 
   return (
-    <div className="rounded-lg border border-slate-100 bg-slate-50 p-4 space-y-3">
+    <div className="rounded-lg border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 p-4 space-y-3">
       <div className="flex items-center gap-3">
         <ColorChip color={color} className="h-10 w-10 rounded-md flex-shrink-0" />
         <input
-          className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 min-h-11"
+          className="flex-1 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-700 dark:text-white min-h-11"
           value={name}
           onChange={(event) => handleNameChange(event.target.value)}
         />
       </div>
       <ColorPalette value={color} onChange={handleColorChange} />
-      <p className="font-mono text-xs text-slate-500 truncate">ID: {category.id}</p>
+      <p className="font-mono text-xs text-slate-500 dark:text-slate-400 truncate">ID: {category.id}</p>
       <div className="flex gap-2">
         <button
           type="button"
           onClick={() => onSave(category.id, { name, color })}
           disabled={isBusy || !dirty}
-          className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 min-h-11"
+          className="flex-1 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 shadow-sm transition hover:bg-slate-100 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50 min-h-11"
         >
           {isBusy ? "Saving..." : "Save"}
         </button>
@@ -417,7 +417,7 @@ function MobileCategoryCard({ category, onSave, onDelete, isBusy }: RowProps) {
           type="button"
           onClick={() => onDelete(category.id)}
           disabled={isBusy}
-          className="flex-1 rounded-md border border-red-300 px-3 py-2 text-sm font-semibold text-red-600 shadow-sm transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 min-h-11"
+          className="flex-1 rounded-md border border-red-300 dark:border-red-700 px-3 py-2 text-sm font-semibold text-red-600 dark:text-red-400 shadow-sm transition hover:bg-red-50 dark:hover:bg-red-900/20 disabled:cursor-not-allowed disabled:opacity-50 min-h-11"
         >
           {isBusy ? "Deleting..." : "Delete"}
         </button>
@@ -444,17 +444,17 @@ function CategoryRow({ category, onSave, onDelete, isBusy }: RowProps) {
   }
 
   return (
-    <tr>
+    <tr className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
       <td className="px-3 py-2">
         <div className="relative">
           <button
             type="button"
             onClick={() => setShowPalette(!showPalette)}
-            className="h-8 w-12 rounded border border-slate-300 hover:border-slate-400 transition"
+            className="h-8 w-12 rounded border border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500 transition"
             style={{ backgroundColor: color }}
           />
           {showPalette && (
-            <div className="absolute left-0 top-full mt-1 z-10 bg-white rounded-lg shadow-lg border border-slate-200 p-2">
+            <div className="absolute left-0 top-full mt-1 z-10 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 p-2">
               <ColorPalette value={color} onChange={handleColorChange} />
             </div>
           )}
@@ -462,19 +462,19 @@ function CategoryRow({ category, onSave, onDelete, isBusy }: RowProps) {
       </td>
       <td className="px-3 py-2">
         <input
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
+          className="w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-700 dark:text-white"
           value={name}
           onChange={(event) => handleNameChange(event.target.value)}
         />
       </td>
-      <td className="px-3 py-2 font-mono text-xs text-slate-500">{category.id}</td>
+      <td className="px-3 py-2 font-mono text-xs text-slate-500 dark:text-slate-400">{category.id}</td>
       <td className="px-3 py-2 text-right">
         <div className="flex justify-end gap-2">
           <button
             type="button"
             onClick={() => onSave(category.id, { name, color })}
             disabled={isBusy || !dirty}
-            className="rounded-md border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-md border border-slate-300 dark:border-slate-600 px-3 py-1 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm transition hover:bg-slate-100 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isBusy ? "Saving..." : "Save"}
           </button>
@@ -482,7 +482,7 @@ function CategoryRow({ category, onSave, onDelete, isBusy }: RowProps) {
             type="button"
             onClick={() => onDelete(category.id)}
             disabled={isBusy}
-            className="rounded-md border border-red-300 px-3 py-1 text-xs font-semibold text-red-600 shadow-sm transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-md border border-red-300 dark:border-red-700 px-3 py-1 text-xs font-semibold text-red-600 dark:text-red-400 shadow-sm transition hover:bg-red-50 dark:hover:bg-red-900/20 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isBusy ? "Deleting..." : "Delete"}
           </button>
