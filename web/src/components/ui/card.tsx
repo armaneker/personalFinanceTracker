@@ -8,12 +8,12 @@ interface CardProps {
 }
 
 const variantStyles = {
-  default: 'bg-white border-slate-200 shadow-sm',
-  action: 'bg-white border-blue-200 shadow-sm ring-1 ring-blue-100',
-  info: 'bg-slate-50 border-slate-200',
-  success: 'bg-emerald-50 border-emerald-200',
-  warning: 'bg-amber-50 border-amber-200',
-  error: 'bg-red-50 border-red-200',
+  default: 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-sm',
+  action: 'bg-white dark:bg-slate-800 border-blue-200 dark:border-blue-800 shadow-sm ring-1 ring-blue-100 dark:ring-blue-900',
+  info: 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700',
+  success: 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800',
+  warning: 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800',
+  error: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
 };
 
 export function Card({ children, className, variant = 'default' }: CardProps) {
@@ -39,7 +39,7 @@ interface CardHeaderProps {
 export function CardHeader({ children, className, icon }: CardHeaderProps) {
   return (
     <div className={cn('flex items-center gap-2 mb-4', className)}>
-      {icon && <span className="text-slate-500">{icon}</span>}
+      {icon && <span className="text-slate-500 dark:text-slate-400">{icon}</span>}
       <div>{children}</div>
     </div>
   );
@@ -52,7 +52,7 @@ interface CardTitleProps {
 
 export function CardTitle({ children, className }: CardTitleProps) {
   return (
-    <h3 className={cn('text-base font-semibold text-slate-900', className)}>
+    <h3 className={cn('text-base font-semibold text-slate-900 dark:text-white', className)}>
       {children}
     </h3>
   );
@@ -65,7 +65,7 @@ interface CardDescriptionProps {
 
 export function CardDescription({ children, className }: CardDescriptionProps) {
   return (
-    <p className={cn('text-sm text-slate-500', className)}>
+    <p className={cn('text-sm text-slate-500 dark:text-slate-400', className)}>
       {children}
     </p>
   );
@@ -91,7 +91,7 @@ interface CardFooterProps {
 
 export function CardFooter({ children, className }: CardFooterProps) {
   return (
-    <div className={cn('mt-4 pt-4 border-t border-slate-100', className)}>
+    <div className={cn('mt-4 pt-4 border-t border-slate-100 dark:border-slate-700', className)}>
       {children}
     </div>
   );
