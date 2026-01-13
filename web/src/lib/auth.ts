@@ -25,7 +25,14 @@ export const authOptions: NextAuthOptions = {
         console.log("[AUTH] Attempting login for:", credentials.email);
 
         // Query user from database
-        const user = await getUserByEmail(credentials.email);
+        let user;
+        try {
+          user = await getUserByEmail(credentials.email);
+          console.log("[AUTH] getUserByEmail result:", user ? `Found user ${user.id}` : "Not found");
+        } catch (error) {
+          console.error("[AUTH] Database error in getUserByEmail:", error);
+          return null;
+        }
 
         if (!user) {
           console.log("[AUTH] User not found:", credentials.email);
@@ -33,6 +40,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         // Verify password against stored hash
+        console.log("[AUTH] Comparing password...");
         const isValidPassword = await compare(credentials.password, user.passwordHash);
 
         console.log("[AUTH] Password validation:", isValidPassword);

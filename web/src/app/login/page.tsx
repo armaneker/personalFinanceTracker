@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent, Suspense } from "react";
+import { useState, useEffect, FormEvent, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -19,11 +19,11 @@ function LoginForm() {
   const registered = searchParams.get("registered") === "true";
 
   // Set initial success message if registered
-  useState(() => {
+  useEffect(() => {
     if (registered) {
       setSuccessMessage("Account created successfully! Please sign in.");
     }
-  });
+  }, [registered]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -32,13 +32,16 @@ function LoginForm() {
     setIsLoading(true);
 
     try {
+      console.log("[LOGIN] Starting sign in for:", email);
       const result = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
+      console.log("[LOGIN] signIn result:", result);
 
       if (result?.error) {
+        console.log("[LOGIN] Error from signIn:", result.error);
         setError("Invalid email or password");
         setIsLoading(false);
         return;
@@ -46,9 +49,11 @@ function LoginForm() {
 
       // Decode the callback URL and redirect
       const decodedUrl = decodeURIComponent(callbackUrl);
+      console.log("[LOGIN] Redirecting to:", decodedUrl);
       router.push(decodedUrl);
       router.refresh();
-    } catch {
+    } catch (err) {
+      console.error("[LOGIN] Unexpected error:", err);
       setError("An unexpected error occurred");
       setIsLoading(false);
     }
