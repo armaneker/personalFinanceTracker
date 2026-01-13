@@ -4,6 +4,8 @@ import { FormEvent, useState } from "react";
 import useSWR from "swr";
 
 import type { Category } from "@/lib/types";
+import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState, TagIcon } from "@/components/ui/empty-state";
 
 type Props = {
   initialCategories: Category[];
@@ -164,9 +166,25 @@ export default function CategoriesManager({ initialCategories }: Props) {
 
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
         {isLoading && categories.length === 0 ? (
-          <p className="text-sm text-slate-500">Loading categories...</p>
+          <div className="space-y-3" aria-busy="true">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-4 py-2">
+                <Skeleton className="h-8 w-12 rounded" />
+                <Skeleton className="h-8 flex-1 rounded-md" />
+                <Skeleton className="h-4 w-32 rounded" />
+                <div className="flex gap-2">
+                  <Skeleton className="h-8 w-16 rounded-md" />
+                  <Skeleton className="h-8 w-16 rounded-md" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : categories.length === 0 ? (
-          <p className="text-sm text-slate-500">No categories configured yet.</p>
+          <EmptyState
+            icon={<TagIcon />}
+            title="No categories yet"
+            description="Categories help organize your transactions. Add your first category above, or they will be created automatically when you import statements."
+          />
         ) : (
           <>
             {/* Mobile card view */}

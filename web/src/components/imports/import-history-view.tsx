@@ -5,6 +5,8 @@ import useSWR from "swr";
 import { format } from "date-fns";
 
 import type { ImportRun } from "@/lib/types";
+import { SkeletonImportCard } from "@/components/ui/skeleton";
+import { EmptyState, ClockIcon } from "@/components/ui/empty-state";
 
 type Props = {
   initialHistory: ImportRun[];
@@ -102,10 +104,22 @@ export default function ImportHistoryView({ initialHistory }: Props) {
         </div>
       )}
 
-      {history.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500">
-          {isLoading ? "Loading import history..." : "No imports found. Import a statement to get started."}
+      {isLoading && history.length === 0 ? (
+        <div className="space-y-4" aria-busy="true">
+          <SkeletonImportCard />
+          <SkeletonImportCard />
+          <SkeletonImportCard />
         </div>
+      ) : history.length === 0 ? (
+        <EmptyState
+          icon={<ClockIcon />}
+          title="No imports yet"
+          description="Your import history will appear here once you upload and approve your first credit card statement."
+          action={{
+            label: "Upload Statement",
+            href: "/imports",
+          }}
+        />
       ) : (
         <div className="space-y-4">
           {history.map((run) => (

@@ -1,3 +1,11 @@
+/**
+ * Utility for conditionally joining class names.
+ * Simple implementation without external deps.
+ */
+export function cn(...classes: (string | undefined | null | false)[]): string {
+  return classes.filter(Boolean).join(" ");
+}
+
 export function slugifyId(input: string, prefix = "cat") {
   const normalized = input
     .toLowerCase()

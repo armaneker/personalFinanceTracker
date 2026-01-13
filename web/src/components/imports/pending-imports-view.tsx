@@ -5,6 +5,8 @@ import useSWR from "swr";
 import { format } from "date-fns";
 
 import type { PendingRunSummary, PendingRunDetail } from "@/lib/importer";
+import { SkeletonImportCard } from "@/components/ui/skeleton";
+import { EmptyState, InboxIcon } from "@/components/ui/empty-state";
 
 type Props = {
   initialRuns: PendingRunSummary[];
@@ -144,10 +146,21 @@ export default function PendingImportsView({ initialRuns }: Props) {
         </div>
       )}
 
-      {runs.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500">
-          {isLoading ? "Loading pending runs..." : "No pending imports waiting for approval."}
+      {isLoading && runs.length === 0 ? (
+        <div className="space-y-4" aria-busy="true">
+          <SkeletonImportCard />
+          <SkeletonImportCard />
         </div>
+      ) : runs.length === 0 ? (
+        <EmptyState
+          icon={<InboxIcon />}
+          title="No pending imports"
+          description="When you upload a statement, it will appear here for review before being committed to your ledger."
+          action={{
+            label: "Upload Statement",
+            href: "/imports",
+          }}
+        />
       ) : (
           <div className="space-y-4">
             {runs.map((run) => (
