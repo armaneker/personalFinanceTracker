@@ -117,20 +117,20 @@ export function SettingsView({ user }: SettingsViewProps) {
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-3">
-        <CogIcon className="h-8 w-8 text-slate-600" />
-        <h1 className="text-2xl font-semibold text-slate-900">Settings</h1>
+        <CogIcon className="h-8 w-8 text-slate-600 dark:text-slate-400" />
+        <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">Settings</h1>
       </div>
 
       {/* Profile Section */}
-      <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-6">
-          <UserIcon className="h-6 w-6 text-slate-600" />
-          <h2 className="text-lg font-medium text-slate-900">Profile</h2>
+          <UserIcon className="h-6 w-6 text-slate-600 dark:text-slate-400" />
+          <h2 className="text-lg font-medium text-slate-900 dark:text-white">Profile</h2>
         </div>
 
         <form onSubmit={handleProfileSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               Email
             </label>
             <input
@@ -138,13 +138,13 @@ export function SettingsView({ user }: SettingsViewProps) {
               type="email"
               value={user.email}
               disabled
-              className="w-full rounded-md border border-slate-300 bg-slate-100 px-3 py-2 text-sm text-slate-500 cursor-not-allowed"
+              className="w-full rounded-md border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 px-3 py-2 text-sm text-slate-500 dark:text-slate-400 cursor-not-allowed"
             />
-            <p className="mt-1 text-xs text-slate-500">Email cannot be changed</p>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Email cannot be changed</p>
           </div>
 
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
+            <label htmlFor="name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               Name
             </label>
             <input
@@ -152,19 +152,19 @@ export function SettingsView({ user }: SettingsViewProps) {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+              className="w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
               placeholder="Enter your name"
             />
           </div>
 
           {profileError && (
-            <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+            <div className="rounded-md bg-red-50 dark:bg-red-900/20 px-3 py-2 text-sm text-red-600 dark:text-red-400">
               {profileError}
             </div>
           )}
 
           {profileSuccess && (
-            <div className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-600">
+            <div className="rounded-md bg-green-50 dark:bg-green-900/20 px-3 py-2 text-sm text-green-600 dark:text-green-400">
               Profile updated successfully
             </div>
           )}
@@ -172,7 +172,7 @@ export function SettingsView({ user }: SettingsViewProps) {
           <button
             type="submit"
             disabled={profileLoading}
-            className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-md bg-slate-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {profileLoading ? "Saving..." : "Save Profile"}
           </button>
@@ -180,10 +180,10 @@ export function SettingsView({ user }: SettingsViewProps) {
       </div>
 
       {/* Password Section */}
-      <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-6">
           <svg
-            className="h-6 w-6 text-slate-600"
+            className="h-6 w-6 text-slate-600 dark:text-slate-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -195,12 +195,12 @@ export function SettingsView({ user }: SettingsViewProps) {
               d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
             />
           </svg>
-          <h2 className="text-lg font-medium text-slate-900">Change Password</h2>
+          <h2 className="text-lg font-medium text-slate-900 dark:text-white">Change Password</h2>
         </div>
 
         <form onSubmit={handlePasswordSubmit} className="space-y-4">
           <div>
-            <label htmlFor="currentPassword" className="block text-sm font-medium text-slate-700 mb-1">
+            <label htmlFor="currentPassword" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               Current Password
             </label>
             <input
@@ -208,13 +208,13 @@ export function SettingsView({ user }: SettingsViewProps) {
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+              className="w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
               placeholder="Enter current password"
             />
           </div>
 
           <div>
-            <label htmlFor="newPassword" className="block text-sm font-medium text-slate-700 mb-1">
+            <label htmlFor="newPassword" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               New Password
             </label>
             <input
@@ -222,14 +222,14 @@ export function SettingsView({ user }: SettingsViewProps) {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+              className="w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
               placeholder="Enter new password"
             />
-            <p className="mt-1 text-xs text-slate-500">Must be at least 8 characters</p>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Must be at least 8 characters</p>
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700 mb-1">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               Confirm New Password
             </label>
             <input
@@ -237,19 +237,19 @@ export function SettingsView({ user }: SettingsViewProps) {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+              className="w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
               placeholder="Confirm new password"
             />
           </div>
 
           {passwordError && (
-            <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+            <div className="rounded-md bg-red-50 dark:bg-red-900/20 px-3 py-2 text-sm text-red-600 dark:text-red-400">
               {passwordError}
             </div>
           )}
 
           {passwordSuccess && (
-            <div className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-600">
+            <div className="rounded-md bg-green-50 dark:bg-green-900/20 px-3 py-2 text-sm text-green-600 dark:text-green-400">
               Password changed successfully
             </div>
           )}
@@ -257,7 +257,7 @@ export function SettingsView({ user }: SettingsViewProps) {
           <button
             type="submit"
             disabled={passwordLoading}
-            className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-md bg-slate-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {passwordLoading ? "Changing..." : "Change Password"}
           </button>
