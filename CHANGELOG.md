@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2026-01-13
+
+### Fixed
+- Dark mode styling on transactions, imports, and pending imports pages (#75, #77, #79)
+- All page components now have proper dark: variant classes for backgrounds, text, and borders
+- Import history page dark mode support (#77)
+
 ## [1.5.0] - 2026-01-13
 
 ### Added

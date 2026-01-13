@@ -14,8 +14,8 @@ import { getToken } from "next-auth/jwt";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow auth routes to pass through
-  if (pathname.startsWith("/api/auth")) {
+  // Allow auth routes and version endpoint to pass through
+  if (pathname.startsWith("/api/auth") || pathname === "/api/version") {
     return NextResponse.next();
   }
 
