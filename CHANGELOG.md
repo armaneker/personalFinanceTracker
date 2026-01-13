@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-01-13
+
+### Added
+- Dark mode support with light/dark/system theme toggle (#67)
+- User settings page with profile display and password change (#68)
+- Statement period display in import history cards (#69)
+- ThemeProvider with localStorage persistence and system preference detection
+- Theme toggle component in app shell header
+
+### Fixed
+- Dashboard cards displaying white background in dark mode (#73)
+- Added dark mode variants to all dashboard components (hero-metrics, charts, categories, transactions)
+- Updated skeleton loading states with dark mode support
+
+## [1.4.0] - 2026-01-12
+
+### Added
+- Phase 3 UX improvements: drag-and-drop file import, skeleton loading states
+- Comprehensive dashboard with hero metrics, spending trends, and category breakdown
+- Transactions page with grouped monthly view and filtering
+- Import flow with pending/history management
+
 ## [0.3.0] - 2026-01-09
 
 ### Added

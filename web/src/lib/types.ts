@@ -76,6 +76,7 @@ export interface ImportRun {
   statement_file: string;
   card_id: string;
   month: string;
+  statement_month?: string; // YYYY-MM format, extracted from statement
   imported_at: string;
   status: "pending" | "completed" | "failed";
   summary?: ImportRunSummary;

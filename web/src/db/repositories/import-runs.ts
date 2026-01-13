@@ -14,6 +14,7 @@ function toApiType(entity: ImportRunEntity): ImportRun {
     statement_file: entity.statementFile,
     card_id: entity.cardId,
     month: entity.month,
+    statement_month: entity.statementMonth ?? undefined,
     imported_at: entity.importedAt,
     status: entity.status,
     summary:
@@ -55,6 +56,7 @@ export async function appendImportHistory(
     statementFile: entry.statement_file,
     cardId: entry.card_id,
     month: entry.month,
+    statementMonth: entry.statement_month ?? null,
     importedAt: entry.imported_at,
     status: entry.status,
     summaryTransactions: entry.summary?.transactions ?? null,

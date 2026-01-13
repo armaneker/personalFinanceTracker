@@ -11,7 +11,7 @@ function SkeletonBase({ className }: SkeletonBaseProps) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded-md bg-slate-200",
+        "animate-pulse rounded-md bg-slate-200 dark:bg-slate-700",
         className
       )}
       aria-hidden="true"
@@ -27,7 +27,7 @@ export function SkeletonCard({ className }: SkeletonBaseProps) {
   return (
     <div
       className={cn(
-        "rounded-xl border border-slate-200 bg-white p-6 shadow-sm",
+        "rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm",
         className
       )}
       aria-hidden="true"
@@ -47,7 +47,7 @@ export function SkeletonChart({ className }: SkeletonBaseProps) {
   return (
     <div
       className={cn(
-        "rounded-xl border border-slate-200 bg-white p-6 shadow-sm",
+        "rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm",
         className
       )}
       aria-hidden="true"
@@ -147,7 +147,7 @@ export function SkeletonCategoryList({ className, count = 5 }: SkeletonBaseProps
   return (
     <div
       className={cn(
-        "rounded-xl border border-slate-200 bg-white p-6 shadow-sm space-y-3",
+        "rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm space-y-3",
         className
       )}
       aria-hidden="true"
@@ -171,13 +171,13 @@ export function SkeletonTransactionCard({ className, rowCount = 5 }: SkeletonBas
   return (
     <div
       className={cn(
-        "rounded-xl border border-slate-200 bg-white p-4 shadow-sm",
+        "rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm",
         className
       )}
       aria-hidden="true"
     >
       {/* Card header */}
-      <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-3 mb-3">
         <div>
           <SkeletonBase className="h-5 w-32 mb-1" />
           <SkeletonBase className="h-3 w-20" />
@@ -204,7 +204,7 @@ export function SkeletonImportCard({ className }: SkeletonBaseProps) {
   return (
     <div
       className={cn(
-        "rounded-xl border border-slate-200 bg-white p-6 shadow-sm space-y-4",
+        "rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm space-y-4",
         className
       )}
       aria-hidden="true"
@@ -223,7 +223,7 @@ export function SkeletonImportCard({ className }: SkeletonBaseProps) {
       {/* Stats grid */}
       <div className="grid gap-4 sm:grid-cols-3">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="rounded-lg border border-slate-100 bg-slate-50 p-4">
+          <div key={i} className="rounded-lg border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 p-4">
             <SkeletonBase className="h-3 w-20 mb-2" />
             <SkeletonBase className="h-6 w-16" />
             <SkeletonBase className="h-3 w-12 mt-1" />
