@@ -1,7 +1,7 @@
 'use client';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ReactNode, useState, ComponentType } from "react";
+import { ReactNode, useState, ComponentType, useEffect, useRef } from "react";
 import { useSession, signOut } from "next-auth/react";
 import {
   ChartBarIcon,
@@ -18,13 +18,33 @@ interface NavItem {
   icon: ComponentType<{ className?: string }>;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { href: "/", label: "Dashboard", icon: ChartBarIcon },
-  { href: "/transactions", label: "Transactions", icon: ListBulletIcon },
-  { href: "/imports", label: "Import", icon: ArrowUpTrayIcon },
-  { href: "/imports/pending", label: "Pending", icon: ClockIcon },
-  { href: "/imports/history", label: "History", icon: ArchiveBoxIcon },
-  { href: "/categories", label: "Categories", icon: TagIcon },
+interface NavGroup {
+  label: string;
+  items: NavItem[];
+}
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: "View",
+    items: [
+      { href: "/", label: "Dashboard", icon: ChartBarIcon },
+      { href: "/transactions", label: "Transactions", icon: ListBulletIcon },
+    ],
+  },
+  {
+    label: "Import",
+    items: [
+      { href: "/imports", label: "Upload", icon: ArrowUpTrayIcon },
+      { href: "/imports/pending", label: "Pending", icon: ClockIcon },
+      { href: "/imports/history", label: "History", icon: ArchiveBoxIcon },
+    ],
+  },
+  {
+    label: "Settings",
+    items: [
+      { href: "/categories", label: "Categories", icon: TagIcon },
+    ],
+  },
 ];
 
 function HamburgerIcon() {
@@ -65,38 +85,114 @@ function CloseIcon() {
   );
 }
 
-function NavigationLink({
-  href,
-  label,
-  icon: Icon,
-  onClick
-}: {
-  href: string;
-  label: string;
-  icon: ComponentType<{ className?: string }>;
-  onClick?: () => void;
-}) {
+function ChevronDownIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className={className || "h-4 w-4"}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m19.5 8.25-7.5 7.5-7.5-7.5"
+      />
+    </svg>
+  );
+}
+
+function SignOutIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className || "h-5 w-5"} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+    </svg>
+  );
+}
+
+function NavigationDropdown({ group }: { group: NavGroup }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const prevPathnameRef = useRef<string | null>(null);
   const pathname = usePathname();
-  const isActive =
-    href === "/"
-      ? pathname === "/" || pathname.startsWith("/dashboard")
-      : href === "/imports"
-        ? pathname === "/imports"
-        : pathname === href || pathname.startsWith(`${href}/`);
+
+  // Check if any item in the group is active
+  const isGroupActive = group.items.some(item => {
+    if (item.href === "/") {
+      return pathname === "/" || pathname.startsWith("/dashboard");
+    }
+    if (item.href === "/imports") {
+      return pathname === "/imports";
+    }
+    return pathname === item.href || pathname.startsWith(`${item.href}/`);
+  });
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Close dropdown on route change - only when pathname actually changes
+  useEffect(() => {
+    if (prevPathnameRef.current !== null && prevPathnameRef.current !== pathname) {
+      // Use queueMicrotask to avoid direct setState in effect body
+      queueMicrotask(() => setIsOpen(false));
+    }
+    prevPathnameRef.current = pathname;
+  }, [pathname]);
 
   return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className={`flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-        isActive
-          ? "bg-slate-900 text-white"
-          : "text-slate-500 hover:bg-slate-200 hover:text-slate-900"
-      }`}
-    >
-      <Icon className="h-4 w-4" />
-      {label}
-    </Link>
+    <div ref={dropdownRef} className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={`flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+          isGroupActive
+            ? "bg-slate-800 text-white"
+            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+        }`}
+      >
+        {group.label}
+        <ChevronDownIcon className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute left-0 top-full z-50 mt-1 min-w-[180px] rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
+          {group.items.map((item) => {
+            const Icon = item.icon;
+            const isActive =
+              item.href === "/"
+                ? pathname === "/" || pathname.startsWith("/dashboard")
+                : item.href === "/imports"
+                  ? pathname === "/imports"
+                  : pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors ${
+                  isActive
+                    ? "bg-slate-100 text-slate-900 font-medium"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -123,7 +219,7 @@ function MobileNavigationLink({
     <Link
       href={href}
       onClick={onClick}
-      className={`flex items-center gap-3 rounded-md px-4 py-3 text-base font-medium transition-colors min-h-11 ${
+      className={`flex items-center gap-3 rounded-md px-4 py-3 text-base font-medium transition-colors min-h-[44px] ${
         isActive
           ? "bg-slate-900 text-white"
           : "text-slate-700 hover:bg-slate-100"
@@ -139,9 +235,19 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const prevPathnameRef = useRef<string | null>(null);
 
-  // Don't show app shell on login page
-  if (pathname === "/login") {
+  // Close mobile menu on route change - only when pathname actually changes
+  useEffect(() => {
+    if (prevPathnameRef.current !== null && prevPathnameRef.current !== pathname) {
+      // Use queueMicrotask to avoid direct setState in effect body
+      queueMicrotask(() => setMobileMenuOpen(false));
+    }
+    prevPathnameRef.current = pathname;
+  }, [pathname]);
+
+  // Don't show app shell on login or signup page
+  if (pathname === "/login" || pathname === "/signup") {
     return <>{children}</>;
   }
 
@@ -156,8 +262,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <header className="border-b border-slate-200 bg-white shadow-sm">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:px-6">
+      <header className="border-b border-slate-200 bg-white shadow-sm sticky top-0 z-40">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6 md:py-4">
           <div>
             <Link href="/" className="text-xl font-semibold text-slate-900">
               Finance Tracker
@@ -165,57 +271,80 @@ export function AppShell({ children }: { children: ReactNode }) {
             <p className="text-sm text-slate-500 hidden sm:block">Monthly credit card insights</p>
           </div>
 
-          {/* Desktop navigation */}
+          {/* Desktop navigation - grouped dropdowns */}
           <nav className="hidden md:flex items-center gap-1">
-            {NAV_ITEMS.map((item) => (
-              <NavigationLink key={item.href} {...item} />
+            {NAV_GROUPS.map((group) => (
+              <NavigationDropdown key={group.label} group={group} />
             ))}
             {session && (
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="ml-2 rounded-md px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-200 hover:text-slate-900 transition-colors"
+                className="ml-2 flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
               >
+                <SignOutIcon className="h-4 w-4" />
                 Sign out
               </button>
             )}
           </nav>
 
-          {/* Mobile hamburger button */}
+          {/* Mobile hamburger button - 44px minimum touch target */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden flex items-center justify-center h-11 w-11 rounded-md text-slate-600 hover:bg-slate-100 transition-colors"
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
           </button>
         </div>
 
-        {/* Mobile navigation menu */}
+        {/* Mobile navigation menu - full-screen overlay */}
         {mobileMenuOpen && (
-          <nav className="md:hidden border-t border-slate-200 bg-white px-4 py-3 space-y-1">
-            {NAV_ITEMS.map((item) => (
-              <MobileNavigationLink
-                key={item.href}
-                {...item}
-                onClick={() => setMobileMenuOpen(false)}
-              />
-            ))}
-            {session && (
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  signOut({ callbackUrl: "/login" });
-                }}
-                className="flex items-center gap-3 w-full text-left rounded-md px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-100 transition-colors min-h-11"
-              >
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
-                </svg>
-                Sign out
-              </button>
-            )}
-          </nav>
+          <>
+            {/* Backdrop */}
+            <div
+              className="md:hidden fixed inset-0 top-[57px] bg-black/20 z-40"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+
+            {/* Slide-in drawer */}
+            <nav className="md:hidden fixed right-0 top-[57px] bottom-0 w-72 max-w-[80vw] bg-white z-50 shadow-xl overflow-y-auto animate-slide-in-right">
+              <div className="p-4 space-y-6">
+                {NAV_GROUPS.map((group) => (
+                  <div key={group.label}>
+                    <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                      {group.label}
+                    </p>
+                    <div className="space-y-1">
+                      {group.items.map((item) => (
+                        <MobileNavigationLink
+                          key={item.href}
+                          {...item}
+                          onClick={() => setMobileMenuOpen(false)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+                {session && (
+                  <div className="pt-4 border-t border-slate-200">
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        signOut({ callbackUrl: "/login" });
+                      }}
+                      className="flex items-center gap-3 w-full text-left rounded-md px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-100 transition-colors min-h-[44px]"
+                    >
+                      <SignOutIcon className="h-5 w-5" />
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
+            </nav>
+          </>
         )}
       </header>
       <main className="mx-auto max-w-6xl px-4 py-6 md:px-6 md:py-8">{children}</main>
