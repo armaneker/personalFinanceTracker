@@ -1,16 +1,30 @@
 'use client';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, ComponentType } from "react";
 import { useSession, signOut } from "next-auth/react";
+import {
+  ChartBarIcon,
+  ListBulletIcon,
+  ArrowUpTrayIcon,
+  ClockIcon,
+  ArchiveBoxIcon,
+  TagIcon,
+} from "@/components/ui/icons";
 
-const NAV_ITEMS = [
-  { href: "/", label: "Dashboard" },
-  { href: "/transactions", label: "Transactions" },
-  { href: "/imports", label: "Imports" },
-  { href: "/imports/pending", label: "Pending" },
-  { href: "/imports/history", label: "History" },
-  { href: "/categories", label: "Categories" },
+interface NavItem {
+  href: string;
+  label: string;
+  icon: ComponentType<{ className?: string }>;
+}
+
+const NAV_ITEMS: NavItem[] = [
+  { href: "/", label: "Dashboard", icon: ChartBarIcon },
+  { href: "/transactions", label: "Transactions", icon: ListBulletIcon },
+  { href: "/imports", label: "Import", icon: ArrowUpTrayIcon },
+  { href: "/imports/pending", label: "Pending", icon: ClockIcon },
+  { href: "/imports/history", label: "History", icon: ArchiveBoxIcon },
+  { href: "/categories", label: "Categories", icon: TagIcon },
 ];
 
 function HamburgerIcon() {
@@ -51,7 +65,17 @@ function CloseIcon() {
   );
 }
 
-function NavigationLink({ href, label, onClick }: { href: string; label: string; onClick?: () => void }) {
+function NavigationLink({
+  href,
+  label,
+  icon: Icon,
+  onClick
+}: {
+  href: string;
+  label: string;
+  icon: ComponentType<{ className?: string }>;
+  onClick?: () => void;
+}) {
   const pathname = usePathname();
   const isActive =
     href === "/"
@@ -64,18 +88,29 @@ function NavigationLink({ href, label, onClick }: { href: string; label: string;
     <Link
       href={href}
       onClick={onClick}
-      className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+      className={`flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
         isActive
           ? "bg-slate-900 text-white"
           : "text-slate-500 hover:bg-slate-200 hover:text-slate-900"
       }`}
     >
+      <Icon className="h-4 w-4" />
       {label}
     </Link>
   );
 }
 
-function MobileNavigationLink({ href, label, onClick }: { href: string; label: string; onClick?: () => void }) {
+function MobileNavigationLink({
+  href,
+  label,
+  icon: Icon,
+  onClick
+}: {
+  href: string;
+  label: string;
+  icon: ComponentType<{ className?: string }>;
+  onClick?: () => void;
+}) {
   const pathname = usePathname();
   const isActive =
     href === "/"
@@ -88,12 +123,13 @@ function MobileNavigationLink({ href, label, onClick }: { href: string; label: s
     <Link
       href={href}
       onClick={onClick}
-      className={`block rounded-md px-4 py-3 text-base font-medium transition-colors min-h-11 ${
+      className={`flex items-center gap-3 rounded-md px-4 py-3 text-base font-medium transition-colors min-h-11 ${
         isActive
           ? "bg-slate-900 text-white"
           : "text-slate-700 hover:bg-slate-100"
       }`}
     >
+      <Icon className="h-5 w-5" />
       {label}
     </Link>
   );
@@ -130,14 +166,14 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
 
           {/* Desktop navigation */}
-          <nav className="hidden md:flex items-center gap-2">
+          <nav className="hidden md:flex items-center gap-1">
             {NAV_ITEMS.map((item) => (
               <NavigationLink key={item.href} {...item} />
             ))}
             {session && (
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="ml-4 rounded-md px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-200 hover:text-slate-900 transition-colors"
+                className="ml-2 rounded-md px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-200 hover:text-slate-900 transition-colors"
               >
                 Sign out
               </button>
@@ -171,8 +207,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                   setMobileMenuOpen(false);
                   signOut({ callbackUrl: "/login" });
                 }}
-                className="block w-full text-left rounded-md px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-100 transition-colors min-h-11"
+                className="flex items-center gap-3 w-full text-left rounded-md px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-100 transition-colors min-h-11"
               >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+                </svg>
                 Sign out
               </button>
             )}
