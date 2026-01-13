@@ -71,7 +71,7 @@ export default function DashboardView({ summary, months }: Props) {
 
   if (error) {
     return (
-      <div className="rounded-xl bg-red-50 p-6 text-sm text-red-700 shadow-sm">
+      <div className="rounded-xl bg-red-50 dark:bg-red-900/20 p-6 text-sm text-red-700 dark:text-red-400 shadow-sm">
         Failed to load dashboard: {error.message}
       </div>
     );
@@ -84,12 +84,12 @@ export default function DashboardView({ summary, months }: Props) {
         {/* Header skeleton */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <div className="h-8 w-48 animate-pulse rounded-md bg-slate-200" />
-            <div className="mt-2 h-4 w-32 animate-pulse rounded-md bg-slate-200" />
+            <div className="h-8 w-48 animate-pulse rounded-md bg-slate-200 dark:bg-slate-700" />
+            <div className="mt-2 h-4 w-32 animate-pulse rounded-md bg-slate-200 dark:bg-slate-700" />
           </div>
           <div className="flex items-center gap-2">
             <Spinner size="sm" />
-            <div className="h-10 w-48 animate-pulse rounded-xl bg-slate-200" />
+            <div className="h-10 w-48 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-700" />
           </div>
         </div>
         <SkeletonHeroMetrics />
@@ -111,13 +111,13 @@ export default function DashboardView({ summary, months }: Props) {
       {/* Header with month selector */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
             {new Date(`${activeSummary.month}-01`).toLocaleDateString("tr-TR", {
               year: "numeric",
               month: "long",
             })}
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Your monthly spending overview
           </p>
         </div>
@@ -128,7 +128,7 @@ export default function DashboardView({ summary, months }: Props) {
           <select
             value={selectedMonth}
             onChange={(event) => setSelectedMonth(event.target.value)}
-            className="rounded-xl border-0 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px] w-full sm:w-48"
+            className="rounded-xl border-0 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 shadow-sm ring-1 ring-slate-200 dark:ring-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px] w-full sm:w-48"
           >
             {months.map((monthOption) => (
               <option key={monthOption} value={monthOption}>

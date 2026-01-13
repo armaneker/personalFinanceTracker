@@ -50,16 +50,16 @@ export default function SpendingTrendChart({ data, currency }: SpendingTrendChar
 
   if (chartData.length === 0) {
     return (
-      <div className="rounded-xl bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-900">Spending Trend</h2>
-        <p className="mt-4 text-sm text-slate-500">No trend data available yet.</p>
+      <div className="rounded-xl bg-white dark:bg-slate-800 p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Spending Trend</h2>
+        <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">No trend data available yet.</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-slate-900">Spending Trend</h2>
+    <div className="rounded-xl bg-white dark:bg-slate-800 p-6 shadow-sm">
+      <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Spending Trend</h2>
       <div className="mt-6 h-64">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData}>

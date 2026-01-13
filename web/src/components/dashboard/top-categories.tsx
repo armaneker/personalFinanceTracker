@@ -36,22 +36,22 @@ export default function TopCategories({ categories, currency }: TopCategoriesPro
 
   if (topCategories.length === 0) {
     return (
-      <div className="rounded-xl bg-white p-6 shadow-sm">
+      <div className="rounded-xl bg-white dark:bg-slate-800 p-6 shadow-sm">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">Top Categories</h2>
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Top Categories</h2>
         </div>
-        <p className="mt-4 text-sm text-slate-500">No category data available yet.</p>
+        <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">No category data available yet.</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm">
+    <div className="rounded-xl bg-white dark:bg-slate-800 p-6 shadow-sm">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-slate-900">Top Categories</h2>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Top Categories</h2>
         <Link
           href="/categories"
-          className="text-sm font-medium text-blue-600 hover:text-blue-700"
+          className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
         >
           See all
         </Link>
@@ -67,16 +67,16 @@ export default function TopCategories({ categories, currency }: TopCategoriesPro
                     className="h-3 w-3 rounded-full"
                     style={{ backgroundColor: color }}
                   />
-                  <span className="font-medium text-slate-700">{category.label}</span>
+                  <span className="font-medium text-slate-700 dark:text-slate-300">{category.label}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-slate-500">{category.percentage.toFixed(0)}%</span>
-                  <span className="font-medium text-slate-900">
+                  <span className="text-slate-500 dark:text-slate-400">{category.percentage.toFixed(0)}%</span>
+                  <span className="font-medium text-slate-900 dark:text-white">
                     {formatMoney(category.total, currency)}
                   </span>
                 </div>
               </div>
-              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-100">
+              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
                 <div
                   className="h-full rounded-full transition-all duration-300"
                   style={{
