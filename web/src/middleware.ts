@@ -14,6 +14,18 @@ import { getToken } from "next-auth/jwt";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Allow CORS preflight requests to pass through (browsers send OPTIONS before POST)
+  if (request.method === "OPTIONS") {
+    return new NextResponse(null, {
+      status: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    });
+  }
+
   // Allow auth routes and version endpoint to pass through
   if (pathname.startsWith("/api/auth") || pathname === "/api/version") {
     return NextResponse.next();
