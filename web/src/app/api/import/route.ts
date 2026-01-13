@@ -1,7 +1,4 @@
 import { z } from "zod";
-import { PDFParse } from "pdf-parse";
-import path from "node:path";
-import { pathToFileURL } from "node:url";
 import { createHash } from "node:crypto";
 
 import { extractTransactionsWithLLM } from "@/lib/llm";
@@ -52,6 +49,11 @@ export async function POST(request: Request) {
     let statementText = data.statementText ?? "";
     if (!statementText && data.statementPdfBase64) {
       try {
+        // Dynamic imports to avoid loading pdfjs-dist browser APIs (DOMMatrix) at module load time
+        const { PDFParse } = await import("pdf-parse");
+        const path = await import("node:path");
+        const { pathToFileURL } = await import("node:url");
+
         const buffer = Buffer.from(data.statementPdfBase64, "base64");
         const workerUrl = pathToFileURL(
           path.join(process.cwd(), "node_modules/pdfjs-dist/build/pdf.worker.min.mjs"),
