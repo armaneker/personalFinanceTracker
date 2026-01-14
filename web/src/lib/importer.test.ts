@@ -9,6 +9,9 @@ import * as categoryService from './category-service'
 import type { Category } from './types'
 import type { StatementExtractionInput } from './schemas'
 
+// User prefix for scoped IDs (first 8 chars of test-user-id)
+const USER_PREFIX = 'test-use'
+
 // Track created cards and owners for verification
 const createdCards: Array<{ id: string; name: string; issuer: string; last4: string; currency: string }> = []
 const createdOwners: Array<{ id: string; label: string }> = []
@@ -181,7 +184,7 @@ describe('importer.ts', () => {
         expect.objectContaining({
           run_id: 'run-001',
           statement_file: 'statement.pdf',
-          card_id: 'card-visa',
+          card_id: `${USER_PREFIX}-card-visa`, // Card IDs are user-scoped
           status: 'completed',
           fingerprint: 'fp-12345',
         })

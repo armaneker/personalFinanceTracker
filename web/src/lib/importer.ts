@@ -58,14 +58,31 @@ export interface ExistingImportMatch {
 }
 
 /**
+ * Generate a user-scoped ID for cards/owners.
+ * This is needed because cards and owners tables have global primary keys on 'id',
+ * so IDs must be unique across all users.
+ */
+function scopedEntityId(userId: string, baseId: string): string {
+  const userPrefix = userId.slice(0, 8);
+  // If already scoped, return as-is
+  if (baseId.startsWith(userPrefix + "-")) {
+    return baseId;
+  }
+  return `${userPrefix}-${baseId}`;
+}
+
+/**
  * Ensure that the card exists for the user.
  * If the card doesn't exist, create it with default values.
- * This is necessary to satisfy foreign key constraints.
+ * Returns the scoped card ID to use.
  */
-async function ensureCardExists(userId: string, cardId: string): Promise<void> {
-  console.log(`[ensureCardExists] Checking card ${cardId} for user ${userId}`);
+async function ensureCardExists(userId: string, cardId: string): Promise<string> {
+  // Generate user-scoped ID
+  const scopedId = scopedEntityId(userId, cardId);
+  console.log(`[ensureCardExists] Checking card ${cardId} -> ${scopedId} for user ${userId}`);
+
   const cards = await getCards(userId);
-  const cardExists = cards.some(card => card.id === cardId);
+  const cardExists = cards.some(card => card.id === scopedId);
   console.log(`[ensureCardExists] Card exists: ${cardExists}, existing cards: ${cards.map(c => c.id).join(', ')}`);
 
   if (!cardExists) {
@@ -81,39 +98,45 @@ async function ensureCardExists(userId: string, cardId: string): Promise<void> {
       last4 = parts[parts.length - 1] || '0000';
     }
 
-    console.log(`[ensureCardExists] Creating card ${cardId} with issuer=${issuer}, last4=${last4}`);
+    const isUnknown = cardId === 'unknown-card' || cardId.includes('unknown');
+    console.log(`[ensureCardExists] Creating card ${scopedId} with issuer=${issuer}, last4=${last4}`);
     try {
       await upsertCard(userId, {
-        id: cardId,
-        name: cardId === 'unknown-card' ? 'Unknown Card' : `${issuer} ${last4}`,
+        id: scopedId,
+        name: isUnknown ? 'Unknown Card' : `${issuer} ${last4}`,
         issuer,
         last4,
         currency: 'TRY',
       });
-      console.log(`[ensureCardExists] Card ${cardId} created successfully`);
+      console.log(`[ensureCardExists] Card ${scopedId} created successfully`);
 
       // Verify the card was actually created
       const verifyCards = await getCards(userId);
-      const verified = verifyCards.some(c => c.id === cardId);
-      console.log(`[ensureCardExists] Verification: card ${cardId} exists = ${verified}`);
+      const verified = verifyCards.some(c => c.id === scopedId);
+      console.log(`[ensureCardExists] Verification: card ${scopedId} exists = ${verified}`);
       if (!verified) {
-        throw new Error(`Card ${cardId} was not persisted after upsert`);
+        throw new Error(`Card ${scopedId} was not persisted after upsert`);
       }
     } catch (error) {
-      console.error(`[ensureCardExists] FAILED to create card ${cardId}:`, error);
+      console.error(`[ensureCardExists] FAILED to create card ${scopedId}:`, error);
       throw error;
     }
   }
+
+  return scopedId;
 }
 
 /**
  * Ensure that the owner exists for the user.
  * If the owner doesn't exist, create it with default values.
- * This is necessary to satisfy foreign key constraints.
+ * Returns the scoped owner ID to use.
  */
-async function ensureOwnerExists(userId: string, ownerId: string): Promise<void> {
+async function ensureOwnerExists(userId: string, ownerId: string): Promise<string> {
+  // Generate user-scoped ID
+  const scopedId = scopedEntityId(userId, ownerId);
+
   const ownerList = await getOwners(userId);
-  const ownerExists = ownerList.some(owner => owner.id === ownerId);
+  const ownerExists = ownerList.some(owner => owner.id === scopedId);
 
   if (!ownerExists) {
     // Auto-create the owner with default values
@@ -127,10 +150,12 @@ async function ensureOwnerExists(userId: string, ownerId: string): Promise<void>
     }
 
     await upsertOwner(userId, {
-      id: ownerId,
+      id: scopedId,
       label,
     });
   }
+
+  return scopedId;
 }
 
 /**
@@ -210,16 +235,30 @@ export async function commitExtraction(
   uniqueCardIds.add(importCardId);
   console.log(`[commitExtraction] User: ${userId}, Cards to ensure: ${Array.from(uniqueCardIds).join(', ')}, Owners to ensure: ${Array.from(uniqueOwnerIds).join(', ')}`);
 
-  // Ensure each card exists
+  // Ensure each card exists and build ID mapping
+  const cardIdMapping = new Map<string, string>();
   for (const cid of uniqueCardIds) {
-    await ensureCardExists(userId, cid);
+    const scopedId = await ensureCardExists(userId, cid);
+    cardIdMapping.set(cid, scopedId);
   }
 
-  // Ensure each owner exists
+  // Ensure each owner exists and build ID mapping
+  const ownerIdMapping = new Map<string, string>();
   for (const oid of uniqueOwnerIds) {
-    await ensureOwnerExists(userId, oid);
+    const scopedId = await ensureOwnerExists(userId, oid);
+    ownerIdMapping.set(oid, scopedId);
   }
   console.log(`[commitExtraction] All cards and owners ensured, proceeding with commit`)
+
+  // Update transaction records with scoped IDs
+  for (const item of prepared.records) {
+    if (item.record.card_id && cardIdMapping.has(item.record.card_id)) {
+      item.record.card_id = cardIdMapping.get(item.record.card_id)!;
+    }
+    if (item.record.owner_id && ownerIdMapping.has(item.record.owner_id)) {
+      item.record.owner_id = ownerIdMapping.get(item.record.owner_id)!;
+    }
+  }
 
   // Commit each transaction
   const commitMonths = new Set<string>();
@@ -234,11 +273,14 @@ export async function commitExtraction(
     await createOrUpdateTransaction(userId, item.month, item.record);
   }
 
+  // Get scoped card ID for import history
+  const scopedImportCardId = cardIdMapping.get(importCardId) ?? importCardId;
+
   // Record in import history
   await appendImportHistory(userId, {
     run_id: payload.run_id,
     statement_file: options.statementFile,
-    card_id: options.cardId ?? "unknown-card",
+    card_id: scopedImportCardId,
     month:
       options.month ??
       prepared.primaryMonth ??
