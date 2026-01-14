@@ -59,8 +59,8 @@ describe('importer.ts', () => {
     vi.mocked(dataStore.getCards).mockImplementation(async () => [...createdCards])
     vi.mocked(dataStore.getOwners).mockImplementation(async () => [...createdOwners])
 
-    // Mock category service
-    vi.mocked(categoryService.ensureCategories).mockResolvedValue()
+    // Mock category service - returns empty ID mapping
+    vi.mocked(categoryService.ensureCategories).mockResolvedValue(new Map())
 
     // Mock FX service to return same amount for TRY
     vi.mocked(fxService.convertAmount).mockImplementation(async (amount, from, to) => ({

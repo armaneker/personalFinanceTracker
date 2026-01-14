@@ -21,8 +21,9 @@ function scopedCategoryId(userId: string, baseId: string): string {
  * Ensure all categories referenced in extraction exist in the category store.
  * Auto-creates missing categories with default colors.
  * Category IDs are scoped per user to avoid PK conflicts.
+ * Returns a mapping from original category IDs to scoped IDs.
  */
-export async function ensureCategories(userId: string, extraction: StatementExtractionInput): Promise<void> {
+export async function ensureCategories(userId: string, extraction: StatementExtractionInput): Promise<Map<string, string>> {
   const categories = await getCategories(userId);
   const map = new Map(categories.map((cat) => [cat.id, cat]));
   // Also track categories by their base name for lookups
@@ -107,4 +108,6 @@ export async function ensureCategories(userId: string, extraction: StatementExtr
   if (changed) {
     await saveCategories(userId, categories);
   }
+
+  return idMapping;
 }

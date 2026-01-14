@@ -212,16 +212,18 @@ export async function commitExtraction(
   options: CommitExtractionOptions,
   precomputed?: PreparedExtraction,
 ) {
-  // Ensure all categories exist
-  await ensureCategories(userId, payload);
+  // Ensure all categories exist and get the ID mapping
+  // This updates payload.transactions with scoped category IDs
+  const categoryIdMapping = await ensureCategories(userId, payload);
 
   // Prepare extraction if not precomputed
   const prepared = precomputed ?? (await prepareExtraction(payload, options, userId));
 
   // Ensure all cards and owners exist (auto-create if needed)
-  // Collect all unique card and owner IDs from transactions
+  // Collect all unique card, owner, and category IDs from transactions
   const uniqueCardIds = new Set<string>();
   const uniqueOwnerIds = new Set<string>();
+  const uniqueCategoryIds = new Set<string>();
   for (const item of prepared.records) {
     if (item.record.card_id) {
       uniqueCardIds.add(item.record.card_id);
@@ -229,11 +231,17 @@ export async function commitExtraction(
     if (item.record.owner_id) {
       uniqueOwnerIds.add(item.record.owner_id);
     }
+    if (item.record.category_id) {
+      uniqueCategoryIds.add(item.record.category_id);
+    }
+    if (item.record.llm_category_id) {
+      uniqueCategoryIds.add(item.record.llm_category_id);
+    }
   }
   // Also add the import-level card ID (this is what gets stored in import_runs)
   const importCardId = options.cardId ?? "unknown-card";
   uniqueCardIds.add(importCardId);
-  console.log(`[commitExtraction] User: ${userId}, Cards to ensure: ${Array.from(uniqueCardIds).join(', ')}, Owners to ensure: ${Array.from(uniqueOwnerIds).join(', ')}`);
+  console.log(`[commitExtraction] User: ${userId}, Cards: ${Array.from(uniqueCardIds).join(', ')}, Owners: ${Array.from(uniqueOwnerIds).join(', ')}, Categories: ${Array.from(uniqueCategoryIds).join(', ')}`);
 
   // Ensure each card exists and build ID mapping
   const cardIdMapping = new Map<string, string>();
@@ -250,13 +258,23 @@ export async function commitExtraction(
   }
   console.log(`[commitExtraction] All cards and owners ensured, proceeding with commit`)
 
-  // Update transaction records with scoped IDs
+  // Update transaction records with scoped IDs (cards, owners, AND categories)
   for (const item of prepared.records) {
+    // Update card_id
     if (item.record.card_id && cardIdMapping.has(item.record.card_id)) {
       item.record.card_id = cardIdMapping.get(item.record.card_id)!;
     }
+    // Update owner_id
     if (item.record.owner_id && ownerIdMapping.has(item.record.owner_id)) {
       item.record.owner_id = ownerIdMapping.get(item.record.owner_id)!;
+    }
+    // Update category_id (from the mapping built by ensureCategories)
+    if (item.record.category_id && categoryIdMapping.has(item.record.category_id)) {
+      item.record.category_id = categoryIdMapping.get(item.record.category_id)!;
+    }
+    // Update llm_category_id
+    if (item.record.llm_category_id && categoryIdMapping.has(item.record.llm_category_id)) {
+      item.record.llm_category_id = categoryIdMapping.get(item.record.llm_category_id)!;
     }
   }
 

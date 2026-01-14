@@ -52,10 +52,11 @@ describe('category-service.ts', () => {
         ],
       }
 
-      await ensureCategories(TEST_USER_ID, extraction)
+      const mapping = await ensureCategories(TEST_USER_ID, extraction)
 
       expect(dataStore.getCategories).toHaveBeenCalled()
       expect(dataStore.saveCategories).not.toHaveBeenCalled()
+      expect(mapping).toBeInstanceOf(Map)
     })
 
     it('should create new categories from new_categories field', async () => {
