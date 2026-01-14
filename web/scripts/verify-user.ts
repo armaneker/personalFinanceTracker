@@ -53,6 +53,16 @@ async function main() {
     console.log("  (no import runs found)");
   }
 
+  // Check categories
+  console.log("\nCategories:");
+  const cats = await client.execute("SELECT id, user_id, name FROM categories LIMIT 10");
+  for (const cat of cats.rows) {
+    console.log(`  - ${cat.id}: ${cat.name} (user: ${cat.user_id})`);
+  }
+  if (cats.rows.length === 0) {
+    console.log("  (no categories found)");
+  }
+
   // Check foreign key status
   console.log("\nForeign Key Status:");
   const fkStatus = await client.execute("PRAGMA foreign_keys");

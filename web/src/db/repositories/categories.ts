@@ -54,20 +54,69 @@ export async function saveCategories(
   const now = new Date().toISOString();
 
   // Delete all existing categories for user
-  await db.delete(categories).where(eq(categories.userId, userId));
+  // Note: This will fail if transactions reference these categories
+  try {
+    await db.delete(categories).where(eq(categories.userId, userId));
+  } catch (deleteError) {
+    console.error("[saveCategories] Failed to delete existing categories:", deleteError);
+    // If delete fails (e.g., FK constraint from transactions), skip delete and use upsert instead
+    console.log("[saveCategories] Falling back to upsert mode");
+    for (const cat of newCategories) {
+      await upsertCategoryInternal(userId, cat, now);
+    }
+    return;
+  }
 
   // Insert all new categories
   if (newCategories.length > 0) {
-    await db.insert(categories).values(
-      newCategories.map((cat) => ({
-        id: cat.id,
-        userId,
-        name: cat.name,
-        color: cat.color ?? null,
-        createdAt: now,
+    try {
+      await db.insert(categories).values(
+        newCategories.map((cat) => ({
+          id: cat.id,
+          userId,
+          name: cat.name,
+          color: cat.color ?? null,
+          createdAt: now,
+          updatedAt: now,
+        })),
+      );
+    } catch (insertError) {
+      const errorMessage = insertError instanceof Error ? insertError.message : String(insertError);
+      console.error("[saveCategories] Failed to insert categories:", errorMessage);
+      console.error("[saveCategories] Full error:", insertError);
+      throw insertError;
+    }
+  }
+}
+
+/**
+ * Internal upsert helper for fallback mode
+ */
+async function upsertCategoryInternal(userId: string, category: Category, now: string): Promise<void> {
+  const existing = await db
+    .select()
+    .from(categories)
+    .where(and(eq(categories.id, category.id), eq(categories.userId, userId)))
+    .limit(1);
+
+  if (existing.length > 0) {
+    await db
+      .update(categories)
+      .set({
+        name: category.name,
+        color: category.color ?? null,
         updatedAt: now,
-      })),
-    );
+      })
+      .where(and(eq(categories.id, category.id), eq(categories.userId, userId)));
+  } else {
+    await db.insert(categories).values({
+      id: category.id,
+      userId,
+      name: category.name,
+      color: category.color ?? null,
+      createdAt: now,
+      updatedAt: now,
+    });
   }
 }
 

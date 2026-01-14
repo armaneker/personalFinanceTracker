@@ -9,6 +9,8 @@ vi.mock('./data-store')
 
 // Test user ID for multi-user support
 const TEST_USER_ID = 'test-user-id'
+// User prefix for scoped category IDs (first 8 chars)
+const USER_PREFIX = 'test-use'
 
 describe('category-service.ts', () => {
   const mockCategories: Category[] = [
@@ -93,7 +95,7 @@ describe('category-service.ts', () => {
         TEST_USER_ID,
         expect.arrayContaining([
           expect.objectContaining({
-            id: 'cat-new',
+            id: `${USER_PREFIX}-cat-new`,
             name: 'New Category',
             color: '#ff0000',
           }),
@@ -131,7 +133,7 @@ describe('category-service.ts', () => {
         TEST_USER_ID,
         expect.arrayContaining([
           expect.objectContaining({
-            id: 'cat-transport',
+            id: `${USER_PREFIX}-cat-transport`,
             name: 'transport',
           }),
         ])
@@ -168,7 +170,7 @@ describe('category-service.ts', () => {
         TEST_USER_ID,
         expect.arrayContaining([
           expect.objectContaining({
-            id: 'cat-entertainment',
+            id: `${USER_PREFIX}-cat-entertainment`,
             name: 'entertainment',
           }),
         ])
@@ -257,9 +259,10 @@ describe('category-service.ts', () => {
       // Note: All categories are saved (existing + new), so length is > 2
       expect(savedCategories).toBeDefined()
       expect(savedCategories?.length).toBeGreaterThanOrEqual(5) // At least 2 existing + 3 new
-      expect(savedCategories?.find(c => c.id === 'cat-new1')?.color).toBeDefined()
-      expect(savedCategories?.find(c => c.id === 'cat-new2')?.color).toBeDefined()
-      expect(savedCategories?.find(c => c.id === 'cat-new3')?.color).toBeDefined()
+      // New categories have user-scoped IDs
+      expect(savedCategories?.find(c => c.id === `${USER_PREFIX}-cat-new1`)?.color).toBeDefined()
+      expect(savedCategories?.find(c => c.id === `${USER_PREFIX}-cat-new2`)?.color).toBeDefined()
+      expect(savedCategories?.find(c => c.id === `${USER_PREFIX}-cat-new3`)?.color).toBeDefined()
     })
 
     it('should not duplicate categories', async () => {

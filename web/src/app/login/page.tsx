@@ -48,10 +48,10 @@ function LoginForm() {
       }
 
       // Decode the callback URL and redirect
+      // Use window.location for full page reload to ensure session cookie is picked up
       const decodedUrl = decodeURIComponent(callbackUrl);
       console.log("[LOGIN] Redirecting to:", decodedUrl);
-      router.push(decodedUrl);
-      router.refresh();
+      window.location.href = decodedUrl;
     } catch (err) {
       console.error("[LOGIN] Unexpected error:", err);
       setError("An unexpected error occurred");
