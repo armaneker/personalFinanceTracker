@@ -258,8 +258,12 @@ export async function commitExtraction(
   }
   console.log(`[commitExtraction] All cards and owners ensured, proceeding with commit`)
 
-  // Update transaction records with scoped IDs (cards, owners, AND categories)
+  // Update transaction records with scoped IDs (transaction ID, cards, owners, AND categories)
   for (const item of prepared.records) {
+    // Scope the transaction ID itself to avoid PK conflicts across users
+    if (item.record.id) {
+      item.record.id = scopedEntityId(userId, item.record.id);
+    }
     // Update card_id
     if (item.record.card_id && cardIdMapping.has(item.record.card_id)) {
       item.record.card_id = cardIdMapping.get(item.record.card_id)!;
