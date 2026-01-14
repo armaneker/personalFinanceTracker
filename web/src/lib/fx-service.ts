@@ -5,6 +5,9 @@ import {
   type FxRateSource,
 } from "@/db/repositories/fx-rates";
 
+// System-wide userId for FX rates (not user-specific)
+const SYSTEM_USER_ID = "system";
+
 // Rate limiting: max 1 request per second
 let lastApiCallTime = 0;
 const MIN_API_INTERVAL_MS = 1000;
@@ -12,6 +15,21 @@ const MIN_API_INTERVAL_MS = 1000;
 // In-memory cache for the current session (to reduce database reads)
 const memoryCache = new Map<string, { rate: number; timestamp: number }>();
 const MEMORY_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+// Hardcoded fallback rates for common currency pairs (as of Jan 2026)
+// These are used only when all other sources fail
+const HARDCODED_FALLBACK_RATES: Record<string, number> = {
+  "USD-TRY": 35.5,
+  "EUR-TRY": 38.5,
+  "GBP-TRY": 44.5,
+  "CHF-TRY": 39.5,
+  "JPY-TRY": 0.23,
+  "AUD-TRY": 22.5,
+  "CAD-TRY": 25.0,
+  "SEK-TRY": 3.2,
+  "NOK-TRY": 3.1,
+  "DKK-TRY": 5.2,
+};
 
 /**
  * FX conversion result
@@ -23,21 +41,6 @@ export interface FxConversionResult {
   originalCurrency: string;
   fxRate: number;
   source: FxRateSource;
-}
-
-/**
- * FX API response from exchangerate.host
- */
-interface ExchangeRateApiResponse {
-  success?: boolean;
-  base: string;
-  date: string;
-  rates?: Record<string, number>;
-  error?: {
-    code: number;
-    type: string;
-    info: string;
-  };
 }
 
 /**
@@ -61,45 +64,143 @@ async function waitForRateLimit(): Promise<void> {
 }
 
 /**
- * Fetch rate from external API with rate limiting
+ * Parse TCMB XML response and extract rate for a currency
  */
-async function fetchRateFromApi(
+function parseTcmbXml(xml: string, currencyCode: string): number | null {
+  // Find the currency entry in XML
+  const currencyRegex = new RegExp(
+    `<Currency[^>]*CurrencyCode="${currencyCode}"[^>]*>([\\s\\S]*?)</Currency>`,
+    "i"
+  );
+  const match = xml.match(currencyRegex);
+
+  if (!match) {
+    console.error(`[TCMB] Currency ${currencyCode} not found in response`);
+    return null;
+  }
+
+  const currencyBlock = match[1];
+
+  // Extract ForexSelling rate (the rate bank sells foreign currency for TRY)
+  const forexSellingMatch = currencyBlock.match(/<ForexSelling>([0-9.]+)<\/ForexSelling>/);
+  if (!forexSellingMatch) {
+    console.error(`[TCMB] ForexSelling not found for ${currencyCode}`);
+    return null;
+  }
+
+  const rate = parseFloat(forexSellingMatch[1]);
+  if (isNaN(rate)) {
+    console.error(`[TCMB] Invalid rate value for ${currencyCode}`);
+    return null;
+  }
+
+  // Check for Unit (some currencies like JPY use 100 as unit)
+  const unitMatch = currencyBlock.match(/<Unit>([0-9]+)<\/Unit>/);
+  const unit = unitMatch ? parseInt(unitMatch[1], 10) : 1;
+
+  // Return rate per single unit
+  return rate / unit;
+}
+
+/**
+ * Fetch rate from TCMB (Central Bank of Turkey)
+ *
+ * TCMB API:
+ * - Today: https://www.tcmb.gov.tr/kurlar/today.xml
+ * - Historical: https://www.tcmb.gov.tr/kurlar/YYMM/DDMMYY.xml
+ *
+ * Note: TCMB provides rates against TRY, so we only support X/TRY conversions
+ */
+async function fetchRateFromTcmb(
   baseCurrency: string,
   targetCurrency: string,
   date: string,
 ): Promise<number | null> {
+  // TCMB only provides rates against TRY
+  if (targetCurrency.toUpperCase() !== "TRY") {
+    console.warn(`[TCMB] Only supports conversion to TRY, requested ${targetCurrency}`);
+    return null;
+  }
+
+  // TRY to TRY is 1:1
+  if (baseCurrency.toUpperCase() === "TRY") {
+    return 1;
+  }
+
   await waitForRateLimit();
 
   try {
     lastApiCallTime = Date.now();
 
-    const response = await fetch(
-      `https://api.exchangerate.host/${date}?base=${baseCurrency.toUpperCase()}&symbols=${targetCurrency.toUpperCase()}`,
-    );
+    // Determine which endpoint to use
+    const today = new Date().toISOString().slice(0, 10);
+    let url: string;
+
+    if (date === today) {
+      url = "https://www.tcmb.gov.tr/kurlar/today.xml";
+    } else {
+      // Historical: format is YYMM/DDMMYY.xml
+      const [year, month, day] = date.split("-");
+      const yy = year.slice(2);
+      url = `https://www.tcmb.gov.tr/kurlar/${yy}${month}/${day}${month}${yy}.xml`;
+    }
+
+    console.log(`[TCMB] Fetching rate from: ${url}`);
+
+    const response = await fetch(url, {
+      headers: {
+        "Accept": "application/xml",
+        "User-Agent": "PersonalFinanceTracker/1.0",
+      },
+    });
 
     if (!response.ok) {
-      console.error(`FX API returned ${response.status} for ${baseCurrency}/${targetCurrency}`);
+      // TCMB returns 404 on weekends/holidays
+      if (response.status === 404) {
+        console.warn(`[TCMB] No data for ${date} (likely weekend/holiday)`);
+        return null;
+      }
+      console.error(`[TCMB] API returned ${response.status}`);
       return null;
     }
 
-    const data: ExchangeRateApiResponse = await response.json();
-
-    if (data.error || !data.rates) {
-      console.error("FX API error:", data.error ?? "No rates returned");
-      return null;
-    }
-
-    const rate = data.rates[targetCurrency.toUpperCase()];
-    if (rate === undefined) {
-      console.error(`Rate not available for ${targetCurrency}`);
-      return null;
-    }
-
-    return rate;
+    const xml = await response.text();
+    return parseTcmbXml(xml, baseCurrency.toUpperCase());
   } catch (error) {
-    console.error("FX API fetch error:", error);
+    console.error("[TCMB] Fetch error:", error);
     return null;
   }
+}
+
+/**
+ * Try to fetch rate for nearby dates (for weekends/holidays)
+ */
+async function fetchRateWithDateFallback(
+  baseCurrency: string,
+  targetCurrency: string,
+  date: string,
+): Promise<{ rate: number; actualDate: string } | null> {
+  // Try the requested date first
+  const rate = await fetchRateFromTcmb(baseCurrency, targetCurrency, date);
+  if (rate !== null) {
+    return { rate, actualDate: date };
+  }
+
+  // Try previous days (up to 5 days back for weekends/holidays)
+  const dateObj = new Date(date);
+  for (let i = 1; i <= 5; i++) {
+    dateObj.setDate(dateObj.getDate() - 1);
+    const prevDate = dateObj.toISOString().slice(0, 10);
+    console.log(`[TCMB] Trying fallback date: ${prevDate}`);
+
+    const prevRate = await fetchRateFromTcmb(baseCurrency, targetCurrency, prevDate);
+    if (prevRate !== null) {
+      console.log(`[TCMB] Found rate for ${prevDate}: ${prevRate}`);
+      return { rate: prevRate, actualDate: prevDate };
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -125,19 +226,28 @@ function setMemoryCache(base: string, target: string, date: string, rate: number
 }
 
 /**
- * Get exchange rate with caching and fallback
+ * Get hardcoded fallback rate
+ */
+function getHardcodedFallback(base: string, target: string): number | null {
+  const key = `${base.toUpperCase()}-${target.toUpperCase()}`;
+  return HARDCODED_FALLBACK_RATES[key] ?? null;
+}
+
+/**
+ * Get exchange rate with caching and fallback (SYSTEM-WIDE)
  *
  * Priority:
  * 1. Memory cache (fast, for repeated lookups in same session)
  * 2. Database cache (persisted across restarts)
- * 3. External API (rate-limited to 1 req/sec)
- * 4. Fallback to last known rate if API fails
+ * 3. TCMB API (with date fallback for weekends/holidays)
+ * 4. Last known rate from database
+ * 5. Hardcoded fallback rates
  */
 export async function getRate(
   baseCurrency: string,
   targetCurrency: string,
   date: string,
-  userId: string,
+  _userId?: string, // Kept for API compatibility but ignored
 ): Promise<{ rate: number; source: FxRateSource } | null> {
   const base = baseCurrency.toUpperCase();
   const target = targetCurrency.toUpperCase();
@@ -150,40 +260,39 @@ export async function getRate(
   // 1. Check memory cache
   const memoryCached = checkMemoryCache(base, target, date);
   if (memoryCached !== null) {
-    return { rate: memoryCached, source: "api" }; // Source from original fetch
+    return { rate: memoryCached, source: "api" };
   }
 
-  // 2. Check database cache
-  const dbCached = await getCachedRate(userId, base, target, date);
+  // 2. Check database cache (system-wide)
+  const dbCached = await getCachedRate(SYSTEM_USER_ID, base, target, date);
   if (dbCached) {
     setMemoryCache(base, target, date, dbCached.rate);
     return { rate: dbCached.rate, source: dbCached.source as FxRateSource };
   }
 
-  // 3. Fetch from API
-  const apiRate = await fetchRateFromApi(base, target, date);
-  if (apiRate !== null) {
+  // 3. Fetch from TCMB API (with date fallback)
+  const tcmbResult = await fetchRateWithDateFallback(base, target, date);
+  if (tcmbResult !== null) {
     // Save to both caches
-    await saveRate(userId, {
+    await saveRate(SYSTEM_USER_ID, {
       baseCurrency: base,
       targetCurrency: target,
-      rate: apiRate,
+      rate: tcmbResult.rate,
       date,
       source: "api",
     });
-    setMemoryCache(base, target, date, apiRate);
-    return { rate: apiRate, source: "api" };
+    setMemoryCache(base, target, date, tcmbResult.rate);
+    return { rate: tcmbResult.rate, source: "api" };
   }
 
-  // 4. Fallback to last known rate
-  const fallbackRate = await getLatestRate(userId, base, target);
+  // 4. Fallback to last known rate from database
+  const fallbackRate = await getLatestRate(SYSTEM_USER_ID, base, target);
   if (fallbackRate) {
     console.warn(
-      `Using fallback rate from ${fallbackRate.date} for ${base}/${target} on ${date}`,
+      `[FX] Using fallback rate from ${fallbackRate.date} for ${base}/${target} on ${date}`,
     );
 
-    // Save the fallback rate for this date (marked as fallback)
-    await saveRate(userId, {
+    await saveRate(SYSTEM_USER_ID, {
       baseCurrency: base,
       targetCurrency: target,
       rate: fallbackRate.rate,
@@ -193,6 +302,25 @@ export async function getRate(
     setMemoryCache(base, target, date, fallbackRate.rate);
 
     return { rate: fallbackRate.rate, source: "fallback" };
+  }
+
+  // 5. Last resort: hardcoded fallback
+  const hardcodedRate = getHardcodedFallback(base, target);
+  if (hardcodedRate !== null) {
+    console.warn(
+      `[FX] Using hardcoded fallback rate for ${base}/${target}: ${hardcodedRate}`,
+    );
+
+    await saveRate(SYSTEM_USER_ID, {
+      baseCurrency: base,
+      targetCurrency: target,
+      rate: hardcodedRate,
+      date,
+      source: "fallback",
+    });
+    setMemoryCache(base, target, date, hardcodedRate);
+
+    return { rate: hardcodedRate, source: "fallback" };
   }
 
   // No rate available
@@ -206,9 +334,9 @@ export async function getRateWithFallback(
   baseCurrency: string,
   targetCurrency: string,
   date: string,
-  userId: string,
+  _userId?: string, // Kept for API compatibility but ignored
 ): Promise<{ rate: number; source: FxRateSource }> {
-  const result = await getRate(baseCurrency, targetCurrency, date, userId);
+  const result = await getRate(baseCurrency, targetCurrency, date);
 
   if (!result) {
     throw new Error(
@@ -220,19 +348,19 @@ export async function getRateWithFallback(
 }
 
 /**
- * Set a manual exchange rate (overrides API rate)
+ * Set a manual exchange rate (overrides API rate) - SYSTEM-WIDE
  */
 export async function setManualRate(
   baseCurrency: string,
   targetCurrency: string,
   rate: number,
   date: string,
-  userId: string,
+  _userId?: string, // Kept for API compatibility but ignored
 ): Promise<void> {
   const base = baseCurrency.toUpperCase();
   const target = targetCurrency.toUpperCase();
 
-  await saveRate(userId, {
+  await saveRate(SYSTEM_USER_ID, {
     baseCurrency: base,
     targetCurrency: target,
     rate,
@@ -251,7 +379,7 @@ export async function convertAmount(
   fromCurrency: string,
   toCurrency: string,
   date: string,
-  userId: string,
+  _userId?: string, // Kept for API compatibility but ignored
 ): Promise<FxConversionResult> {
   const from = fromCurrency.toUpperCase();
   const to = toCurrency.toUpperCase();
@@ -268,7 +396,7 @@ export async function convertAmount(
     };
   }
 
-  const rateResult = await getRateWithFallback(from, to, date, userId);
+  const rateResult = await getRateWithFallback(from, to, date);
 
   return {
     amount: Number((amount * rateResult.rate).toFixed(2)),
